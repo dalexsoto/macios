@@ -7,6 +7,8 @@ DOTNET_SDK_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests
 DOTNET_PACKS_PATH=$(DOTNET_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
+WATCHOS_ILLINK_VERSION=$(shell sed -n 's/.*<MicrosoftNETILLinkTasksPackageVersion>\([^<]*\)<\/MicrosoftNETILLinkTasksPackageVersion>.*/\1/p' $(TOP)/eng/Version.Details.props)
+SYSTEM_DOTNET_ROOT?=/usr/local/share/dotnet
 CUSTOM_RUNTIME_SOURCE=$(if $(CUSTOM_DOTNET),--source $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping,)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
@@ -16,6 +18,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval NET8_$(platform)_NUGET_VERSION_NO_
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_watchOS_GLOBAL_USINGS=CoreGraphics Foundation WatchKit
 DOTNET_MacCatalyst_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_macOS_GLOBAL_USINGS=AppKit CoreGraphics Foundation
 
@@ -110,7 +113,7 @@ endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
 
 define VersionsTemplate
-targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index
+targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/eng/Version.Details.props $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
@@ -122,6 +125,8 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
 		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
+		-e 's/@RUNTIME_PACK_VERSION@/$(DOTNET_BCL_VERSION)/g' \
+		-e 's/@ILLINK_PACK_VERSION@/$(WATCHOS_ILLINK_VERSION)/g' \
 		-e 's/@XCODE_IS_PREVIEW@/$(XCODE_IS_PREVIEW)/g' \
 		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		-e 's/@NUGET_OS_VERSION@/$$($(2)_NUGET_OS_VERSION)/g' \
@@ -191,9 +196,9 @@ include $(TOP)/scripts/generate-workloadmanifest-json/fragment.mk
 include $(TOP)/scripts/generate-workloadmanifest-targets/fragment.mk
 include $(TOP)/scripts/generate-workloaddependencies-json/fragment.mk
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_JSON) | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/eng/Version.Details.props $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_JSON) | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_JSON_EXEC) "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Version.Details.props "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS_NO_ARCH)"
+	$$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_JSON_EXEC) "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(4)_NUGET_OS_VERSION)" "$(SUPPORTED_API_VERSIONS_$(4))" $(TOP)/eng/Version.Details.props "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS_NO_ARCH)" "$(DOTNET_BCL_VERSION)"
 	$$(Q) mv $$@.tmp $$@
 
 Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile $(GENERATE_WORKLOADMANIFEST_TARGETS) | Workloads/Microsoft.NET.Sdk.$(1)
@@ -215,6 +220,16 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targ
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadDependencies.json
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(call lowercase,$(platform)),$($(platform)_NUGET_VERSION_NO_METADATA),$(call uppercase,$(platform)),$(NET8_$(platform)_NUGET_VERSION_NO_METADATA))))
+
+ifdef INCLUDE_WATCHOS
+watchOS_NUGET_TARGETS += $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data/RuntimeIdentifierGraph.json
+watchOS_NUGET_TARGETS += $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data/libcoreclr.xcprivacy
+watchOS_NUGET_TARGETS += $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data/libSystem.Native.xcprivacy
+WORKLOAD_TARGETS += $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data/RuntimeIdentifierGraph.json
+$(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data/RuntimeIdentifierGraph.json: $(DOTNET_DIR)/sdk/$(DOTNET_VERSION)/PortableRuntimeIdentifierGraph.json $(GENERATE_WORKLOADMANIFEST_JSON) Makefile | $(DOTNET_DESTDIR)/$(WATCHOS_NUGET_SDK_NAME)/data
+	$(Q_GEN) $(GENERATE_WORKLOADMANIFEST_JSON_EXEC) --watch-runtime-graph "$<" "$@.tmp"
+	$(Q) mv "$@.tmp" "$@"
+endif
 
 # Always use the commit distance as the third number in the VS component version, as it should always increase across all branches.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(call uppercase,$(platform))_NUGET_OS_VERSION).$($(call uppercase,$(platform))_NUGET_COMMIT_DISTANCE)))
@@ -316,9 +331,11 @@ TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLO
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
 .stamp-workload-replace-$1-$(DOTNET_VERSION): $$(ALL_SCRIPTS)
+ifneq ($(1),watchOS)
 	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET_VERSION): $(shell echo $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3)"
 	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/microsoft.net.sdk.$3
 	$(Q) rm -Rf $(DOTNET_SDK_MANIFESTS_PATH)/*/workloadsets
+endif
 	$(Q) touch $$@
 
 $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET_VERSION) | $(DOTNET_SDK_MANIFESTS_PATH)/$(MACIOS_MANIFEST_VERSION_BAND)
@@ -438,10 +455,21 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
 
+ifeq ($(1),watchOS)
+install-system-$(3): pack-watchos
+	$$(Q) test -d "$(SYSTEM_DOTNET_ROOT)/sdk/$(DOTNET_VERSION)" || { echo "Install .NET SDK $(DOTNET_VERSION) into $(SYSTEM_DOTNET_ROOT) before installing watchOS."; exit 1; }
+	$$(Q) mkdir -p tmpdir/watchos-system-install
+	$$(Q) printf '%s\n' '{"sdk":{"version":"$(DOTNET_VERSION)","rollForward":"disable","allowPrerelease":true}}' > tmpdir/watchos-system-install/global.json
+	$$(Q) cd tmpdir/watchos-system-install && test "$$$$("$(SYSTEM_DOTNET_ROOT)/dotnet" --version)" = "$(DOTNET_VERSION)" || { echo "The system dotnet muxer did not select $(DOTNET_VERSION)."; exit 1; }
+	$$(Q) sudo install -d "$(SYSTEM_DOTNET_ROOT)/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.watchos"
+	$$(Q) sudo install -m 644 Workloads/Microsoft.NET.Sdk.watchOS/WorkloadManifest.json Workloads/Microsoft.NET.Sdk.watchOS/WorkloadManifest.targets Workloads/Microsoft.NET.Sdk.watchOS/WorkloadDependencies.json "$(SYSTEM_DOTNET_ROOT)/sdk-manifests/$(MACIOS_MANIFEST_VERSION_BAND)/microsoft.net.sdk.watchos/"
+	$$(Q) cd tmpdir/watchos-system-install && sudo "$(SYSTEM_DOTNET_ROOT)/dotnet" workload install watchos --skip-manifest-update $$(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) $$(foreach source,$$(NUGET_SOURCES),--source $$(source))
+else
 install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(3)
 	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) $$(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(3) -v diag
+endif
 
 INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
@@ -526,9 +554,14 @@ clean-templates:
 	$(Q) rm -f -- $(TEMPLATE_PACKS)
 
 install-system:
-	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
-	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
-	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) $(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
+ifneq ($(filter-out watchos,$(DOTNET_PLATFORMS_LOWERCASE)),)
+	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh $(filter-out watchos,$(DOTNET_PLATFORMS_LOWERCASE))
+	$(Q) cd $(HOME) && sudo dotnet workload remove $(filter-out watchos,$(DOTNET_PLATFORMS_LOWERCASE))
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) $(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(filter-out watchos,$(DOTNET_PLATFORMS_LOWERCASE)) -v diag
+endif
+ifneq ($(filter watchos,$(DOTNET_PLATFORMS_LOWERCASE)),)
+	$(Q) $(MAKE) install-system-watchos
+endif
 
 all-local:: $(TARGETS)
 
@@ -539,4 +572,3 @@ clean-local::
 .stamp-workaround-for-maccore-issue-2427: $(TOP)/eng/Versions.props $(LOCAL_WORKLOAD_TARGETS) $(INSTALLED_SDK_MANIFESTS)
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
-

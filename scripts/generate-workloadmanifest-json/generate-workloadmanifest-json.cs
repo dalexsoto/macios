@@ -1,9 +1,24 @@
 // arguments are: <platform> <outputPath>
 
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Xml;
 
-var expectedArgumentCount = 10;
+if (args.Length == 3 && args [0] == "--watch-runtime-graph") {
+	var graph = JsonNode.Parse (File.ReadAllText (args [1]))?.AsObject ()
+		?? throw new InvalidDataException ("The SDK runtime graph must be a JSON object.");
+	var runtimes = graph ["runtimes"]?.AsObject ()
+		?? throw new InvalidDataException ("The SDK runtime graph does not contain runtime identifiers.");
+	runtimes ["watchos"] = new JsonObject { ["#import"] = new JsonArray ("unix") };
+	runtimes ["watchos-arm64"] = new JsonObject { ["#import"] = new JsonArray ("watchos", "unix-arm64") };
+	runtimes ["watchossimulator"] = new JsonObject { ["#import"] = new JsonArray ("watchos") };
+	runtimes ["watchossimulator-arm64"] = new JsonObject { ["#import"] = new JsonArray ("watchossimulator", "watchos", "unix-arm64") };
+	File.WriteAllText (args [2], graph.ToJsonString (new JsonSerializerOptions { WriteIndented = true }) + "\n");
+	return 0;
+}
+
+var expectedArgumentCount = 11;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	return 1;
@@ -21,6 +36,7 @@ var currentApiVersion = args [argumentIndex++];
 var supportedApiVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var versionsPropsPath = args [argumentIndex++];
 var ridNoArch = args [argumentIndex++];
+var runtimeVersion = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 
@@ -71,6 +87,17 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	foreach (var rid in runtimeIdentifiers) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{currentApiVersion}\",");
 	}
+	if (platform == "watchOS") {
+		writer.WriteLine ("				\"Microsoft.NETCore.App.Ref.watchOS\",");
+		writer.WriteLine ("				\"Microsoft.NETCore.App.Crossgen2.watchOS\",");
+		writer.WriteLine ("				\"Microsoft.DotNet.ILCompiler.watchOS\",");
+		writer.WriteLine ("				\"Microsoft.DotNet.ILCompiler.watchOS.Host\",");
+		writer.WriteLine ("				\"Microsoft.NET.ILLink.Tasks.watchOS\",");
+		foreach (var rid in runtimeIdentifiers) {
+			writer.WriteLine ($"				\"Microsoft.NETCore.App.Runtime.{rid}\",");
+			writer.WriteLine ($"				\"Microsoft.NETCore.App.Runtime.NativeAOT.{rid}\",");
+		}
+	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net9\"");
 	writer.WriteLine ($"			],");
 	writer.WriteLine ($"			\"extends\": [");
@@ -80,7 +107,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		for (var i = earliestDotNetVersion; i < latestDotNetVersion; i++) {
 			writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net{i}\",");
 		}
-	} else {
+	} else if (platform != "watchOS") {
 		// Hopefully when https://github.com/dotnet/runtime/issues/122264 is done we can use the versioned workload for every version
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}\",");
 		for (var i = earliestDotNetVersion; i < latestDotNetVersion; i++) {
@@ -146,6 +173,34 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			\"kind\": \"framework\",");
 		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");
+	}
+	if (platform == "watchOS") {
+		foreach (var rid in runtimeIdentifiers) {
+			foreach (var prefix in new [] { "Microsoft.NETCore.App.Runtime", "Microsoft.NETCore.App.Runtime.NativeAOT" }) {
+				writer.WriteLine ($"		\"{prefix}.{rid}\": {{");
+				writer.WriteLine ("			\"kind\": \"framework\",");
+				writer.WriteLine ($"			\"version\": \"{runtimeVersion}\"");
+				writer.WriteLine ("		},");
+			}
+		}
+		var aliasedPacks = new [] {
+			(Id: "Microsoft.NETCore.App.Ref.watchOS", Kind: "framework", Host: "any", Package: "Microsoft.NETCore.App.Ref"),
+			(Id: "Microsoft.NETCore.App.Crossgen2.watchOS", Kind: "sdk", Host: "osx-arm64", Package: "Microsoft.NETCore.App.Crossgen2.osx-arm64"),
+			(Id: "Microsoft.DotNet.ILCompiler.watchOS", Kind: "sdk", Host: "any", Package: "Microsoft.DotNet.ILCompiler"),
+			(Id: "Microsoft.DotNet.ILCompiler.watchOS.Host", Kind: "sdk", Host: "osx-arm64", Package: "runtime.osx-arm64.Microsoft.DotNet.ILCompiler"),
+		};
+		foreach (var pack in aliasedPacks) {
+			writer.WriteLine ($"		\"{pack.Id}\": {{");
+			writer.WriteLine ($"			\"kind\": \"{pack.Kind}\",");
+			writer.WriteLine ($"			\"version\": \"{runtimeVersion}\",");
+			writer.WriteLine ($"			\"alias-to\": {{ \"{pack.Host}\": \"{pack.Package}\" }}");
+			writer.WriteLine ("		},");
+		}
+		writer.WriteLine ("		\"Microsoft.NET.ILLink.Tasks.watchOS\": {");
+		writer.WriteLine ("			\"kind\": \"sdk\",");
+		writer.WriteLine ($"			\"version\": \"{versionsPropsTable ["MicrosoftNETILLinkTasksPackageVersion"]}\",");
+		writer.WriteLine ("			\"alias-to\": { \"any\": \"Microsoft.NET.ILLink.Tasks\" }");
+		writer.WriteLine ("		},");
 	}
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net9\": {{");
 	writer.WriteLine ($"			\"kind\": \"template\",");

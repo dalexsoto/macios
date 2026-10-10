@@ -35,11 +35,13 @@
   <PropertyGroup>
     <_RepositoryPath>$(MSBuildThisFileDirectory)../..</_RepositoryPath>
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
+    <RuntimeIdentifierGraphPath Condition="'$(_PlatformName)' == 'watchOS' And '$(PackageOSTargetVersion)' != ''">$(_buildPath)/Microsoft.watchOS.Sdk.$(PackageOSTargetVersion)/data/RuntimeIdentifierGraph.json</RuntimeIdentifierGraphPath>
     <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
     <NupkgPath Condition=" '$(NupkgPath)' == '' ">$([MSBuild]::NormalizeDirectory ('$(_buildPath)\nupkgs\'))</NupkgPath>
     <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests\$(_PlatformName)</BarManifestOutputPath>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">tvOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">watchOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">macOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'MacCatalyst'">MacCatalyst</_AssemblyInfix>
     <LicenseFile>$(_RepositoryPath)/$(PackageLicenseFile)</LicenseFile>

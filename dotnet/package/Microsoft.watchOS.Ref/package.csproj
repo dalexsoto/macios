@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" />
+  <PropertyGroup>
+    <_PlatformName>watchOS</_PlatformName>
+  </PropertyGroup>
+  <Import Project="../microsoft.ref.csproj" />
+</Project>

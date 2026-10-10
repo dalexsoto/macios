@@ -18,8 +18,13 @@ cd "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE"
 
 WORKLOAD_DST="$BUILD_SOURCESDIRECTORY/WorkloadRollback.json"
 
-var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
-DOTNET_PLATFORMS=${var#*=}
+# Optional platform arguments restrict the rollback to the selected workloads.
+if test "$#" -gt 0; then
+  DOTNET_PLATFORMS="$*"
+else
+  var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=DOTNET_PLATFORMS)
+  DOTNET_PLATFORMS=${var#*=}
+fi
 echo "Dotnet platforms are '$DOTNET_PLATFORMS'"
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/$BUILD_REPOSITORY_TITLE/tools/devops" print-variable VARIABLE=MACIOS_MANIFEST_VERSION_BAND)

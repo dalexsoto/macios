@@ -10,6 +10,8 @@
 		<_XamarinTargetPlatformVersionLibrary>@TARGET_PLATFORM_VERSION_LIBRARY@</_XamarinTargetPlatformVersionLibrary>
 		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
 		<_XamarinDotNetVersion>@DOTNET_TFM@</_XamarinDotNetVersion>
+		<_XamarinRuntimePackVersion>@RUNTIME_PACK_VERSION@</_XamarinRuntimePackVersion>
+		<_XamarinILLinkPackVersion>@ILLINK_PACK_VERSION@</_XamarinILLinkPackVersion>
 		<_XamarinPackSuffix>@DOTNET_TFM@_@NUGET_OS_VERSION@</_XamarinPackSuffix>
 		<RecommendedXcodeVersion>@XCODE_VERSION@</RecommendedXcodeVersion>
 		<!-- Keep setting the underscored (private) version too, in case anybody depends on it being set. -->
