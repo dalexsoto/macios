@@ -530,6 +530,10 @@ namespace Xamarin.Linker {
 					new LoadValue ((key, value) => Application.PublishReadyToRunContainerFormat = value),
 					new SaveValue ((key, storage) => saveNonEmpty (key, Application.PublishReadyToRunContainerFormat, storage))
 				)},
+				{ "WatchApplicationEntryPoint", (
+					new LoadValue ((key, value) => Application.WatchApplicationEntryPoint = value),
+					new SaveValue ((key, storage) => saveNonEmpty (key, Application.WatchApplicationEntryPoint, storage))
+				)},
 				{ "ReferenceNativeSymbol", (
 					new LoadValue ((key, value) => {
 						(string symbolType, string symbolMode, string symbol) = SplitString3 (value, ':');

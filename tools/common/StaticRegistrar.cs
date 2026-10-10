@@ -2201,6 +2201,7 @@ namespace Registrar {
 		AutoIndentStringBuilder? declarations; // forward declarations, struct definitions
 		AutoIndentStringBuilder? methods; // c methods that contain the actual implementations
 		AutoIndentStringBuilder? interfaces; // public objective-c @interface declarations
+		AutoIndentStringBuilder? swiftInterfaces;
 		AutoIndentStringBuilder nslog_start = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder nslog_end = new AutoIndentStringBuilder ();
 
@@ -2774,7 +2775,64 @@ namespace Registrar {
 			if (method.IsVariadic)
 				sb.Append (", ...");
 
+			if (App.Platform == ApplePlatform.WatchOS && !isCtor) {
+				var returnType = method.NativeReturnType;
+				if (returnType.Is ("System", "String") || returnType is ArrayType || IsNSObject (returnType) || IsDelegate (returnType)) {
+					var inherited = GetInheritedWatchMethod (method);
+					var owningFamily = HasOwningMethodFamily (method.Selector);
+					var managedInherited = inherited?.Method is not null && !inherited.DeclaringType.IsWrapper
+						&& !IsPlatformType (inherited.DeclaringType.Type);
+					var expectsRetained = inherited is null || managedInherited
+						? inherited?.RetainReturnValue ?? method.RetainReturnValue
+						: owningFamily || (inherited.Method is not null && inherited.RetainReturnValue);
+					if (IsDelegate (returnType)) {
+						if (inherited is not null && !managedInherited && !expectsRetained)
+							throw ErrorHelper.CreateError (99, "The delegate-returning watchOS export '{0}' cannot override a non-owning native declaration because its block marshaller returns an owned copy.", method.DescriptiveMethodName);
+						if (!method.RetainReturnValue)
+							throw ErrorHelper.CreateError (99, "The delegate-returning watchOS export '{0}' must declare [return: Release] on its root method or property getter because its block marshaller returns an owned copy.", method.DescriptiveMethodName);
+					}
+					if (inherited is not null) {
+						if (method.RetainReturnValue != expectsRetained)
+							throw ErrorHelper.CreateError (99, "The watchOS export '{0}' must {1} [return: Release] to match the ownership of the inherited Objective-C selector '{2}'.", method.DescriptiveMethodName, expectsRetained ? "declare" : "omit", method.Selector);
+					}
+					if (inherited is null || managedInherited) {
+						if (owningFamily)
+							sb.Append (" __attribute__((objc_method_family(none)))");
+						if (method.RetainReturnValue)
+							sb.Append (" __attribute__((ns_returns_retained))");
+						else if (owningFamily)
+							sb.Append (" __attribute__((ns_returns_not_retained))");
+					}
+				}
+			}
+
 			return sb.ToString ();
+		}
+
+		static bool HasOwningMethodFamily (string selector)
+		{
+			var name = selector.TrimStart ('_');
+			foreach (var family in new [] { "alloc", "new", "copy", "mutableCopy", "init" }) {
+				if (name.StartsWith (family, StringComparison.Ordinal) && (name.Length == family.Length || name [family.Length] < 'a' || name [family.Length] > 'z'))
+					return true;
+			}
+			return false;
+		}
+
+		ObjCMethod? GetInheritedWatchMethod (ObjCMethod method)
+		{
+			var visited = new HashSet<ObjCType> ();
+			for (var parent = method.DeclaringType.BaseType; parent is not null && visited.Add (parent); parent = parent.BaseType) {
+				var inherited = parent.Methods?.FirstOrDefault (candidate => candidate.Selector == method.Selector && candidate.IsStatic == method.IsStatic);
+				if (inherited is not null)
+					return inherited;
+			}
+			foreach (var protocol in method.DeclaringType.AllProtocolsInHierarchy) {
+				var inherited = protocol.Methods?.FirstOrDefault (candidate => candidate.Selector == method.Selector && candidate.IsStatic == method.IsStatic);
+				if (inherited is not null)
+					return inherited;
+			}
+			return null;
 		}
 
 		void WriteFullName (StringBuilder sb, TypeReference type)
@@ -3168,6 +3226,10 @@ namespace Registrar {
 				} else {
 					iface = interfaces;
 				}
+				var swiftInterface = ReferenceEquals (iface, interfaces) && !@class.IsWrapper ? swiftInterfaces : null;
+				if (swiftInterface is not null && @class.SuperType is not null && @class.SuperType.IsWrapper && !IsPlatformType (@class.SuperType.Type))
+					throw ErrorHelper.CreateError (99, "The public watchOS model '{0}' derives from binding-library type '{1}', whose native superclass header is unavailable to Swift. Use an NSObject-based model that wraps the native object.", @class.Type.FullName, @class.SuperType.Type.FullName);
+				var interfaceStart = iface.StringBuilder.Length;
 
 				if (@class.IsCategory) {
 					var exportedName = EncodeNonAsciiCharacters (@class.BaseType!.ExportedName);
@@ -3267,7 +3329,9 @@ namespace Registrar {
 							case ArgumentSemantic.Assign:
 							case ArgumentSemantic.None:
 							default:
-								iface.Write (", assign");
+								var watchReadonlyObject = App.Platform == ApplePlatform.WatchOS && property.IsReadOnly
+									&& (property.PropertyType.Is ("System", "String") || property.PropertyType is ArrayType || IsNSObject (property.PropertyType));
+								iface.Write (watchReadonlyObject ? ", strong" : ", assign");
 								break;
 							}
 							if (property.IsReadOnly)
@@ -3296,12 +3360,21 @@ namespace Registrar {
 					}
 				}
 
+				if (swiftInterface is not null)
+					swiftInterface.Append (iface.StringBuilder.ToString (interfaceStart, iface.StringBuilder.Length - interfaceStart));
+
 				if (@class.Methods is not null) {
 					foreach (var method in @class.Methods) {
 						try {
 							if (is_protocol)
 								iface.Write (method.IsOptional ? "@optional " : "@required ");
-							iface.WriteLine ("{0};", GetObjCSignature (method, exceptions));
+							var signature = GetObjCSignature (method, exceptions);
+							iface.WriteLine ("{0};", signature);
+							if (swiftInterface is not null && method.Method is not null) {
+								if (is_protocol)
+									swiftInterface.Write (method.IsOptional ? "@optional " : "@required ");
+								swiftInterface.WriteLine ("{0};", signature);
+							}
 						} catch (ProductException ex) {
 							skip.Add (method);
 							exceptions.Add (ex);
@@ -3314,6 +3387,8 @@ namespace Registrar {
 				iface.Unindent ();
 				iface.WriteLine ("@end");
 				iface.WriteLine ();
+				swiftInterface?.WriteLine ("@end");
+				swiftInterface?.WriteLine ();
 
 				if (!is_protocol && !@class.IsWrapper) {
 					var hasClangDiagnostic = @class.IsModel;
@@ -5811,7 +5886,7 @@ namespace Registrar {
 			Generate (header_path, source_path, out initialization_method);
 		}
 
-		public void Generate (string header_path, string source_path, out string initialization_method, string? assembly_source_path = null, string? assembly_object_path = null)
+		public void Generate (string header_path, string source_path, out string initialization_method, string? assembly_source_path = null, string? assembly_object_path = null, string? swift_header_path = null)
 		{
 			if (assembly_source_path is not null && assembly_object_path is not null)
 				throw new ArgumentException ("The assembly table can only be emitted as a source or an object file.");
@@ -5821,6 +5896,7 @@ namespace Registrar {
 			declarations = new AutoIndentStringBuilder ();
 			methods = new AutoIndentStringBuilder ();
 			interfaces = new AutoIndentStringBuilder ();
+			swiftInterfaces = swift_header_path is not null ? new AutoIndentStringBuilder () : null;
 			AutoIndentStringBuilder? assembly_source = null;
 			if (assembly_source_path is not null) {
 				assembly_source = new AutoIndentStringBuilder ();
@@ -5878,6 +5954,11 @@ namespace Registrar {
 				Driver.WriteIfDifferent (App, assembly_object_path, bytes);
 			}
 
+			if (swift_header_path is not null && swiftInterfaces is not null) {
+				var imports = header.ToString ().Split ('\n').Where (line => line.StartsWith ("#import ", StringComparison.Ordinal) || line.StartsWith ("#include ", StringComparison.Ordinal));
+				Driver.WriteIfDifferent (App, swift_header_path, "#pragma once\n" + string.Join ("\n", imports) + "\n" + declarations.ToString () + swiftInterfaces.ToString (), true);
+			}
+
 			header.AppendLine ();
 			header.AppendLine (declarations);
 			header.AppendLine (interfaces);
@@ -5891,6 +5972,8 @@ namespace Registrar {
 			methods = null;
 			interfaces.Dispose ();
 			interfaces = null;
+			swiftInterfaces?.Dispose ();
+			swiftInterfaces = null;
 			assembly_source?.Dispose ();
 			sb.Dispose ();
 		}

@@ -19,6 +19,7 @@ namespace Xamarin.Linker {
 
 			// Always write this item file so that changing registrar modes doesn't leave stale generated registrar sources behind.
 			Configuration.WriteOutputForMSBuild ("_RegistrarFile", new List<MSBuildItem> ());
+			Configuration.WriteOutputForMSBuild ("_WatchRegistrarHeader", new List<MSBuildItem> ());
 
 			switch (app.Registrar) {
 			case RegistrarMode.Dynamic:
@@ -38,6 +39,9 @@ namespace Xamarin.Linker {
 				var dir = Configuration.CacheDirectory;
 				var header = Path.Combine (dir, "registrar.h");
 				var code = Path.Combine (dir, "registrar.mm");
+				var swiftHeader = app.Platform == ApplePlatform.WatchOS && !string.IsNullOrEmpty (app.WatchApplicationEntryPoint)
+					? Path.Combine (dir, "watch-registrar.h")
+					: null;
 				var separateAssemblies = app.Registrar == RegistrarMode.TrimmableStatic && app.XamarinRuntime == XamarinRuntime.CoreCLR;
 				var architecture = Configuration.Abi & Abi.ArchMask;
 				var assemblyObject = separateAssemblies && (architecture == Abi.ARM64 || architecture == Abi.x86_64)
@@ -54,7 +58,9 @@ namespace Xamarin.Linker {
 					Configuration.Application.StaticRegistrar.FilterTrimmedApi (Annotations);
 				}
 #endif
-				Configuration.Application.StaticRegistrar.Generate (header, code, out var initialization_method, assemblySource, assemblyObject);
+				Configuration.Application.StaticRegistrar.Generate (header, code, out var initialization_method, assemblySource, assemblyObject, swiftHeader);
+				if (swiftHeader is not null)
+					Configuration.WriteOutputForMSBuild ("_WatchRegistrarHeader", new List<MSBuildItem> { new MSBuildItem (swiftHeader) });
 
 				var items = new List<MSBuildItem> ();
 				var abi = Configuration.Abi;
