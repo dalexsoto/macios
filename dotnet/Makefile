@@ -7,6 +7,7 @@ DOTNET_SDK_MANIFESTS_PATH=$(DOTNET_DIR)/sdk-manifests
 DOTNET_PACKS_PATH=$(DOTNET_DIR)/packs
 DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
+CUSTOM_RUNTIME_SOURCE=$(if $(CUSTOM_DOTNET),--source $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping,)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(call uppercase,$(platform))_NUGET_VERSION_NO_METADATA)))
@@ -440,7 +441,7 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
 install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(3)
-	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(3) -v diag
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) $$(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(3) -v diag
 
 INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
@@ -470,6 +471,7 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsBundle
 NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET) workload install --skip-manifest-update \
+		$(CUSTOM_RUNTIME_SOURCE) \
 		$(foreach source,$(NUGET_SOURCES),--source $(source)) \
 		--source $(DOTNET_NUPKG_DIR) $(DOTNET_WORKLOAD_VERBOSITY) \
 		$(DOTNET_PLATFORMS_LOWERCASE)
@@ -526,7 +528,7 @@ clean-templates:
 install-system:
 	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
 	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
-	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) $(CUSTOM_RUNTIME_SOURCE) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
 all-local:: $(TARGETS)
 
