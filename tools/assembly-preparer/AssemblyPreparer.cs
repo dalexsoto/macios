@@ -176,7 +176,9 @@ public class AssemblyPreparer : IDisposable {
 			steps.Add (new PreserveProtocolsStep ());
 			steps.Add (new PreserveSmartEnumConversionsStep ());
 			steps.Add (new PreserveBlockCodeStep ());
-			steps.Add (new OptimizeGeneratedCodeStep ());
+		}
+		steps.Add (new OptimizeGeneratedCodeStep ());
+		if (configuration.Application.AreAnyAssembliesTrimmed) {
 			steps.Add (new ApplyPreserveAttributeStep ());
 			steps.Add (new MarkForStaticRegistrarStep ());
 			steps.Add (new MarkNSObjectsStep ());
@@ -189,7 +191,7 @@ public class AssemblyPreparer : IDisposable {
 		//   Export attribute removal still needs the step to detect NSXpcInterface reflection.
 		// * If nothing is being trimmed, the dynamic registrar (which lives in the platform assembly, an SDK
 		//   assembly that's only trimmed when trimming is enabled) can't be removed, so there's nothing to compute.
-		if (configuration.Application.AreAnyAssembliesTrimmed && (!configuration.DynamicRegistrationSupported.HasValue || configuration.Application.TrimExportAttributes != false))
+		if (configuration.Application.Platform == ApplePlatform.WatchOS || (configuration.Application.AreAnyAssembliesTrimmed && (!configuration.DynamicRegistrationSupported.HasValue || configuration.Application.TrimExportAttributes != false)))
 			steps.Add (new DetectApiUsageStep ());
 
 		// PreMarkDispatcher: I don't think we need this one

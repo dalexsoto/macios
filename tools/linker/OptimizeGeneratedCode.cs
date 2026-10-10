@@ -518,25 +518,35 @@ namespace Xamarin.Linker {
 			return type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
 		}
 
-		public static bool OptimizeMethod (OptimizeGeneratedCodeData data, MethodDefinition method)
+		public static bool OptimizeMethod (OptimizeGeneratedCodeData data, MethodDefinition method, bool blockSignaturesOnly = false)
 		{
 			var modified = false;
 
 			if (!method.HasBody)
 				return modified;
 
-			if (method.IsBindingImplOptimizableCode (data.LinkContext)) {
+			if (blockSignaturesOnly && method.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+				return false;
+
+			if (blockSignaturesOnly && data.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS) {
+				// Signature reconstruction is required even for handwritten blocks when dynamic registration is unavailable.
+			} else if (method.IsBindingImplOptimizableCode (data.LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
 			} else if (method.IsGeneratedCode (data.LinkContext) && (
 				GetIsExtensionType (method.DeclaringType)
 				|| IsExport (method))) {
 				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
 			} else {
-				// but it would be too risky to apply on user-generated code
-				return modified;
+				if (data.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
+					blockSignaturesOnly = true;
+				else
+					return modified;
 			}
 
-			if (ProcessProtocolInterfaceStaticConstructor (data, method))
+			if (blockSignaturesOnly && method.DeclaringType.Is ("ObjCRuntime", "BlockLiteral"))
+				return false;
+
+			if (!blockSignaturesOnly && ProcessProtocolInterfaceStaticConstructor (data, method))
 				return true;
 
 			var instructions = method.Body.Instructions;
@@ -545,13 +555,16 @@ namespace Xamarin.Linker {
 				switch (ins.OpCode.Code) {
 				case Code.Newobj:
 				case Code.Call:
+					if (blockSignaturesOnly && (ins.Operand is not MethodReference blockMethod || !blockMethod.DeclaringType.Is (Namespaces.ObjCRuntime, "BlockLiteral")))
+						break;
 					modified |= ProcessCalls (data, method, ins, out var instructionsAddedOrRemoved);
 					i += instructionsAddedOrRemoved;
 					break;
 				}
 			}
 
-			modified |= EliminateDeadCode (data, method);
+			if (!blockSignaturesOnly)
+				modified |= EliminateDeadCode (data, method);
 			return modified;
 		}
 
@@ -982,8 +995,17 @@ namespace Xamarin.Linker {
 				foreach (var method in type.Methods) {
 					if (method.Name != "SetupBlockImpl")
 						continue;
+					if (method.IsStatic || method.Parameters.Count != 4
+						|| !method.Parameters [0].ParameterType.Is ("System", "Delegate")
+						|| !method.Parameters [1].ParameterType.Is ("System", "Delegate")
+						|| !method.Parameters [2].ParameterType.Is ("System", "Boolean")
+						|| !method.Parameters [3].ParameterType.Is ("System", "String"))
+						continue;
 					data.SetupBlockImplDefinition = method;
-					data.SetupBlockImplDefinition.IsPublic = true; // Make sure the method is callable from the optimized code.
+					if (!method.IsPublic) {
+						method.IsPublic = true;
+						data.ModifiedPlatformAssembly = true;
+					}
 					break;
 				}
 				if (data.SetupBlockImplDefinition is null)
@@ -1107,6 +1129,7 @@ namespace Xamarin.Linker {
 
 		public MethodDefinition? SetupBlockImplDefinition;
 		public MethodDefinition? BlockCtorDefinition;
+		public bool ModifiedPlatformAssembly;
 
 		public Application App => LinkContext.App;
 	}

@@ -41,7 +41,7 @@ namespace Xamarin.Bundler {
 			/* Opt.RegisterProtocols                  */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.InlineDynamicRegistrationSupported */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.StaticBlockToDelegateLookup        */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
-			/* Opt.RemoveDynamicRegistrar             */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
+			/* Opt.RemoveDynamicRegistrar             */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.TVOS, ApplePlatform.MacCatalyst, ApplePlatform.WatchOS },
 			/* Opt.TrimArchitectures                  */ new ApplePlatform [] {                    ApplePlatform.MacOSX,                                               },
 			/* Opt.InlineIsARM64CallingConvention     */ new ApplePlatform [] {                                                                                        },
 			/* Opt.SealAndDevirtualize                */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
@@ -204,8 +204,11 @@ namespace Xamarin.Bundler {
 					break; // does not require the linker
 				case Opt.TrimArchitectures:
 					break; // Does not require linker
-				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
+					if (app.Platform == ApplePlatform.WatchOS && app.PrepareAssemblies && app.IsAnyStaticRegistrar)
+						break;
+					goto case Opt.RegisterProtocols;
+				case Opt.RegisterProtocols:
 				case Opt.RedirectClassHandles:
 					if (!app.IsAnyStaticRegistrar) {
 						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (value.Value ? "" : "-"), opt_names [i]));

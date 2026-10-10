@@ -1497,6 +1497,11 @@ namespace Xamarin.Linker {
 			SaveAssembly (CurrentAssembly);
 		}
 
+		public void SavePlatformAssembly ()
+		{
+			SaveAssembly (PlatformAssembly);
+		}
+
 		void SaveAssembly (AssemblyDefinition assembly)
 		{
 			if (assembly != CurrentAssembly && assembly != PlatformAssembly)

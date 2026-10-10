@@ -37,8 +37,40 @@ namespace MonoTouch.Tuner {
 
 		void Process (AssemblyDefinition assembly)
 		{
+			if (App.Platform == Xamarin.Utils.ApplePlatform.WatchOS) {
+				ValidateWatchDynamicCalls (assembly);
+				return;
+			}
 			if (Optimizations.RemoveDynamicRegistrar != false)
 				dynamic_registration_support_required |= RequiresDynamicRegistrar (assembly, Optimizations.RemoveDynamicRegistrar == true);
+		}
+
+		void ValidateWatchDynamicCalls (AssemblyDefinition assembly)
+		{
+			if (!Profile.IsOrReferencesProductAssembly (assembly))
+				return;
+			var isProduct = Profile.IsProductAssembly (assembly);
+			foreach (var type in assembly.MainModule.GetTypes ()) {
+				if (isProduct && type.Namespace == "ObjCRuntime" && (type.Name == "BlockLiteral" || type.Name == "Runtime"))
+					continue;
+				foreach (var method in type.Methods) {
+					if (!method.HasBody)
+						continue;
+					foreach (var instruction in method.Body.Instructions) {
+						if (instruction.Operand is not MethodReference called || called.DeclaringType.Namespace != "ObjCRuntime")
+							continue;
+						var requiresDynamicRegistration = called.DeclaringType.Name switch {
+							"Runtime" => called.Name == "ConnectMethod" || called.Name == "RegisterAssembly",
+							"TypeConverter" => called.Name == "ToManaged",
+							"BlockLiteral" => called.Name == "SetupBlock" || called.Name == "SetupBlockUnsafe"
+								|| (called.Name == ".ctor" && called.Parameters.Any (parameter => parameter.ParameterType.Is ("System", "Type") || parameter.ParameterType.Is ("System.Reflection", "MethodInfo"))),
+							_ => false,
+						};
+						if (requiresDynamicRegistration)
+							Report (ErrorHelper.CreateError (99, "watchOS cannot call '{0}' from '{1}': dynamic Objective-C registration is unavailable. Use statically exported methods and a block with a compile-time signature.", called.FullName, method.FullName));
+					}
+				}
+			}
 		}
 
 		// If certain conditions are met, we can optimize away the code for the dynamic registrar.

@@ -14,7 +14,8 @@ namespace Xamarin.Linker.Steps {
 
 		protected override bool IsActiveFor (AssemblyDefinition assembly)
 		{
-			return OptimizeGeneratedCode.IsActiveFor (assembly, Configuration.Profile, DerivedLinkContext.Annotations);
+			return OptimizeGeneratedCode.IsActiveFor (assembly, Configuration.Profile, DerivedLinkContext.Annotations)
+				|| (App.Platform == Xamarin.Utils.ApplePlatform.WatchOS && App.PrepareAssemblies && !App.DynamicRegistrationSupported && Configuration.Profile.IsOrReferencesProductAssembly (assembly));
 		}
 
 		protected override bool ProcessType (TypeDefinition type)
@@ -30,7 +31,13 @@ namespace Xamarin.Linker.Steps {
 					Optimizations = App.Optimizations,
 				};
 			}
-			return OptimizeGeneratedCode.OptimizeMethod (data, method);
+			var blockSignaturesOnly = !OptimizeGeneratedCode.IsActiveFor (method.Module.Assembly, Configuration.Profile, DerivedLinkContext.Annotations);
+			var modified = OptimizeGeneratedCode.OptimizeMethod (data, method, blockSignaturesOnly);
+			if (data.ModifiedPlatformAssembly) {
+				abr.SavePlatformAssembly ();
+				data.ModifiedPlatformAssembly = false;
+			}
+			return modified;
 		}
 	}
 }

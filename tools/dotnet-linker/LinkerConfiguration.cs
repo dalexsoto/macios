@@ -803,6 +803,10 @@ namespace Xamarin.Linker {
 			}
 
 			// Optimizations.Parse can only be called after setting ErrorHelper.Platform
+			if (Platform == ApplePlatform.WatchOS) {
+				foreach (var code in new [] { 2106, 2107, 2387, 4174 })
+					ErrorHelper.SetWarningLevel (Application, ErrorHelper.WarningLevel.Error, code);
+			}
 			if (!StringUtils.IsNullOrEmpty (user_optimize_flags)) {
 				var messages = new List<ProductException> ();
 				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
