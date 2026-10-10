@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "watchOS Binding Library",
+  "description": "An Objective-C binding library for .NET watchOS applications.",
+  "symbols/Framework/choices/net11.0-watchos/description": ".NET 11 watchOS"
+}

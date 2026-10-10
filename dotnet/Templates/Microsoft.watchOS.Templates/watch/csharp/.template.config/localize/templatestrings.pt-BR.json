@@ -1,0 +1,11 @@
+{
+  "author": "Microsoft",
+  "name": "watchOS Application",
+  "description": "A .NET watchOS application with C# application logic and a SwiftUI interface.",
+  "symbols/bundleId/displayName": "Bundle ID",
+  "symbols/bundleId/description": "Overrides CFBundleIdentifier in Info.plist.",
+  "symbols/minOSVersion/displayName": "Minimum OS version",
+  "symbols/minOSVersion/description": "The minimum supported watchOS version.",
+  "symbols/Framework/description": "The target framework.",
+  "symbols/Framework/choices/net11.0-watchos/description": ".NET 11 watchOS"
+}

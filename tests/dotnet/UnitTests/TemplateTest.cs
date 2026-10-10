@@ -112,6 +112,9 @@ namespace Xamarin.Tests {
 			new TemplateInfo (ApplePlatform.TVOS, "tvoslib", TemplateLanguage.VisualBasic),
 			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding", TemplateLanguage.CSharp),
 			new TemplateInfo (ApplePlatform.TVOS, "tvostest", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.WatchOS, "watch", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.WatchOS, "watchoslib", TemplateLanguage.CSharp),
+			new TemplateInfo (ApplePlatform.WatchOS, "watchosbinding", TemplateLanguage.CSharp),
 
 			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", TemplateLanguage.CSharp, execute: true),
 			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", TemplateLanguage.VisualBasic, execute: true),
@@ -248,6 +251,111 @@ namespace Xamarin.Tests {
 				var appExecutable = GetNativeExecutable (platform, appPath);
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
+		}
+
+		[TestCase ("UseMonoRuntime", "true", "watchOS applications support CoreCLR and NativeAOT, not Mono")]
+		[TestCase ("UseInterpreter", "true", "watchOS CoreCLR already includes its interpreter")]
+		[TestCase ("RuntimeIdentifier", "watchos-arm64_32", "watchOS only supports the watchos-arm64 and watchossimulator-arm64")]
+		[TestCase ("RuntimeIdentifier", "watchossimulator-x64", "watchOS only supports the watchos-arm64 and watchossimulator-arm64")]
+		[TestCase ("IsAppExtension", "true", "modern single-target watch applications")]
+		[TestCase ("DebuggerSupport", "true", "Managed debugging and Hot Reload are not supported")]
+		[TestCase ("MtouchHttpClientHandler", "CFNetworkHandler", "watchOS only supports NSUrlSessionHandler")]
+		[TestCase ("WatchApplicationEntryPoint", "invalid:name", "WatchApplicationEntryPoint must be a C identifier")]
+		[TestCase ("EnableDefaultwatchOSItems", "false", "requires a SwiftCompile source")]
+		[TestCase ("PrepareAssemblies", "false", "watchOS requires PrepareAssemblies=true")]
+		public void WatchRejectsUnsupportedConfiguration (string property, string value, string expectedError)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			var properties = GetDefaultProperties ();
+			properties [property] = value;
+			var result = DotNet.AssertBuildFailure (project, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
+			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (error => error.Message?.Contains (expectedError, StringComparison.Ordinal) == true));
+		}
+
+		[Test]
+		public void WatchSwiftIncrementalAndClean ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			var properties = GetDefaultProperties ("watchossimulator-arm64");
+			DotNet.AssertBuild (project, properties);
+			var intermediate = Path.Combine (directory, "obj", "Debug", Configuration.DotNetTfm + "-watchos", "watchossimulator-arm64");
+			var swiftObject = Path.Combine (intermediate, "swift", "WatchApplication.o");
+			var generatedHeader = Path.Combine (intermediate, "swift", "WatchApplication-Swift.h");
+			Assert.That (File.Exists (swiftObject) && File.Exists (generatedHeader), Is.True);
+			var originalTime = File.GetLastWriteTimeUtc (swiftObject);
+			DotNet.AssertBuild (project, properties);
+			Assert.That (File.GetLastWriteTimeUtc (swiftObject), Is.EqualTo (originalTime), "No-op build must not recompile Swift");
+
+			var source = Path.Combine (directory, "App.swift");
+			File.WriteAllText (source, File.ReadAllText (source).Replace ("spacing: 12", "spacing: 13", StringComparison.Ordinal));
+			DotNet.AssertBuild (project, properties);
+			Assert.That (File.GetLastWriteTimeUtc (swiftObject), Is.GreaterThan (originalTime), "Swift edit must rebuild its object");
+			var editedTime = File.GetLastWriteTimeUtc (swiftObject);
+			DotNet.AssertBuild (project, properties);
+			Assert.That (File.GetLastWriteTimeUtc (swiftObject), Is.EqualTo (editedTime), "Unchanged Swift export header must not cause repeated compilation");
+			var resource = Path.Combine (directory, "PrivacyInfo.xcprivacy");
+			File.AppendAllText (resource, "\n");
+			DotNet.AssertBuild (project, properties);
+			Assert.That (File.GetLastWriteTimeUtc (swiftObject), Is.EqualTo (editedTime), "Resource edit must not recompile Swift");
+			DotNet.AssertBuild (project, properties, target: "Clean");
+			Assert.That (Directory.Exists (Path.Combine (intermediate, "swift")), Is.False, "Clean must remove Swift object, headers and module cache");
+		}
+
+		[Test]
+		public void WatchRejectsRuntimeBlockSignature ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			var program = Path.Combine (directory, "Program.cs");
+			File.WriteAllText (program, File.ReadAllText (program).Replace ("WatchApplication.Run (", "UnsupportedBlock.Create (typeof (UnsupportedBlock).GetMethod (\"Callback\")!); WatchApplication.Run (", StringComparison.Ordinal));
+			File.WriteAllText (Path.Combine (directory, "UnsupportedBlock.cs"), """
+				using System;
+				using System.Reflection;
+				using System.Runtime.InteropServices;
+				using ObjCRuntime;
+				public static class UnsupportedBlock {
+					[UnmanagedCallersOnly]
+					public static void Callback (IntPtr block) { }
+					public static unsafe void Create (MethodInfo method) {
+						using var block = new BlockLiteral ((delegate* unmanaged<IntPtr, void>) &Callback, new object (), method);
+					}
+				}
+				""");
+			var properties = GetDefaultProperties ("watchossimulator-arm64");
+			properties ["AllowUnsafeBlocks"] = "true";
+			var result = DotNet.AssertBuildFailure (project, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
+			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (error => error.Message?.Contains ("dynamic Objective-C registration is unavailable", StringComparison.Ordinal) == true));
+		}
+
+		[Test]
+		public void WatchRejectsIncorrectNativeOwnership ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			File.WriteAllText (Path.Combine (directory, "InvalidCopy.cs"), """
+				using Foundation;
+				using ObjCRuntime;
+				[Register ("WatchInvalidCopy")]
+				public sealed class InvalidCopy : NSObject, INSCopying {
+					[Export ("copyWithZone:")]
+					public NSObject Copy (NSZone? zone) => new InvalidCopy ();
+				}
+				""");
+			var result = DotNet.AssertBuildFailure (project, GetDefaultProperties ("watchossimulator-arm64"));
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
+			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (error => error.Message?.Contains ("must declare [return: Release]", StringComparison.Ordinal) == true));
 		}
 
 		[Test]

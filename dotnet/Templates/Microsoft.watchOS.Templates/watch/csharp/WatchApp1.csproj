@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0-watchos</TargetFramework>
+    <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">WatchApp1</RootNamespace>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>minOSVersion</SupportedOSPlatformVersion>
+    <UseMonoRuntime>false</UseMonoRuntime>
+    <WatchApplicationEntryPoint>dotnet_watch_application_main</WatchApplicationEntryPoint>
+    <TrimMode Condition="'$(Configuration)' == 'Release' And '$(PublishAot)' != 'true'">full</TrimMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <BundleResource Include="PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+  </ItemGroup>
+</Project>

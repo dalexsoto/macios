@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": ["watchOS", "Mobile"],
+  "groupIdentity": "Microsoft.watchOS.WatchApp",
+  "identity": "Microsoft.watchOS.WatchApp.CSharp",
+  "name": "watchOS Application",
+  "description": "A .NET watchOS application with C# application logic and a SwiftUI interface.",
+  "shortName": "watch",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "WatchApp1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [{"path": "WatchApp1.csproj"}],
+  "symbols": {
+    "bundleId": {
+      "type": "parameter",
+      "displayName": "Bundle ID",
+      "description": "Overrides CFBundleIdentifier in Info.plist.",
+      "datatype": "string",
+      "replaces": "com.companyname.WatchApp1"
+    },
+    "minOSVersion": {
+      "type": "parameter",
+      "displayName": "Minimum OS version",
+      "description": "The minimum supported watchOS version.",
+      "datatype": "string",
+      "replaces": "minOSVersion",
+      "defaultValue": "26.0"
+    },
+    "Framework": {
+      "type": "parameter",
+      "description": "The target framework.",
+      "datatype": "choice",
+      "choices": [{"choice": "net11.0-watchos", "description": ".NET 11 watchOS"}],
+      "replaces": "net11.0-watchos",
+      "defaultValue": "net11.0-watchos"
+    }
+  },
+  "defaultName": "WatchApp1"
+}

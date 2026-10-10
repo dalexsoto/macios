@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "watchOS Class Library",
+  "description": "A .NET class library for watchOS applications.",
+  "symbols/Framework/choices/net11.0-watchos/description": ".NET 11 watchOS"
+}
