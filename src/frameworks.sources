@@ -2459,6 +2459,8 @@ MACCATALYST_FRAMEWORKS = \
 # Compute the SOURCES variables.
 #
 
+WATCHOS_FRAMEWORKS = CoreFoundation CoreGraphics Foundation Security UIKit WatchKit
+
 IOS_DOTNET_CORE_SOURCES      := $(sort $(foreach framework,$(call uppercase,$(IOS_FRAMEWORKS)),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES))
 IOS_DOTNET_API_SOURCES       := $(sort $(foreach framework,$(call uppercase,$(IOS_FRAMEWORKS)),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES))
 IOS_DOTNET_APIS              := $(sort $(foreach framework,$(call lowercase,$(IOS_FRAMEWORKS)),$(framework).cs)                  $(IOS_DOTNET_API_SOURCES))

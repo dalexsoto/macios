@@ -741,6 +741,7 @@ static partial class BindingSyntaxFactory {
 		(string Namespace, string Classname)? caller = platform switch {
 			PlatformName.iOS => ("UIKit", "UIApplication"),
 			PlatformName.TvOS => ("UIKit", "UIApplication"),
+			PlatformName.WatchOS => ("WatchKit", "WatchApplication"),
 			PlatformName.MacCatalyst => ("UIKit", "UIApplication"),
 			PlatformName.MacOSX => ("AppKit", "NSApplication"),
 			_ => null

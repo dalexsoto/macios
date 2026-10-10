@@ -40,6 +40,8 @@ public static class PlatformNameExtensionsBgen {
 			return ApplePlatform.iOS;
 		case PlatformName.TvOS:
 			return ApplePlatform.TVOS;
+		case PlatformName.WatchOS:
+			return ApplePlatform.WatchOS;
 		case PlatformName.MacCatalyst:
 			return ApplePlatform.MacCatalyst;
 		case PlatformName.MacOSX:

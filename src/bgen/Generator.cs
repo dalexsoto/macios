@@ -2465,6 +2465,9 @@ public partial class Generator : IMemberGatherer {
 		case PlatformName.TvOS:
 			frameworkList = Frameworks.tvosframeworks;
 			break;
+		case PlatformName.WatchOS:
+			frameworkList = Frameworks.watchosframeworks;
+			break;
 		case PlatformName.MacOSX:
 			frameworkList = Frameworks.macosframeworks;
 			break;
@@ -2506,6 +2509,8 @@ public partial class Generator : IMemberGatherer {
 		// If there are no unavailable attributes for a platform on a type
 		// add a supported introduced (without version) since it was "unlisted"
 		foreach (var platform in BindingTouch.AllPlatformNames) {
+			if (platform == PlatformName.WatchOS && CurrentPlatform != PlatformName.WatchOS)
+				continue;
 			if (!PlatformMarkedUnavailable (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
 				availability.Add (AttributeFactory.CreateNoVersionSupportedAttribute (platform));
 			}
@@ -3563,10 +3568,12 @@ public partial class Generator : IMemberGatherer {
 		string s;
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
-		case PlatformName.WatchOS:
 		case PlatformName.TvOS:
 		case PlatformName.MacCatalyst:
 			s = $"global::UIKit.UIApplication.EnsureUIThread ();";
+			break;
+		case PlatformName.WatchOS:
+			s = "global::WatchKit.WatchApplication.EnsureUIThread ();";
 			break;
 		case PlatformName.MacOSX:
 			s = $"global::AppKit.NSApplication.EnsureUIThread ();";
@@ -5647,6 +5654,8 @@ public partial class Generator : IMemberGatherer {
 
 	public void PrintXpcInterfaceAttribute (ICustomAttributeProvider mi)
 	{
+		if (BindingTouch.CurrentPlatform == PlatformName.WatchOS)
+			return;
 		if (!AttributeManager.HasAttribute<XpcInterfaceAttribute> (mi))
 			return;
 
@@ -5854,6 +5863,9 @@ public partial class Generator : IMemberGatherer {
 		case PlatformName.TvOS:
 			platformName = "tvos";
 			return true;
+		case PlatformName.WatchOS:
+			platformName = "watchos";
+			return true;
 		default:
 			throw new BindingException (1047, CurrentPlatform);
 		}
@@ -5978,6 +5990,8 @@ public partial class Generator : IMemberGatherer {
 			return "Microsoft.macOS";
 		case ApplePlatform.TVOS:
 			return "Microsoft.tvOS";
+		case ApplePlatform.WatchOS:
+			return "Microsoft.watchOS";
 		case ApplePlatform.MacCatalyst:
 			return "Microsoft.MacCatalyst";
 		default:

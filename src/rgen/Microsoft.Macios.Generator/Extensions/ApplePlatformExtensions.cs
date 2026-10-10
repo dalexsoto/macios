@@ -15,6 +15,7 @@ public static class ApplePlatformExtensions {
 	public static string? ToPlatformDefine (this ApplePlatform self) => self switch {
 		ApplePlatform.iOS => "IOS",
 		ApplePlatform.TVOS => "TVOS",
+		ApplePlatform.WatchOS => "WATCHOS",
 		ApplePlatform.MacOSX => "MONOMAC",
 		ApplePlatform.MacCatalyst => "__MACCATALYST__",
 		_ => null

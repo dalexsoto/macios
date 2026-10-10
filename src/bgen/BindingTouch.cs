@@ -44,7 +44,7 @@ using System.Threading;
 
 public class BindingTouch : IDisposable, IToolLog {
 	public static ApplePlatform [] AllPlatforms = new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst };
-	public static PlatformName [] AllPlatformNames = new PlatformName [] { PlatformName.iOS, PlatformName.MacOSX, PlatformName.TvOS, PlatformName.MacCatalyst };
+	public static PlatformName [] AllPlatformNames = new PlatformName [] { PlatformName.iOS, PlatformName.MacOSX, PlatformName.TvOS, PlatformName.MacCatalyst, PlatformName.WatchOS };
 	public PlatformName CurrentPlatform;
 	public ApplePlatform Platform { get => CurrentPlatform.AsApplePlatform (); }
 	public bool BindThirdPartyLibrary = true;

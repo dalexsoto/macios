@@ -46,6 +46,7 @@ public class LibraryInfo {
 			switch (currentPlatform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
 				return true;

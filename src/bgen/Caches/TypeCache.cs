@@ -48,20 +48,20 @@ public class TypeCache {
 
 	/* Different binding types */
 	public Type DictionaryContainerType { get; }
-	public Type AudioBuffers { get; }
-	public Type AVCaptureWhiteBalanceGains { get; }
+	public Type? AudioBuffers { get; }
+	public Type? AVCaptureWhiteBalanceGains { get; }
 	public Type CFRunLoop { get; }
 	public Type CGAffineTransform { get; }
-	public Type CGColor { get; }
-	public Type CGColorSpace { get; }
-	public Type CGContext { get; }
-	public Type CGPDFDocument { get; }
-	public Type CGPDFPage { get; }
-	public Type CGGradient { get; }
-	public Type CGImage { get; }
-	public Type CGImageSource { get; }
-	public Type CGLayer { get; }
-	public Type CGPath { get; }
+	public Type? CGColor { get; }
+	public Type? CGColorSpace { get; }
+	public Type? CGContext { get; }
+	public Type? CGPDFDocument { get; }
+	public Type? CGPDFPage { get; }
+	public Type? CGGradient { get; }
+	public Type? CGImage { get; }
+	public Type? CGImageSource { get; }
+	public Type? CGLayer { get; }
+	public Type? CGPath { get; }
 	public Type CGVector { get; }
 	public Type DispatchQueue { get; }
 	public Type DispatchData { get; }
@@ -70,17 +70,17 @@ public class TypeCache {
 	public Type NSString { get; }
 	public Type NSValue { get; }
 	public Type NSZone { get; }
-	public Type SCNMatrix4 { get; }
-	public Type SCNVector3 { get; }
-	public Type SCNVector4 { get; }
+	public Type? SCNMatrix4 { get; }
+	public Type? SCNVector3 { get; }
+	public Type? SCNVector4 { get; }
 	public Type SecAccessControl { get; }
 	public Type SecIdentity { get; }
 	public Type SecKey { get; }
 	public Type SecTrust { get; }
-	public Type SecProtocolMetadata { get; }
-	public Type SecProtocolOptions { get; }
-	public Type SecTrust2 { get; }
-	public Type SecIdentity2 { get; }
+	public Type? SecProtocolMetadata { get; }
+	public Type? SecProtocolOptions { get; }
+	public Type? SecTrust2 { get; }
+	public Type? SecIdentity2 { get; }
 	public Type CoreGraphics_CGPoint { get; }
 	public Type CoreGraphics_CGRect { get; }
 	public Type CoreGraphics_CGSize { get; }
@@ -144,10 +144,10 @@ public class TypeCache {
 	public Type? PMPrintSession { get; }
 	public Type? PMPrintSettings { get; }
 
-	public Type NWEndpoint { get; }
-	public Type NWInterface { get; }
-	public Type NWParameters { get; }
-	public Type NWProxyConfig { get; }
+	public Type? NWEndpoint { get; }
+	public Type? NWInterface { get; }
+	public Type? NWParameters { get; }
+	public Type? NWProxyConfig { get; }
 
 	// optional if UIKit is present
 	public Type? UIOffset { get; }
@@ -216,20 +216,20 @@ public class TypeCache {
 
 		DictionaryContainerType = Lookup (platformAssembly, "Foundation", "DictionaryContainer");
 		// misplaced API, it's really in CoreAudio (now available everywhere)
-		AudioBuffers = Lookup (platformAssembly, "AudioToolbox", "AudioBuffers");
-		AVCaptureWhiteBalanceGains = Lookup (platformAssembly, "AVFoundation", "AVCaptureWhiteBalanceGains");
+		AudioBuffers = ConditionalLookup (platformAssembly, "AudioToolbox", "AudioBuffers", currentPlatform == PlatformName.WatchOS);
+		AVCaptureWhiteBalanceGains = ConditionalLookup (platformAssembly, "AVFoundation", "AVCaptureWhiteBalanceGains", currentPlatform == PlatformName.WatchOS);
 		CFRunLoop = Lookup (platformAssembly, "CoreFoundation", "CFRunLoop");
 		CGAffineTransform = Lookup (platformAssembly, "CoreGraphics", "CGAffineTransform");
-		CGColor = Lookup (platformAssembly, "CoreGraphics", "CGColor");
-		CGColorSpace = Lookup (platformAssembly, "CoreGraphics", "CGColorSpace");
-		CGContext = Lookup (platformAssembly, "CoreGraphics", "CGContext");
-		CGPDFDocument = Lookup (platformAssembly, "CoreGraphics", "CGPDFDocument");
-		CGPDFPage = Lookup (platformAssembly, "CoreGraphics", "CGPDFPage");
-		CGGradient = Lookup (platformAssembly, "CoreGraphics", "CGGradient");
-		CGImage = Lookup (platformAssembly, "CoreGraphics", "CGImage");
-		CGImageSource = Lookup (platformAssembly, "ImageIO", "CGImageSource");
-		CGLayer = Lookup (platformAssembly, "CoreGraphics", "CGLayer");
-		CGPath = Lookup (platformAssembly, "CoreGraphics", "CGPath");
+		CGColor = ConditionalLookup (platformAssembly, "CoreGraphics", "CGColor", currentPlatform == PlatformName.WatchOS);
+		CGColorSpace = ConditionalLookup (platformAssembly, "CoreGraphics", "CGColorSpace", currentPlatform == PlatformName.WatchOS);
+		CGContext = ConditionalLookup (platformAssembly, "CoreGraphics", "CGContext", currentPlatform == PlatformName.WatchOS);
+		CGPDFDocument = ConditionalLookup (platformAssembly, "CoreGraphics", "CGPDFDocument", currentPlatform == PlatformName.WatchOS);
+		CGPDFPage = ConditionalLookup (platformAssembly, "CoreGraphics", "CGPDFPage", currentPlatform == PlatformName.WatchOS);
+		CGGradient = ConditionalLookup (platformAssembly, "CoreGraphics", "CGGradient", currentPlatform == PlatformName.WatchOS);
+		CGImage = ConditionalLookup (platformAssembly, "CoreGraphics", "CGImage", currentPlatform == PlatformName.WatchOS);
+		CGImageSource = ConditionalLookup (platformAssembly, "ImageIO", "CGImageSource", currentPlatform == PlatformName.WatchOS);
+		CGLayer = ConditionalLookup (platformAssembly, "CoreGraphics", "CGLayer", currentPlatform == PlatformName.WatchOS);
+		CGPath = ConditionalLookup (platformAssembly, "CoreGraphics", "CGPath", currentPlatform == PlatformName.WatchOS);
 		CGVector = Lookup (platformAssembly, "CoreGraphics", "CGVector");
 		DispatchQueue = Lookup (platformAssembly, "CoreFoundation", "DispatchQueue");
 		DispatchData = Lookup (platformAssembly, "CoreFoundation", "DispatchData");
@@ -238,17 +238,17 @@ public class TypeCache {
 		NSString = Lookup (platformAssembly, "Foundation", "NSString");
 		NSValue = Lookup (bindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSValue");
 		NSZone = Lookup (platformAssembly, "Foundation", "NSZone");
-		SCNVector3 = Lookup (platformAssembly, "SceneKit", "SCNVector3");
-		SCNVector4 = Lookup (platformAssembly, "SceneKit", "SCNVector4");
-		SCNMatrix4 = Lookup (platformAssembly, "SceneKit", "SCNMatrix4");
+		SCNVector3 = ConditionalLookup (platformAssembly, "SceneKit", "SCNVector3", currentPlatform == PlatformName.WatchOS);
+		SCNVector4 = ConditionalLookup (platformAssembly, "SceneKit", "SCNVector4", currentPlatform == PlatformName.WatchOS);
+		SCNMatrix4 = ConditionalLookup (platformAssembly, "SceneKit", "SCNMatrix4", currentPlatform == PlatformName.WatchOS);
 		SecAccessControl = Lookup (platformAssembly, "Security", "SecAccessControl");
 		SecIdentity = Lookup (platformAssembly, "Security", "SecIdentity");
 		SecKey = Lookup (platformAssembly, "Security", "SecKey");
 		SecTrust = Lookup (platformAssembly, "Security", "SecTrust");
-		SecProtocolOptions = Lookup (platformAssembly, "Security", "SecProtocolOptions");
-		SecProtocolMetadata = Lookup (platformAssembly, "Security", "SecProtocolMetadata");
-		SecTrust2 = Lookup (platformAssembly, "Security", "SecTrust2");
-		SecIdentity2 = Lookup (platformAssembly, "Security", "SecIdentity2");
+		SecProtocolOptions = ConditionalLookup (platformAssembly, "Security", "SecProtocolOptions", currentPlatform == PlatformName.WatchOS);
+		SecProtocolMetadata = ConditionalLookup (platformAssembly, "Security", "SecProtocolMetadata", currentPlatform == PlatformName.WatchOS);
+		SecTrust2 = ConditionalLookup (platformAssembly, "Security", "SecTrust2", currentPlatform == PlatformName.WatchOS);
+		SecIdentity2 = ConditionalLookup (platformAssembly, "Security", "SecIdentity2", currentPlatform == PlatformName.WatchOS);
 		CoreGraphics_CGRect = Lookup (platformAssembly, "CoreGraphics", "CGRect");
 		CoreGraphics_CGPoint = Lookup (platformAssembly, "CoreGraphics", "CGPoint");
 		CoreGraphics_CGSize = Lookup (platformAssembly, "CoreGraphics", "CGSize");
@@ -313,10 +313,10 @@ public class TypeCache {
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
-		NWEndpoint = Lookup (platformAssembly, "Network", "NWEndpoint");
-		NWInterface = Lookup (platformAssembly, "Network", "NWInterface");
-		NWParameters = Lookup (platformAssembly, "Network", "NWParameters");
-		NWProxyConfig = Lookup (platformAssembly, "Network", "NWProxyConfig");
+		NWEndpoint = ConditionalLookup (platformAssembly, "Network", "NWEndpoint", currentPlatform == PlatformName.WatchOS);
+		NWInterface = ConditionalLookup (platformAssembly, "Network", "NWInterface", currentPlatform == PlatformName.WatchOS);
+		NWParameters = ConditionalLookup (platformAssembly, "Network", "NWParameters", currentPlatform == PlatformName.WatchOS);
+		NWProxyConfig = ConditionalLookup (platformAssembly, "Network", "NWProxyConfig", currentPlatform == PlatformName.WatchOS);
 
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
@@ -328,13 +328,17 @@ public class TypeCache {
 			[CGAffineTransform] = "CGAffineTransform",
 			[NSRange] = "Range",
 			[CGVector] = "CGVector",
-			[SCNMatrix4] = "SCNMatrix4",
-			[SCNVector3] = "Vector",
-			[SCNVector4] = "Vector",
 			[CoreGraphics_CGPoint] = "CGPoint",
 			[CoreGraphics_CGRect] = "CGRect",
 			[CoreGraphics_CGSize] = "CGSize"
 		};
+
+		if (SCNMatrix4 is not null)
+			nsvalueCreateMap [SCNMatrix4] = "SCNMatrix4";
+		if (SCNVector3 is not null)
+			nsvalueCreateMap [SCNVector3] = "Vector";
+		if (SCNVector4 is not null)
+			nsvalueCreateMap [SCNVector4] = "Vector";
 
 		if (CLLocationCoordinate2D is not null)
 			nsvalueCreateMap [CLLocationCoordinate2D] = "MKCoordinate";

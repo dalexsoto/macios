@@ -58,7 +58,7 @@ install-bgen: $(DOTNET_BGEN_TARGETS)
 include $(TOP)/scripts/generate-frameworks/fragment.mk
 $(DOTNET_BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator $(GENERATE_FRAMEWORKS)
 	@mkdir -p $(dir $@)
-	$(Q) $(GENERATE_FRAMEWORKS_EXEC) $@.tmp '$(IOS_FRAMEWORKS)' '$(MACOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' '$(MACCATALYST_FRAMEWORKS)'
+	$(Q) $(GENERATE_FRAMEWORKS_EXEC) $@.tmp '$(IOS_FRAMEWORKS)' '$(MACOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' '$(MACCATALYST_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)'
 	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $@ has been automatically re-generated; please commit the changes."; exit 1; fi
 	$(Q) mv $@.tmp $@
 
@@ -77,4 +77,3 @@ $(RSP_DIR)/dotnet/%-defines-dotnet.rsp: frameworks.sources Makefile.generator $(
 
 $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: bgen/Attributes.cs bgen/PlatformName.cs bgen/DotNetGlobals.cs Makefile.generator | $(DOTNET_BUILD_DIR)
 	$(Q_DOTNET_BUILD) $(DOTNET_CSC) $(DOTNET_FLAGS) -d:BINDING_ATTRIBUTES_DLL -out:$@ bgen/Attributes.cs bgen/PlatformName.cs bgen/DotNetGlobals.cs
-

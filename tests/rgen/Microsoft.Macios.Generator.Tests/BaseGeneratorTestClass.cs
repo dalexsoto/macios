@@ -25,6 +25,7 @@ public class BaseGeneratorTestClass {
 	readonly Dictionary<TargetFramework, string []> platformDefines = new () {
 		{ TargetFramework.DotNet_iOS, new [] { "__IOS__" } },
 		{ TargetFramework.DotNet_tvOS, new [] { "__TVOS__" } },
+		{ TargetFramework.GetTargetFramework (ApplePlatform.WatchOS), new [] { "__WATCHOS__" } },
 		{ TargetFramework.DotNet_macOS, new [] { "__MACOS__" } },
 		{ TargetFramework.DotNet_MacCatalyst, new [] { "__MACCATALYST__" } },
 	};

@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 
 try {
-	var actualArgumentCount = 5;
+	var actualArgumentCount = 6;
 	if (args.Length != actualArgumentCount) {
 		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length} arguments");
 		return 1;
@@ -17,17 +17,20 @@ try {
 	var macosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var tvosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var maccatalystframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var watchosframeworks = args [idx++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var allframeworks = new string [] [] {
 		iosframeworks,
 		macosframeworks,
 		tvosframeworks,
 		maccatalystframeworks,
+		watchosframeworks,
 	};
 	var names = new string [] {
 		"iosframeworks",
 		"macosframeworks",
 		"tvosframeworks",
 		"maccatalystframeworks",
+		"watchosframeworks",
 	};
 
 	var all = new HashSet<string> ();

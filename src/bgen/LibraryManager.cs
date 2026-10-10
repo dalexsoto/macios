@@ -23,6 +23,8 @@ public class LibraryManager {
 			return PlatformName.iOS;
 		case ApplePlatform.TVOS:
 			return PlatformName.TvOS;
+		case ApplePlatform.WatchOS:
+			return PlatformName.WatchOS;
 		case ApplePlatform.MacCatalyst:
 			return PlatformName.MacCatalyst;
 		case ApplePlatform.MacOSX:
@@ -32,4 +34,3 @@ public class LibraryManager {
 		}
 	}
 }
-

@@ -12,6 +12,7 @@ public static class PlatformNameExtensions {
 			PlatformName.MacCatalyst => ApplePlatform.MacCatalyst,
 			PlatformName.MacOSX => ApplePlatform.MacOSX,
 			PlatformName.TvOS => ApplePlatform.TVOS,
+			PlatformName.WatchOS => ApplePlatform.WatchOS,
 			_ => ApplePlatform.None,
 		};
 

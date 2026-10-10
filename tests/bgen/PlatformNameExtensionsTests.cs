@@ -10,6 +10,7 @@ namespace GeneratorTests {
 
 		[TestCase (PlatformName.iOS, "UIApplication")]
 		[TestCase (PlatformName.TvOS, "UIApplication")]
+		[TestCase (PlatformName.WatchOS, "WatchApplication")]
 		[TestCase (PlatformName.MacCatalyst, "UIApplication")]
 		[TestCase (PlatformName.MacOSX, "NSApplication")]
 		public void GetApplicationClassNameTest (PlatformName platformName, string expected)
@@ -40,6 +41,7 @@ namespace GeneratorTests {
 
 		[TestCase (PlatformName.iOS, ApplePlatform.iOS)]
 		[TestCase (PlatformName.TvOS, ApplePlatform.TVOS)]
+		[TestCase (PlatformName.WatchOS, ApplePlatform.WatchOS)]
 		[TestCase (PlatformName.MacCatalyst, ApplePlatform.MacCatalyst)]
 		[TestCase (PlatformName.MacOSX, ApplePlatform.MacOSX)]
 		[TestCase (PlatformName.None, ApplePlatform.None)]

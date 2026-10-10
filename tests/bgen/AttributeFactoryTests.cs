@@ -13,6 +13,7 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.MacCatalyst)]
 		[TestCase (PlatformName.MacOSX)]
 		[TestCase (PlatformName.TvOS)]
+		[TestCase (PlatformName.WatchOS)]
 		public void CreateNoVersionSupportedAttributeTest (PlatformName platform)
 			=> Assert.That (AttributeFactory.CreateNoVersionSupportedAttribute (platform).Platform, Is.EqualTo (platform));
 
@@ -20,6 +21,7 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.MacCatalyst)]
 		[TestCase (PlatformName.MacOSX)]
 		[TestCase (PlatformName.TvOS)]
+		[TestCase (PlatformName.WatchOS)]
 		public void CreateUnsupportedAttributeTest (PlatformName platform)
 			=> Assert.That (AttributeFactory.CreateUnsupportedAttribute (platform).Platform, Is.EqualTo (platform));
 

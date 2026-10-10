@@ -5,8 +5,10 @@ public static class PlatformNameExtensions {
 	public static bool TryGetApplicationClassName (this PlatformName currentPlatform, [NotNullWhen (true)] out string? className)
 	{
 		switch (currentPlatform) {
-		case PlatformName.iOS:
 		case PlatformName.WatchOS:
+			className = "WatchApplication";
+			return true;
+		case PlatformName.iOS:
 		case PlatformName.TvOS:
 		case PlatformName.MacCatalyst:
 			className = "UIApplication";

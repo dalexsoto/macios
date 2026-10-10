@@ -30,6 +30,8 @@ static class CompilationExtensions {
 				return PlatformName.MacOSX;
 			case "Microsoft.tvOS":
 				return PlatformName.TvOS;
+			case "Microsoft.watchOS":
+				return PlatformName.WatchOS;
 			}
 		}
 
@@ -43,6 +45,8 @@ static class CompilationExtensions {
 			return PlatformName.MacOSX;
 		case "Microsoft.tvOS":
 			return PlatformName.TvOS;
+		case "Microsoft.watchOS":
+			return PlatformName.WatchOS;
 		}
 
 		// we cannot identify the platform we are working on
@@ -61,6 +65,7 @@ static class CompilationExtensions {
 	static readonly HashSet<string> uiNamespaces = new HashSet<string> {
 		"AppKit",
 		"UIKit",
+		"WatchKit",
 		"Twitter",
 		"NewsstandKit",
 		"QuickLook",

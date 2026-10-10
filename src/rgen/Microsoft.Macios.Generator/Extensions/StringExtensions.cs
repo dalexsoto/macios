@@ -27,6 +27,7 @@ static class StringExtensions {
 		var platform = self switch {
 			_ when self.StartsWith ("ios") => ApplePlatform.iOS,
 			_ when self.StartsWith ("tvos") => ApplePlatform.TVOS,
+			_ when self.StartsWith ("watchos") => ApplePlatform.WatchOS,
 			_ when self.StartsWith ("maccatalyst") => ApplePlatform.MacCatalyst,
 			_ when self.StartsWith ("macos") => ApplePlatform.MacOSX,
 			_ => ApplePlatform.None

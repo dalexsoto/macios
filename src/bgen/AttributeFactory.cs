@@ -46,6 +46,7 @@ public static partial class AttributeFactory {
 		new (PlatformName.TvOS),
 		new (PlatformName.MacOSX),
 		new (PlatformName.MacCatalyst),
+		new (PlatformName.WatchOS),
 	};
 
 	static readonly UnavailableAttribute [] unsupportedCache = new UnavailableAttribute [] {
@@ -53,6 +54,7 @@ public static partial class AttributeFactory {
 		new (PlatformName.MacCatalyst),
 		new (PlatformName.MacOSX),
 		new (PlatformName.TvOS),
+		new (PlatformName.WatchOS),
 	};
 
 	public static IntroducedAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
@@ -67,7 +69,7 @@ public static partial class AttributeFactory {
 		case PlatformName.MacCatalyst:
 			return noVersionSupportedCache [3];
 		case PlatformName.WatchOS:
-			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
+			return noVersionSupportedCache [4];
 		default:
 			throw new NotImplementedException ();
 		}
@@ -85,7 +87,7 @@ public static partial class AttributeFactory {
 		case PlatformName.TvOS:
 			return unsupportedCache [3];
 		case PlatformName.WatchOS:
-			throw new InvalidOperationException ("CreateUnsupportedAttribute for WatchOS never makes sense");
+			return unsupportedCache [4];
 		default:
 			throw new NotImplementedException ();
 		}

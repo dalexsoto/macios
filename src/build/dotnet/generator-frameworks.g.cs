@@ -543,6 +543,15 @@ partial class Frameworks {
 		"WebKit",
 		"XKit",
 	};
+	// GENERATED FILE - DO NOT EDIT
+	internal readonly HashSet<string> watchosframeworks = new HashSet<string> {
+		"CoreFoundation",
+		"CoreGraphics",
+		"Foundation",
+		"Security",
+		"UIKit",
+		"WatchKit",
+	};
 	bool? _Accelerate;
 	bool? _Accessibility;
 	bool? _AccessoryAccess;
@@ -720,6 +729,7 @@ partial class Frameworks {
 	bool? _Vision;
 	bool? _VisionKit;
 	bool? _WatchConnectivity;
+	bool? _WatchKit;
 	bool? _WebKit;
 	bool? _XKit;
 	public bool HaveAccelerate { get { if (!_Accelerate.HasValue) _Accelerate = GetValue ("Accelerate"); return _Accelerate.Value; } }
@@ -899,6 +909,7 @@ partial class Frameworks {
 	public bool HaveVision { get { if (!_Vision.HasValue) _Vision = GetValue ("Vision"); return _Vision.Value; } }
 	public bool HaveVisionKit { get { if (!_VisionKit.HasValue) _VisionKit = GetValue ("VisionKit"); return _VisionKit.Value; } }
 	public bool HaveWatchConnectivity { get { if (!_WatchConnectivity.HasValue) _WatchConnectivity = GetValue ("WatchConnectivity"); return _WatchConnectivity.Value; } }
+	public bool HaveWatchKit { get { if (!_WatchKit.HasValue) _WatchKit = GetValue ("WatchKit"); return _WatchKit.Value; } }
 	public bool HaveWebKit { get { if (!_WebKit.HasValue) _WebKit = GetValue ("WebKit"); return _WebKit.Value; } }
 	public bool HaveXKit { get { if (!_XKit.HasValue) _XKit = GetValue ("XKit"); return _XKit.Value; } }
 }

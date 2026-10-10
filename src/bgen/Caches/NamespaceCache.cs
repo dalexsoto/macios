@@ -43,6 +43,8 @@ public class NamespaceCache {
 			UINamespaces.Add ("AppKit");
 		if (Frameworks.HaveUIKit)
 			UINamespaces.Add ("UIKit");
+		if (CurrentPlatform == PlatformName.WatchOS)
+			UINamespaces.Add ("WatchKit");
 		if (Frameworks.HaveTwitter)
 			UINamespaces.Add ("Twitter");
 		if (Frameworks.HaveGameKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.WatchOS)
@@ -77,8 +79,12 @@ public class NamespaceCache {
 		ImplicitNamespaces.Add ("Foundation");
 		ImplicitNamespaces.Add ("ObjCRuntime");
 		ImplicitNamespaces.Add ("CoreGraphics");
-		ImplicitNamespaces.Add ("CoreML");
-		ImplicitNamespaces.Add ("SceneKit");
+		if (Frameworks.HaveCoreML)
+			ImplicitNamespaces.Add ("CoreML");
+		if (Frameworks.HaveSceneKit)
+			ImplicitNamespaces.Add ("SceneKit");
+		if (CurrentPlatform == PlatformName.WatchOS)
+			ImplicitNamespaces.Add ("WatchKit");
 
 		if (Frameworks.HaveAudioUnit)
 			ImplicitNamespaces.Add ("AudioUnit");
@@ -92,7 +98,7 @@ public class NamespaceCache {
 			ImplicitNamespaces.Add ("CoreVideo");
 		if (Frameworks.HaveCoreMedia)
 			ImplicitNamespaces.Add ("CoreMedia");
-		if (Frameworks.HaveSecurity && CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveSecurity)
 			ImplicitNamespaces.Add ("Security");
 		if (Frameworks.HaveAVFoundation)
 			ImplicitNamespaces.Add ("AVFoundation");

@@ -16,6 +16,7 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 	[Theory]
 	[PlatformInlineData (ApplePlatform.iOS, PlatformName.iOS)]
 	[PlatformInlineData (ApplePlatform.TVOS, PlatformName.TvOS)]
+	[PlatformInlineData (ApplePlatform.WatchOS, PlatformName.WatchOS)]
 	[PlatformInlineData (ApplePlatform.MacOSX, PlatformName.MacOSX)]
 	[PlatformInlineData (ApplePlatform.MacCatalyst, PlatformName.MacCatalyst)]
 	public void GetCurrentPlatformTests (ApplePlatform platform, PlatformName expectedPlatform)
@@ -57,6 +58,10 @@ public class CompilationExtensionsTest : BaseGeneratorTestClass {
 						"GameKit",
 						"MapKit",
 					}];
+			}
+
+			if (Configuration.IsEnabled (ApplePlatform.WatchOS)) {
+				yield return [ApplePlatform.WatchOS, new [] { "UIKit", "WatchKit" }];
 			}
 
 			if (Configuration.IsEnabled (ApplePlatform.MacOSX)) {

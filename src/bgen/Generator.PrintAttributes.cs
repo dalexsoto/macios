@@ -36,10 +36,6 @@ public partial class Generator {
 				availabilityToConsider.AddRange (parentContextAvailability);
 			}
 
-			// We do not support Watch, so strip from both our input sources before any processing
-			memberAvailability = memberAvailability.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
-			availabilityToConsider = availabilityToConsider.Where (x => x.Platform != PlatformName.WatchOS).ToList ();
-
 			// Add any implied non-catalyst introduced (Catalyst will come later)
 			AddUnlistedAvailability (context, availabilityToConsider);
 

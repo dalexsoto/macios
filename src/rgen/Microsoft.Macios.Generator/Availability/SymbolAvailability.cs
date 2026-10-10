@@ -13,7 +13,7 @@ namespace Microsoft.Macios.Generator.Availability;
 /// </summary>
 readonly partial struct SymbolAvailability : IEquatable<SymbolAvailability> {
 	static readonly HashSet<ApplePlatform> supportedPlatforms =
-		[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst];
+		[ApplePlatform.iOS, ApplePlatform.TVOS, ApplePlatform.MacOSX, ApplePlatform.MacCatalyst, ApplePlatform.WatchOS];
 
 	readonly SortedDictionary<ApplePlatform, PlatformAvailability?> availabilities = new ();
 

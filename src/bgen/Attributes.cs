@@ -1206,8 +1206,7 @@ public sealed class TVAttribute : IntroducedAttribute {
 	}
 }
 
-#if !XAMCORE_5_0
-[Obsolete ("Do not use, watchOS is not supported in .NET")]
+/// <summary>Specifies when an API was introduced in watchOS.</summary>
 [AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class WatchAttribute : IntroducedAttribute {
 	public WatchAttribute (byte major, byte minor)
@@ -1220,7 +1219,6 @@ public sealed class WatchAttribute : IntroducedAttribute {
 	{
 	}
 }
-#endif // XAMCORE_5_0
 
 [AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class MacCatalystAttribute : IntroducedAttribute {
@@ -1279,8 +1277,7 @@ public sealed class NoiOSAttribute : UnavailableAttribute {
 	}
 }
 
-#if !XAMCORE_5_0
-[Obsolete ("Do not use, watchOS is not supported in .NET")]
+/// <summary>Specifies that an API is unavailable on watchOS.</summary>
 [AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
 public sealed class NoWatchAttribute : UnavailableAttribute {
 	public NoWatchAttribute ()
@@ -1288,7 +1285,6 @@ public sealed class NoWatchAttribute : UnavailableAttribute {
 	{
 	}
 }
-#endif // XAMCORE_5_0
 
 /// <summary>Attribute indicating that an API is not available on tvOS.</summary>
 [AttributeUsage (AttributeTargets.All, AllowMultiple = false)]
