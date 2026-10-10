@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-watchos</TargetFramework>
+		<IsBindingProject>true</IsBindingProject>
+		<IsTrimmable>false</IsTrimmable>
+		<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+	</ItemGroup>
+</Project>

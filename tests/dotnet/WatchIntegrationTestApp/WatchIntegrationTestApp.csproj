@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-watchos</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<ImplicitUsings>true</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+		<ApplicationId>com.xamarin.watchintegrationtest</ApplicationId>
+		<ApplicationTitle>Watch integration</ApplicationTitle>
+		<WatchApplicationEntryPoint>dotnet_watch_integration_main</WatchApplicationEntryPoint>
+		<UseMonoRuntime>false</UseMonoRuntime>
+		<TrimMode Condition="'$(Configuration)' == 'Release' And '$(PublishAot)' != 'true'">full</TrimMode>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="../WatchBlockLibrary/WatchBlockLibrary.csproj" />
+		<BundleResource Include="../../../dotnet/Templates/Microsoft.watchOS.Templates/watch/csharp/PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+	</ItemGroup>
+</Project>

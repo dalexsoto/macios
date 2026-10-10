@@ -358,6 +358,117 @@ namespace Xamarin.Tests {
 			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (error => error.Message?.Contains ("must declare [return: Release]", StringComparison.Ordinal) == true));
 		}
 
+		[TestCase (false, "newState")]
+		[TestCase (true, "newState")]
+		[TestCase (true, "retainedState")]
+		public void WatchPreservesManagedBaseSelectorOwnership (bool retained, string selector)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			var release = retained ? "[return: Release]" : "";
+			File.WriteAllText (Path.Combine (directory, "Ownership.cs"), $$"""
+				using Foundation;
+				using ObjCRuntime;
+				[Register ("WatchOwnershipBase")]
+				public class OwnershipBase : NSObject {
+					[Export ("{{selector}}")]
+					{{release}}
+					public virtual NSObject NewState () => new NSObject ();
+				}
+				[Register ("WatchOwnershipDerived")]
+				public sealed class OwnershipDerived : OwnershipBase {
+					[Export ("{{selector}}")]
+					{{release}}
+					public override NSObject NewState () => new NSObject ();
+				}
+				""");
+			DotNet.AssertBuild (project, GetDefaultProperties ("watchossimulator-arm64"));
+			var header = Directory.GetFiles (directory, "watch-registrar.h", SearchOption.AllDirectories).Single ();
+			var signatures = File.ReadAllLines (header).Where (line => line.Contains (" " + selector, StringComparison.Ordinal)).ToArray ();
+			Assert.That (signatures, Has.Length.EqualTo (2));
+			foreach (var signature in signatures) {
+				if (selector == "newState")
+					Assert.That (signature, Does.Contain ("objc_method_family(none)"));
+				Assert.That (signature, Does.Contain (retained ? "ns_returns_retained" : "ns_returns_not_retained"));
+			}
+		}
+
+		[Test]
+		public void WatchManagedOverrideUsesRootOwnership ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			File.WriteAllText (Path.Combine (directory, "Ownership.cs"), """
+				using Foundation;
+				using ObjCRuntime;
+				[Register ("WatchOwnershipBase")]
+				public class OwnershipBase : NSObject {
+					[Export ("newState")]
+					public virtual NSObject NewState () => new NSObject ();
+				}
+				[Register ("WatchOwnershipDerived")]
+				public sealed class OwnershipDerived : OwnershipBase {
+					[Export ("newState")]
+					[return: Release]
+					public override NSObject NewState () => new NSObject ();
+				}
+				""");
+			DotNet.AssertBuild (project, GetDefaultProperties ("watchossimulator-arm64"));
+			var header = Directory.GetFiles (directory, "watch-registrar.h", SearchOption.AllDirectories).Single ();
+			var signatures = File.ReadAllLines (header).Where (line => line.Contains (" newState", StringComparison.Ordinal)).ToArray ();
+			Assert.That (signatures, Has.Length.EqualTo (2));
+			foreach (var signature in signatures)
+				Assert.That (signature, Does.Contain ("ns_returns_not_retained"));
+		}
+
+		[Test]
+		public void WatchRejectsUnretainedDelegateExport ()
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Cache.CreateTemporaryDirectory ();
+			DotNet.AssertNew (directory, "watch", language: "C#");
+			var project = Directory.GetFiles (directory, "*.csproj").Single ();
+			File.WriteAllText (Path.Combine (directory, "DelegateExport.cs"), """
+				using System;
+				using Foundation;
+				using ObjCRuntime;
+				[Register ("WatchDelegateExport")]
+				public sealed class DelegateExport : NSObject {
+					[Export ("callback")]
+					public Action Callback () => () => { };
+				}
+				""");
+			var result = DotNet.AssertBuildFailure (project, GetDefaultProperties ("watchossimulator-arm64"));
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath);
+			Assert.That (errors, Has.Some.Matches<BuildLogEvent> (error => error.Message?.Contains ("delegate-returning watchOS export", StringComparison.Ordinal) == true));
+		}
+
+		[TestCase ("Debug")]
+		[TestCase ("Release")]
+		public void WatchIntegrationAppBuilds (string configuration)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			var directory = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", "WatchIntegrationTestApp");
+			var project = Path.Combine (directory, "WatchIntegrationTestApp.csproj");
+			var properties = GetDefaultProperties ("watchossimulator-arm64");
+			properties ["Configuration"] = configuration;
+			properties ["EnableCodeSigning"] = "false";
+			properties ["MtouchLink"] = configuration == "Release" ? "Full" : "None";
+			DotNet.AssertBuild (project, properties);
+			var intermediate = Path.Combine (directory, "obj", configuration, Configuration.DotNetTfm + "-watchos", "watchossimulator-arm64");
+			Assert.That (Directory.GetFiles (intermediate, "watch-registrar.h", SearchOption.AllDirectories), Has.Length.EqualTo (1));
+			Assert.That (Directory.GetFiles (intermediate, "WatchApplication.o", SearchOption.AllDirectories), Has.Length.EqualTo (1));
+			var header = Directory.GetFiles (intermediate, "watch-registrar.h", SearchOption.AllDirectories).Single ();
+			var declarations = File.ReadAllLines (header);
+			foreach (var selector in new [] { "newChild", "copyState" })
+				Assert.That (declarations.Single (line => line.Contains (" " + selector, StringComparison.Ordinal)), Does.Contain ("ns_returns_not_retained"));
+			Assert.That (declarations.Single (line => line.Contains (" retainedChild", StringComparison.Ordinal)), Does.Contain ("ns_returns_retained"));
+		}
+
 		[Test]
 		[TestCase (ApplePlatform.iOS, TemplateLanguage.CSharp)]
 		[TestCase (ApplePlatform.iOS, TemplateLanguage.FSharp)]
