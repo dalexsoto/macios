@@ -1334,6 +1334,7 @@
 
 			<!-- Also collect Info.plist files from framework directories as additional inputs for the copy target -->
 			<_DirectoriesToPublishInfoPlist Include="@(_DirectoriesToPublish->'%(SourceDirectory)/Info.plist')" Condition="Exists('%(_DirectoriesToPublish.SourceDirectory)/Info.plist')" />
+			<_DirectoriesToPublishPrivacyManifest Include="@(_DirectoriesToPublish->'%(SourceDirectory)/PrivacyInfo.xcprivacy')" Condition="Exists('%(_DirectoriesToPublish.SourceDirectory)/PrivacyInfo.xcprivacy')" />
 		</ItemGroup>
 
 		<Delete
@@ -1344,7 +1345,7 @@
 
 	<Target Name="_CopyDirectoriesToBundle"
 		DependsOnTargets="_CollectDecompressedPlugins;_ComputeFrameworkFilesToPublish;_CollectDecompressedXpcServices;_CreateStampLocationForCopyDirectoriesToBundle"
-		Inputs="@(_DirectoriesToPublish);@(_DirectoriesToPublishInfoPlist);$(_CopyDirectoriesToBundleInputFile)"
+		Inputs="@(_DirectoriesToPublish);@(_DirectoriesToPublishInfoPlist);@(_DirectoriesToPublishPrivacyManifest);$(_CopyDirectoriesToBundleInputFile)"
 		Outputs="@(_DirectoriesToPublish -> '%(StampLocation)')"
 		>
 

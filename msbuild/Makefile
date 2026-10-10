@@ -28,10 +28,15 @@ MSBUILD_DIRECTORIES          =
 
 ALL_SOURCES:= \
 	$(shell git ls-files | sed 's/ /\\ /g') \
+	$(wildcard Xamarin.MacDev.Tasks/Tasks/*.cs) \
 	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) \
 	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj) \
 	Versions.g.cs \
 	$(wildcard $(TOP)/tools/common/*.cs) \
+	$(wildcard $(TOP)/tools/assembly-preparer/*.cs) \
+	$(wildcard $(TOP)/tools/dotnet-linker/*.cs) \
+	$(wildcard $(TOP)/tools/dotnet-linker/Steps/*.cs) \
+	$(wildcard $(TOP)/tools/linker/*.cs) \
 
 CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0

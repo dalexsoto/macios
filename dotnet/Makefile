@@ -251,8 +251,10 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform))))
 
 # Create the nuget in a temporary directory (nupkgs/)
+PackageDependencies = $(wildcard $(1)/*) $(foreach directory,$(wildcard $(1)/*/),$(call PackageDependencies,$(patsubst %/,%,$(directory))))
+
 define CreateNuGetTemplate
-nupkgs/$(1)$(4).$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1)$(4).$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(call PackageDependencies,$(DOTNET_DESTDIR)/$(1).$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION)) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_BUILD) $(DOTNET) build package/$(1)/package.csproj -p:VersionBand=$(5) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog" /p:PackageOSTargetVersion=$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION)
@@ -304,7 +306,7 @@ TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_V
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
 WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(MACIOS_MANIFEST_VERSION_BAND).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
-pack-$(call lowercase,$(1)): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
+pack-$(call lowercase,$(1)): $$(RUNTIME_MANAGED_PACKS_$(1)) $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 

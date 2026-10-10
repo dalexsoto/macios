@@ -226,7 +226,7 @@
 	<!-- Create frameworks for each R2R module (iOS/tvOS) -->
 	<Target Name="_CreateR2RModuleFrameworks"
 			Condition="'$(CreateR2RFramework)' == 'true'"
-			Inputs="%(_R2RModule.ObjectFile)"
+			Inputs="%(_R2RModule.ObjectFile);$(_TaskAssemblyName)"
 			Outputs="%(_R2RModule.FrameworkOutput)"
 			>
 
@@ -479,7 +479,7 @@
 
 	<Target
 		Name="_CreateInfoPlistForFrameworks"
-		Inputs="@(_CreatedFrameworksFromDylibs->'%(OriginatingDylib)');$(_ComputeFrameworksToCreateAppManifestHashedInputsPath)"
+		Inputs="@(_CreatedFrameworksFromDylibs->'%(OriginatingDylib)');$(_ComputeFrameworksToCreateAppManifestHashedInputsPath);$(_TaskAssemblyName)"
 		Outputs="@(_CreatedFrameworksFromDylibs->'%(AppManifestPath)')"
 		>
 
