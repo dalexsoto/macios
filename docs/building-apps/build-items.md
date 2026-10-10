@@ -373,6 +373,25 @@ the `CollectAppManifestsDependsOn` property:
 </Target>
 ```
 
+## SwiftCompile
+
+For watchOS application projects, the Swift source files to compile into the
+native executable. `**/*.swift` is included by default, excluding normal build
+output directories. Set `EnableDefaultwatchOSItems=false` to provide an explicit
+list.
+
+All files compile together as a library with the watchOS target triple and SDK.
+The SDK supplies a bridging header generated from the managed registrar and
+tracks the resulting object, exported header, settings, and module cache for
+incremental builds and clean. The application's entry point is selected with
+[`WatchApplicationEntryPoint`](build-properties.md#watchapplicationentrypoint).
+
+## SwiftAdditionalInput
+
+Additional files whose changes require recompiling a watchOS project's
+`SwiftCompile` sources. This is useful for additional headers or generated
+inputs consumed by those sources.
+
 ## ReferenceNativeSymbol
 
 The item group `ReferenceNativeSymbol` can be used to specify how we should

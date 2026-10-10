@@ -7,6 +7,7 @@
 		<!-- We have a public property for each platform, and unify them into a single private property for our own build logic -->
 		<EnableDefaultiOSItems Condition=" '$(_PlatformName)' == 'iOS' And '$(EnableDefaultiOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultiOSItems>
 		<EnableDefaulttvOSItems Condition=" '$(_PlatformName)' == 'tvOS' And '$(EnableDefaulttvOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaulttvOSItems>
+		<EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
 		<EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
 		<EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
 	</PropertyGroup>

@@ -63,6 +63,10 @@
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">tvOSBindingProject</_ProjectType>
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'tvOS' And '$(OutputType)' == 'Library'">tvOSClassLibrary</_ProjectType>
 
+		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(OutputType)' == 'Exe'">watchOSExecutableProject</_ProjectType>
+		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(IsBindingProject)' == 'true'">watchOSBindingProject</_ProjectType>
+		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'watchOS' And '$(OutputType)' == 'Library'">watchOSClassLibrary</_ProjectType>
+
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Exe'">macOSExecutableProject</_ProjectType>
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsAppExtension)' != ''">macOSAppExtensionProject</_ProjectType>
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library' And '$(IsBindingProject)' != ''">macOSBindingProject</_ProjectType>
@@ -80,7 +84,7 @@
 		<ProjectCapability Include="Mobile" />
 		<ProjectCapability Include="RuntimeEnvironmentVariableSupport" />
 		<!-- We have to use a network connection (web sockets) to connect hot reload / dotnet watch when running on device, so enable that. Since this also works locally (simulator/desktop), just enable it always -->
-		<ProjectCapability Include="HotReloadWebSockets" />
+		<ProjectCapability Include="HotReloadWebSockets" Condition="'$(_PlatformName)' != 'watchOS'" />
 		
 		<ProjectCapability Include="IOSApplication" Condition="'$(_ProjectType)' == 'iOSExecutableProject'" />
 		<ProjectCapability Include="IOSAppExtension" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject'" />
@@ -90,6 +94,9 @@
 		<ProjectCapability Include="TvOSAppExtension" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject'" />
 		<ProjectCapability Include="TvOSBinding" Condition="'$(_ProjectType)' == 'tvOSBindingProject'" />
 		<ProjectCapability Include="TvOSClassLibrary" Condition="'$(_ProjectType)' == 'tvOSClassLibrary'" />
+		<ProjectCapability Include="WatchOSApplication" Condition="'$(_ProjectType)' == 'watchOSExecutableProject'" />
+		<ProjectCapability Include="WatchOSBinding" Condition="'$(_ProjectType)' == 'watchOSBindingProject'" />
+		<ProjectCapability Include="WatchOSClassLibrary" Condition="'$(_ProjectType)' == 'watchOSClassLibrary'" />
 		<ProjectCapability Include="MacOSApplication" Condition="'$(_ProjectType)' == 'macOSExecutableProject'" />
 		<ProjectCapability Include="MacOSAppExtension" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject'" />
 		<ProjectCapability Include="MacOSBinding" Condition="'$(_ProjectType)' == 'macOSBindingProject'" />
@@ -199,6 +206,7 @@
 	<PropertyGroup>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'tvOS'">tvos</_TargetFrameworkPlatform>
+		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'watchOS'">watchos</_TargetFrameworkPlatform>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'macOS'">macos</_TargetFrameworkPlatform>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">maccatalyst</_TargetFrameworkPlatform>
 		<_ComputedTargetFrameworkMoniker Condition=" '$(_TargetFrameworkPlatform)' != '' ">$(TargetFrameworkMoniker),Profile=$(_TargetFrameworkPlatform)</_ComputedTargetFrameworkMoniker>
@@ -984,6 +992,7 @@
 				Verbosity=$(_BundlerVerbosity)
 				Warn=$(_BundlerWarn)
 				WarnAsError=$(_BundlerWarnAsError)
+				WatchApplicationEntryPoint=$(WatchApplicationEntryPoint)
 				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 				XcodeVersion=$(_XcodeVersion)
@@ -1473,6 +1482,7 @@
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_MainLinkerFlags.items" />
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" />
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_RegistrarFile.items" />
+			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_WatchRegistrarHeader.items" Condition="'$(_PlatformName)' == 'watchOS'" />
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_ReferencesFile.items" />
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/ReferenceNativeSymbol.items" />
 			<_LinkerItemFiles Include="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" />
@@ -1499,6 +1509,7 @@
 			<_MainLinkerFlags Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_MainLinkerFlags.items'" />
 			<_BindingLibraryFrameworks Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_BindingLibraryFrameworks.items'" />
 			<_RegistrarFile Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_RegistrarFile.items'" />
+			<_WatchRegistrarHeader Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_WatchRegistrarHeader.items'" />
 			<_ReferencesFile Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_ReferencesFile.items'" />
 			<_ProcessedReferenceNativeSymbol Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == 'ReferenceNativeSymbol.items'" />
 			<_AssembliesToAOT Include="@(_AllLinkerItems)" Condition="'%(_AllLinkerItems.SourceFile)' == '_AssembliesToAOT.items'" />
@@ -2354,7 +2365,7 @@
 
 	<Target Name="_CompileNativeExecutable"
 		DependsOnTargets="$(_CompileNativeExecutableDependsOn)"
-		Inputs="@(_CompileNativeExecutableFile)"
+		Inputs="@(_CompileNativeExecutableFile);@(_NativeExecutableHeaderFiles)"
 		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
 		>
 
@@ -2433,6 +2444,8 @@
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'iOS' And '$(_SdkIsSimulator)' != 'true'">iphoneos</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' == 'true'">appletvsimulator</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'tvOS' And '$(_SdkIsSimulator)' != 'true'">appletvos</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'watchOS' And '$(_SdkIsSimulator)' == 'true'">watchsimulator</_SwiftTargetPlatform>
+			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'watchOS' And '$(_SdkIsSimulator)' != 'true'">watchos</_SwiftTargetPlatform>
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SwiftTargetPlatform> <!-- yes, 'macosx' and not 'maccatalyst': even though the resulting maccatalyst directory exists, it doesn't have anything useful in it -->
 			<_SwiftTargetPlatform Condition="'$(_PlatformName)' == 'macOS'">macosx</_SwiftTargetPlatform>
 
@@ -3443,6 +3456,9 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Import Project="$(_TargetsDirectory)Xamarin.TVOS.$(_ProjectLanguage).targets"                 Condition="'$(_ProjectType)' == 'tvOSExecutableProject' Or '$(_ProjectType)' == 'tvOSClassLibrary' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.TVOS.AppExtension.$(_ProjectLanguage).targets"    Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.TVOS.ObjCBinding.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'tvOSBindingProject' " />
+
+	<Import Project="$(_TargetsDirectory)Xamarin.iOS.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSExecutableProject' Or '$(_ProjectType)' == 'watchOSClassLibrary'" />
+	<Import Project="$(_TargetsDirectory)Xamarin.iOS.ObjCBinding.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'watchOSBindingProject'" />
 
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />

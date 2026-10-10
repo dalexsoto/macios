@@ -164,6 +164,7 @@
 		<!-- The _<platform>RuntimeIdentifier values are set from the IDE -->
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'watchOS'">$(_watchOSRuntimeIdentifier)</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_MacCatalystRuntimeIdentifier)</RuntimeIdentifier>
 
@@ -182,6 +183,8 @@
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' == 'true'">tvos-arm64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">tvossimulator-arm64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">tvossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'watchOS' And '$(_IsPublishing)' == 'true'">watchos-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'watchOS' And '$(_IsPublishing)' != 'true'">watchossimulator-arm64</RuntimeIdentifier>
 
 		<!-- For debug desktop builds we default to the host architecture -->
 		<!-- For release desktop builds we default to universal apps in .NET 7+, except for macOS and Mac Catalyst 27+ -->
@@ -210,6 +213,7 @@
 	<PropertyGroup Condition="'$(PublishRuntimeIdentifier)' == '' And '$(_XamarinUsingDefaultRuntimeIdentifier)' == 'true'">
 		<PublishRuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">ios-arm64</PublishRuntimeIdentifier>
 		<PublishRuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">tvos-arm64</PublishRuntimeIdentifier>
+		<PublishRuntimeIdentifier Condition="'$(_PlatformName)' == 'watchOS'">watchos-arm64</PublishRuntimeIdentifier>
 	</PropertyGroup>
 
 	<!-- Now that we know the runtime identifier, we can determine if we're building for a simulator -->
@@ -220,7 +224,7 @@
 		<SdkIsSimulator>$(_SdkIsSimulator)</SdkIsSimulator>
 
 		<!-- SdkIsMobile is true when building for a mobile platform (iOS or tvOS). -->
-		<SdkIsMobile Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'">true</SdkIsMobile>
+		<SdkIsMobile Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">true</SdkIsMobile>
 
 		<!-- SdkIsDevice is true when building for device (which can only happen on iOS and tvOS). -->
 		<SdkIsDevice Condition="'$(SdkIsSimulator)' != 'true' And '$(SdkIsMobile)' == 'true'">true</SdkIsDevice>

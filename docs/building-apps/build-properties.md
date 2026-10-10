@@ -1931,6 +1931,18 @@ The default value is to validate; set to `false` to disable.
 > [!NOTE]
 > Using a different than the recommended version is likely to produce problems later on in the build process.
 
+## WatchApplicationEntryPoint
+
+The public Swift `@_cdecl` symbol used to enter a watchOS application's SwiftUI
+event loop. It must be a C identifier and have the C-compatible signature
+`void entry(NSObject *model)`. Set it to the function provided by the application;
+the `watch` template uses `dotnet_watch_application_main`.
+
+The SDK compiles `SwiftCompile` sources against the generated Objective-C
+registrar header and type-checks this function through Swift's generated export
+header. `WatchApplication.Run(NSObject)` invokes it after runtime initialization.
+Do not add a second Swift `@main`. See [watchOS applications](../watchos.md).
+
 ## XamMacResourcePrefix
 
 The directory where resources are stored (this prefix will be removed when copying resources to the app bundle).

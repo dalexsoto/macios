@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Xamarin.Shared.Sdk.targets" />
+  <UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.CompileWatchSwiftCode" AssemblyFile="$(_TaskAssemblyName)" />
+  <UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.ResolveWatchReadyToRunCompiler" AssemblyFile="$(_TaskAssemblyName)" />
+  <UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.PrepareWatchAppLaunch" AssemblyFile="$(_TaskAssemblyName)" />
+  <UsingTask Runtime="$(_TaskRuntime)" TaskName="Xamarin.MacDev.Tasks.ValidateWatchAppBundleSize" AssemblyFile="$(_TaskAssemblyName)" />
+  <PropertyGroup>
+    <_CompileNativeExecutableDependsOn>$(_CompileNativeExecutableDependsOn);_CompileWatchSwiftCode</_CompileNativeExecutableDependsOn>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(EnableDefaultwatchOSItems)' == 'true' And '$(OutputType)' == 'Exe'">
+    <SwiftCompile Include="**/*.swift" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <Target Name="_ValidateWatchCompilerPacks" BeforeTargets="ProcessFrameworkReferences">
+    <PropertyGroup>
+      <_ActiveWatchILCompilerTargets Condition="'$(ILCompilerTargetsPath)' != ''">$([MSBuild]::NormalizePath('$(ILCompilerTargetsPath)'))</_ActiveWatchILCompilerTargets>
+      <_ActiveWatchILLinkTargets Condition="'$(ILLinkTargetsPath)' != ''">$([MSBuild]::NormalizePath('$(ILLinkTargetsPath)'))</_ActiveWatchILLinkTargets>
+      <_ExpectedWatchILCompilerTargets>$([MSBuild]::NormalizePath('$(_WatchILCompilerTargets)'))</_ExpectedWatchILCompilerTargets>
+      <_ExpectedWatchILLinkTargets>$([MSBuild]::NormalizePath('$(_WatchILLinkTargets)'))</_ExpectedWatchILLinkTargets>
+    </PropertyGroup>
+    <Error Condition="'$(PublishAot)' == 'true' And '$(_ActiveWatchILCompilerTargets)' != '$(_ExpectedWatchILCompilerTargets)'"
+      Text="watchOS NativeAOT requires the ILCompiler build targets installed by the watchos workload. Remove incompatible compiler package references or ILCompilerTargetsPath overrides." />
+    <Error Condition="'$(_ActiveWatchILLinkTargets)' != '$(_ExpectedWatchILLinkTargets)'"
+      Text="watchOS requires the ILLink build targets installed by the watchos workload. Remove incompatible linker package references or ILLinkTargetsPath overrides." />
+  </Target>
+
+  <Target Name="_ConfigureWatchRuntimePacks" BeforeTargets="ProcessFrameworkReferences" DependsOnTargets="_ValidateWatchCompilerPacks">
+    <ItemGroup>
+      <KnownFrameworkReference Condition="'%(KnownFrameworkReference.Identity)' == 'Microsoft.NETCore.App' And '%(KnownFrameworkReference.TargetFramework)' == '$(_XamarinDotNetVersion)'"
+        TargetingPackVersion="$(_XamarinRuntimePackVersion)"
+        DefaultRuntimeFrameworkVersion="$(_XamarinRuntimePackVersion)"
+        LatestRuntimeFrameworkVersion="$(_XamarinRuntimePackVersion)"
+        RuntimePackRuntimeIdentifiers="%(KnownFrameworkReference.RuntimePackRuntimeIdentifiers);watchos-arm64;watchossimulator-arm64" />
+      <KnownRuntimePack Condition="'%(KnownRuntimePack.Identity)' == 'Microsoft.NETCore.App' And '%(KnownRuntimePack.TargetFramework)' == '$(_XamarinDotNetVersion)' And '%(KnownRuntimePack.RuntimePackLabels)' == 'NativeAOT'"
+        LatestRuntimeFrameworkVersion="$(_XamarinRuntimePackVersion)"
+        RuntimePackRuntimeIdentifiers="%(KnownRuntimePack.RuntimePackRuntimeIdentifiers);watchos-arm64;watchossimulator-arm64" />
+      <KnownILCompilerPack Condition="'%(KnownILCompilerPack.Identity)' == 'Microsoft.DotNet.ILCompiler' And '%(KnownILCompilerPack.TargetFramework)' == '$(_XamarinDotNetVersion)'"
+        ILCompilerPackVersion="$(_XamarinRuntimePackVersion)" />
+      <KnownCrossgen2Pack Condition="'%(KnownCrossgen2Pack.Identity)' == 'Microsoft.NETCore.App.Crossgen2' And '%(KnownCrossgen2Pack.TargetFramework)' == '$(_XamarinDotNetVersion)'"
+        Crossgen2PackVersion="$(_XamarinRuntimePackVersion)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_IncludeWatchTrimAnalyzers" BeforeTargets="CoreCompile"
+    Condition="'$(EnableTrimAnalyzer)' == 'true' Or '$(EnableAotAnalyzer)' == 'true' Or '$(EnableSingleFileAnalyzer)' == 'true'">
+    <ItemGroup>
+      <_ExistingWatchTrimAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.Filename)' == 'ILLink.RoslynAnalyzer'" />
+      <Analyzer Include="$(NetCoreTargetingPackRoot)Microsoft.NET.ILLink.Tasks/$(_XamarinILLinkPackVersion)/analyzers/dotnet/cs/ILLink.RoslynAnalyzer.dll" Condition="'@(_ExistingWatchTrimAnalyzer)' == ''" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_CopyWatchRuntimePrivacyManifests" AfterTargets="_CreateFrameworksForDylibs">
+    <ItemGroup>
+      <_WatchRuntimePrivacyManifest Include="@(_CreatedFrameworksFromDylibs)" Condition="'%(_CreatedFrameworksFromDylibs.Filename)' == 'libcoreclr' Or '%(_CreatedFrameworksFromDylibs.Filename)' == 'libSystem.Native'">
+        <Source>$(_XamarinSdkRootDirectory)data/%(_CreatedFrameworksFromDylibs.Filename).xcprivacy</Source>
+        <Destination>%(_CreatedFrameworksFromDylibs.Identity)/PrivacyInfo.xcprivacy</Destination>
+      </_WatchRuntimePrivacyManifest>
+    </ItemGroup>
+    <Copy SourceFiles="@(_WatchRuntimePrivacyManifest->'%(Source)')" DestinationFiles="@(_WatchRuntimePrivacyManifest->'%(Destination)')" SkipUnchangedFiles="true" />
+    <ItemGroup>
+      <FileWrites Include="@(_WatchRuntimePrivacyManifest->'%(Destination)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_UseInstalledWatchILCompiler" AfterTargets="ProcessFrameworkReferences"
+    Condition="Exists('$(_WatchILCompilerProps)') And '$(ILCompilerTargetsPath)' != ''">
+    <ItemGroup>
+      <PackageReference Remove="@(PackageReference)" Condition="'%(PackageReference.Identity)' == 'Microsoft.DotNet.ILCompiler' And '%(PackageReference.IsImplicitlyDefined)' == 'true'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_UseInstalledWatchILLink" AfterTargets="ProcessFrameworkReferences"
+    Condition="Exists('$(_WatchILLinkProps)') And '$(ILLinkTargetsPath)' != ''">
+    <ItemGroup>
+      <PackageReference Remove="@(PackageReference)" Condition="'%(PackageReference.Identity)' == 'Microsoft.NET.ILLink.Tasks' And '%(PackageReference.IsImplicitlyDefined)' == 'true'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ResolveReadyToRunCompilers">
+    <ResolveWatchReadyToRunCompiler
+      RuntimeIdentifier="$(RuntimeIdentifier)"
+      Crossgen2Packs="@(ResolvedCrossgen2Pack)"
+      PerfmapFormatVersion="$(PublishReadyToRunPerfmapFormatVersion)"
+      TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)">
+      <Output TaskParameter="Crossgen2Tool" ItemName="Crossgen2Tool" />
+    </ResolveWatchReadyToRunCompiler>
+  </Target>
+
+  <Target Name="_ComputeWatchRunArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;_ReadAppManifest;ComputeAvailableDevices">
+    <PropertyGroup>
+      <WaitForExit Condition="'$(WaitForExit)' == ''">true</WaitForExit>
+    </PropertyGroup>
+    <PrepareWatchAppLaunch
+      Devices="@(Devices)"
+      Device="$(Device)"
+      AppBundlePath="$(_AppBundlePath)"
+      BundleIdentifier="$(_BundleIdentifier)"
+      EnvironmentVariables="@(RuntimeEnvironmentVariable)"
+      SdkIsSimulator="$(_SdkIsSimulator)"
+      SdkDevPath="$(_SdkDevPath)"
+      StandardOutputPath="$(StandardOutputPath)"
+      StandardErrorPath="$(StandardErrorPath)"
+      WaitForExit="$(WaitForExit)"
+      TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)">
+      <Output TaskParameter="RunArguments" PropertyName="RunArguments" />
+      <Output TaskParameter="DeployCommands" ItemName="_WatchDeployCommand" />
+    </PrepareWatchAppLaunch>
+    <PropertyGroup>
+      <RunCommand>/usr/bin/env</RunCommand>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="DeployToDevice" DependsOnTargets="_ComputeWatchRunArguments">
+    <Exec Command="%(_WatchDeployCommand.Identity)" />
+  </Target>
+
+  <Target Name="_PrepareRunMobile" BeforeTargets="ComputeRunArguments" DependsOnTargets="_ComputeWatchRunArguments" />
+
+  <Target Name="_ValidatePublishedWatchAppSize" AfterTargets="_PostProcessAppBundle"
+    Condition="'$(_IsPublishing)' == 'true' And '$(_SdkIsSimulator)' != 'true'">
+    <ValidateWatchAppBundleSize AppBundlePath="$(_AppBundlePath)" TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)" />
+  </Target>
+
+  <Target Name="_ResetWatchBundleOnRuntimeChange" BeforeTargets="_CopyResourcesToBundle;_WriteAppManifest"
+    DependsOnTargets="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'">
+    <PropertyGroup>
+      <_WatchBundleLayoutFile>$(IntermediateOutputPath)watch-bundle-layout.txt</_WatchBundleLayoutFile>
+      <_WatchBundleLayout>$(_UseNativeAot)|$(PublishReadyToRun)|$(_LibMonoLinkMode)|$(_LibXamarinLinkMode)</_WatchBundleLayout>
+    </PropertyGroup>
+    <ReadLinesFromFile File="$(_WatchBundleLayoutFile)" Condition="Exists('$(_WatchBundleLayoutFile)')">
+      <Output TaskParameter="Lines" ItemName="_PreviousWatchBundleLayout" />
+    </ReadLinesFromFile>
+    <CallTarget Targets="_CleanAppBundle" Condition="'@(_PreviousWatchBundleLayout)' != '$(_WatchBundleLayout)'" />
+    <WriteLinesToFile File="$(_WatchBundleLayoutFile)" Lines="$(_WatchBundleLayout)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(_WatchBundleLayoutFile)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_ComputeWatchSwiftInputs" DependsOnTargets="_ComputeVariables" Condition="'@(SwiftCompile)' != ''">
+    <PropertyGroup>
+      <_WatchSwiftDirectory>$(DeviceSpecificIntermediateOutputPath)swift/</_WatchSwiftDirectory>
+      <_WatchSwiftObject>$(_WatchSwiftDirectory)WatchApplication.o</_WatchSwiftObject>
+      <_WatchSwiftGeneratedHeader>$(_WatchSwiftDirectory)WatchApplication-Swift.h</_WatchSwiftGeneratedHeader>
+      <_WatchSwiftModuleCache>$(_WatchSwiftDirectory)module-cache/</_WatchSwiftModuleCache>
+      <_WatchSwiftHeader>$(_WatchSwiftDirectory)WatchApplication-Bridging.h</_WatchSwiftHeader>
+      <_WatchSwiftSettings>$(_WatchSwiftDirectory)settings.txt</_WatchSwiftSettings>
+    </PropertyGroup>
+    <Error Condition="'@(_WatchRegistrarHeader)' == '' Or !Exists('@(_WatchRegistrarHeader)')" Text="The watchOS registrar must produce a Swift interop header before compiling Swift. Use the trimmable-static registrar." />
+    <MakeDir Directories="$(_WatchSwiftDirectory)" />
+    <ItemGroup>
+      <_WatchSwiftSetting Include="Sdk=$(_SdkRoot);MinimumOSVersion=$(_MinimumOSVersion);Optimize=$(Optimize);Simulator=$(_SdkIsSimulator);Header=$(_WatchSwiftHeader)" />
+      <_WatchSwiftSetting Include="@(SwiftCompile)" />
+      <_WatchSwiftHeaderLine Include="#import &lt;Foundation/Foundation.h&gt;" />
+      <_WatchSwiftHeaderLine Include="@(_WatchRegistrarHeader->'#import &quot;%(FullPath)&quot;')" />
+      <_NativeExecutableObjectFiles Include="$(_WatchSwiftObject)" />
+      <_NativeExecutableHeaderFiles Include="$(_WatchSwiftGeneratedHeader)" />
+      <_XamarinMainIncludeDirectory Include="$(_WatchSwiftDirectory)" />
+      <_CompileNativeExecutableFile>
+        <AdditionalDependencies>%(_CompileNativeExecutableFile.AdditionalDependencies);$(_WatchSwiftGeneratedHeader)</AdditionalDependencies>
+      </_CompileNativeExecutableFile>
+      <FileWrites Include="$(_WatchSwiftObject);$(_WatchSwiftGeneratedHeader);$(_WatchSwiftHeader);$(_WatchSwiftSettings);@(_WatchRegistrarHeader);$(_WatchSwiftModuleCache)**/*" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(_WatchSwiftHeader)" Lines="@(_WatchSwiftHeaderLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <WriteLinesToFile File="$(_WatchSwiftSettings)" Lines="@(_WatchSwiftSetting)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <Target Name="_CompileWatchSwiftCode"
+    Condition="'@(SwiftCompile)' != ''"
+    DependsOnTargets="_ComputeWatchSwiftInputs"
+    Inputs="@(SwiftCompile);@(SwiftAdditionalInput);@(_WatchRegistrarHeader);$(_WatchSwiftHeader);$(_WatchSwiftSettings);$(_TaskAssemblyName)"
+    Outputs="$(_WatchSwiftObject);$(_WatchSwiftGeneratedHeader)">
+    <CompileWatchSwiftCode
+      Sources="@(SwiftCompile)"
+      OutputFile="$(_WatchSwiftObject)"
+      InteropHeader="$(_WatchSwiftHeader)"
+      GeneratedHeader="$(_WatchSwiftGeneratedHeader)"
+      ModuleCachePath="$(_WatchSwiftModuleCache)"
+      Optimize="$(Optimize)"
+      MinimumOSVersion="$(_MinimumOSVersion)"
+      SdkRoot="$(_SdkRoot)"
+      SdkDevPath="$(_SdkDevPath)"
+      SdkIsSimulator="$(_SdkIsSimulator)"
+      TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)" />
+    <ItemGroup>
+      <FileWrites Include="$(_WatchSwiftModuleCache)**/*" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_CleanWatchSwiftCode" AfterTargets="CoreClean">
+    <RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)swift/" Condition="'$(DeviceSpecificIntermediateOutputPath)' != ''" />
+  </Target>
+
+  <Target Name="_ValidateWatchOSRuntime" BeforeTargets="ProcessFrameworkReferences;PrepareForBuild;_PrepareForReadyToRunCompilation">
+    <Error Condition="'$(UseMonoRuntime)' == 'true'" Text="watchOS applications support CoreCLR and NativeAOT, not Mono." />
+    <Error Condition="'$(DebuggerSupport)' == 'true' Or '$(HotReloadCompatibleBuild)' == 'true'" Text="Managed debugging and Hot Reload are not supported by the watchOS runtime." />
+    <Error Condition="'$(UseInterpreter)' == 'true' Or '$(MtouchInterpreter)' != ''" Text="watchOS CoreCLR already includes its interpreter. UseInterpreter and MtouchInterpreter configure Mono and are not supported for watchOS." />
+    <Error Condition="'$(IsAppExtension)' == 'true'" Text="This watchOS SDK builds modern single-target watch applications, not legacy WatchKit extensions." />
+    <Error Condition="'$(UseNativeHttpHandler)' == 'false'" Text="watchOS requires an NSUrlSession-based HTTP handler; the managed socket handler is unavailable." />
+    <Error Condition="'$(MtouchHttpClientHandler)' != '' And '$(MtouchHttpClientHandler)' != 'NSUrlSessionHandler'" Text="watchOS only supports NSUrlSessionHandler for HTTP networking." />
+    <Error Condition="'$(RuntimeIdentifier)' != '' And '$(RuntimeIdentifier)' != 'watchos-arm64' And '$(RuntimeIdentifier)' != 'watchossimulator-arm64'" Text="watchOS only supports the watchos-arm64 and watchossimulator-arm64 runtime identifiers." />
+    <Error Condition="'$(PublishReadyToRun)' == 'true' And '$(PublishReadyToRunUseCrossgen2)' == 'false'" Text="watchOS ReadyToRun compilation requires Crossgen2." />
+    <Error Condition="'$(Registrar)' != 'trimmable-static'" Text="watchOS applications require the trimmable-static registrar." />
+    <Error Condition="'$(PrepareAssemblies)' != 'true'" Text="watchOS requires PrepareAssemblies=true to generate static Objective-C and block interop." />
+    <Error Condition="'$(DynamicRegistrationSupported)' == 'true'" Text="watchOS applications use statically generated Objective-C registration." />
+    <Error Condition="'@(SwiftCompile)' != '' And '$(WatchApplicationEntryPoint)' == ''" Text="Set WatchApplicationEntryPoint to the public @_cdecl Swift application entry point." />
+    <Error Condition="'$(WatchApplicationEntryPoint)' != '' And '@(SwiftCompile)' == ''" Text="WatchApplicationEntryPoint requires a SwiftCompile source defining the native watch application." />
+    <Error Condition="'$(WatchApplicationEntryPoint)' != '' And !$([System.Text.RegularExpressions.Regex]::IsMatch('$(WatchApplicationEntryPoint)', '^[A-Za-z_][A-Za-z0-9_]*$'))" Text="WatchApplicationEntryPoint must be a C identifier." />
+  </Target>
+</Project>
