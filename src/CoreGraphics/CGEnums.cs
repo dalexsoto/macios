@@ -13,13 +13,6 @@ using System.ComponentModel;
 
 namespace CoreGraphics {
 
-	public enum MatrixOrder {
-		/// <summary>To be added.</summary>
-		Prepend = 0,
-		/// <summary>To be added.</summary>
-		Append = 1,
-	}
-
 	// untyped enum -> CGPath.h
 	/// <summary>Join type for drawing operations.</summary>
 	///     <remarks>Specifies how to join consecutive line or curve segments in a figure.</remarks>

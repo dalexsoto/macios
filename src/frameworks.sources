@@ -499,6 +499,8 @@ COREFOUNDATION_SOURCES = \
 # CoreGraphics
 
 COREGRAPHICS_API_SOURCES = \
+	CoreGraphics/CGRectFields.cs \
+	CoreGraphics/MatrixOrder.cs \
 	CoreGraphics/CGEnums.cs \
 
 COREGRAPHICS_CORE_SOURCES = \
@@ -806,6 +808,9 @@ FINDERSYNC_CORE_SOURCES = \
 # Foundation
 
 FOUNDATION_API_SOURCES = \
+	foundation-base.cs \
+	Foundation/BaseEnums.cs \
+	Foundation/BaseAdditionalEnums.cs \
 	Foundation/Enum.cs \
 	Foundation/Enums.cs \
 	Foundation/EnumDesktop.cs \

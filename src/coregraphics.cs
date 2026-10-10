@@ -6,16 +6,6 @@
 
 namespace CoreGraphics {
 
-	[Static]
-	[Internal]
-	interface CGRectFields {
-		[Field ("CGRectNull", "CoreGraphics")]
-		CGRect Null { get; }
-
-		[Field ("CGRectInfinite", "CoreGraphics")]
-		CGRect Infinite { get; }
-	}
-
 	[TV (18, 0), Mac (15, 0), iOS (18, 0), MacCatalyst (18, 0)]
 	enum CGToneMapping : uint {
 		Default = 0,
