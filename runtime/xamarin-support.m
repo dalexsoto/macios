@@ -118,7 +118,7 @@ xamarin_timezone_get_local_name ()
 	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
-#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_OSX
+#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_OSX && !TARGET_OS_WATCH
 void
 xamarin_start_wwan (const char *uri)
 {
@@ -155,7 +155,7 @@ xamarin_start_wwan (const char *uri)
 	CFRelease (message);
 #endif
 }
-#endif /* !TARGET_OS_TV && !TARGET_OS_MACCATALYST */
+#endif /* !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_OSX && !TARGET_OS_WATCH */
 
 #if defined (MONOTOUCH)
 // called from mono-extensions/mcs/class/corlib/System/Environment.iOS.cs

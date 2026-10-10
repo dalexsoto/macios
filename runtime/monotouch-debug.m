@@ -19,6 +19,8 @@
 #include "frameworks.h"
 #if HAVE_UIKIT
 #include <UIKit/UIKit.h>
+#elif TARGET_OS_WATCH
+#include <Foundation/Foundation.h>
 #else
 #include <AppKit/AppKit.h>
 #endif
@@ -260,6 +262,9 @@ xamarin_track_finished_launching ()
 	if (xamarin_launch_timestamp == 0)
 		return;
 
+#if TARGET_OS_WATCH
+	PRINT (PRODUCT ": Launch notification timing is not supported on watchOS.");
+#else
 #if HAVE_UIKIT
 	NSNotificationName didFinishLaunchingNotification = UIApplicationDidFinishLaunchingNotification;
 #else
@@ -281,6 +286,7 @@ xamarin_track_finished_launching ()
 				PRINT (PRODUCT ": Did finish launching in %llu.%3llu s", seconds, milliseconds);
 				[center removeObserver: token];
 			}];
+#endif
 }
 
 // These hold the values of the environment variables captured in

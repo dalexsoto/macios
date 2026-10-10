@@ -12,4 +12,8 @@
 
 #define HAVE_COREMEDIA 1
 
+#if TARGET_OS_WATCH
+#define HAVE_COREANIMATION 0
+#else
 #define HAVE_COREANIMATION 1
+#endif

@@ -80,6 +80,9 @@ namespace ObjCRuntime {
 #if __TVOS__
 		internal const string PlatformName = "tvOS";
 		internal const string ProductName = "Microsoft." + PlatformName;
+#elif __WATCHOS__
+		internal const string PlatformName = "watchOS";
+		internal const string ProductName = "Microsoft." + PlatformName;
 #elif __MACCATALYST__
 		internal const string PlatformName = "Mac Catalyst";
 		internal const string ProductName = "Microsoft.MacCatalyst";
@@ -282,8 +285,12 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static bool DynamicRegistrationSupported {
 			get {
+#if __WATCHOS__
+				return false;
+#else
 				// The linker may turn calls to this property into a constant
 				return true;
+#endif
 			}
 		}
 
@@ -441,6 +448,9 @@ namespace ObjCRuntime {
 		/// </remarks>
 		internal static void EnsureUIThread ()
 		{
+#if __WATCHOS__
+			WatchKit.WatchApplication.EnsureUIThread ();
+#else
 #if MONOMAC
 			var checkForIllegalCrossThreadCalls = AppKit.NSApplication.CheckForIllegalCrossThreadCalls;
 #else
@@ -458,6 +468,21 @@ namespace ObjCRuntime {
 #else
 			throw new UIKit.UIKitThreadAccessException ();
 #endif
+#endif // __WATCHOS__
+		}
+
+		internal static void EnsureEventAndDelegateAreNotMismatched (bool check, object del, Type expectedType)
+		{
+			if (check && !expectedType.IsAssignableFrom (del.GetType ()))
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
+		}
+
+		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (bool check, object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
+		{
+			if (check && currentDelegateValue is not null && newDelegateValue is not null
+				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
+				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));
 		}
 
 #if MONOMAC

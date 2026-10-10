@@ -123,16 +123,12 @@ namespace UIKit {
 
 		internal static void EnsureEventAndDelegateAreNotMismatched (object del, Type expectedType)
 		{
-			if (CheckForEventAndDelegateMismatches && !(expectedType.IsAssignableFrom (del.GetType ())))
-				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
+			Runtime.EnsureEventAndDelegateAreNotMismatched (CheckForEventAndDelegateMismatches, del, expectedType);
 		}
 
 		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
 		{
-			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue is not null && newDelegateValue is not null
-				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
-				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
-				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));
+			Runtime.EnsureDelegateAssignIsNotOverwritingInternalDelegate (CheckForEventAndDelegateMismatches, currentDelegateValue, newDelegateValue, internalDelegateType);
 		}
 	}
 

@@ -21,6 +21,7 @@ SHIPPED_HEADERS +=         \
 	xamarin/runtime-generated.h \
 	xamarin/monovm-bridge.h \
 	xamarin/coreclr-bridge.h \
+	xamarin/watchos.h \
 
 SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m monovm-bridge.m coreclr-bridge.m nativeaot-bridge.m swift-functions.swift
 SHARED_X64_SOURCES += trampolines-x86_64.m trampolines-x86_64-asm.s trampolines-x86_64-objc_msgSend.s trampolines-x86_64-objc_msgSendSuper.s trampolines-x86_64-objc_msgSend_stret.s trampolines-x86_64-objc_msgSendSuper_stret.s
@@ -96,6 +97,7 @@ MONOTOUCH_ARM64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_ARM64_
 
 DOTNET_iOS_LIBRARIES = libextension-dotnet-coreclr.a
 DOTNET_tvOS_LIBRARIES = libextension-dotnet-coreclr.a libtvextension-dotnet-coreclr.a
+DOTNET_watchOS_LIBRARIES =
 DOTNET_macOS_LIBRARIES = libextension-dotnet-coreclr.a
 DOTNET_MacCatalyst_LIBRARIES = libextension-dotnet-coreclr.a
 
@@ -139,6 +141,8 @@ DOTNET_iphonesimulator_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_iphoneos_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_tvsimulator_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_tvos_CORECLR_DYLIB_FLAGS=-lcoreclr
+DOTNET_watchos_CORECLR_DYLIB_FLAGS=-lcoreclr
+DOTNET_watchsimulator_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_maccatalyst_CORECLR_DYLIB_FLAGS=-lcoreclr
 DOTNET_mac_CORECLR_DYLIB_FLAGS=-lcoreclr
 
@@ -181,7 +185,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 define DotNetLibXamarinTemplate
 
 DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/packages/microsoft.netcore.app.runtime$(7).$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native
-DOTNET$(6)_$(2)_DYLIB_FLAGS = $(DOTNET_$(1)$(6)_DYLIB_FLAGS) -Wl,-install_name,libxamarin$(5).dylib -framework Foundation -framework CFNetwork -framework Security -lz -L$(abspath $(DOTNET$(6)_$(2)_LIBDIR))
+DOTNET$(6)_$(2)_DYLIB_FLAGS = $(DOTNET_$(1)$(6)_DYLIB_FLAGS) -Wl,-install_name,libxamarin$(5).dylib -framework Foundation $(if $(filter watchos watchsimulator,$(1)),,-framework CFNetwork) -framework Security -lz -L$(abspath $(DOTNET$(6)_$(2)_LIBDIR))
 
 DOTNET_$(2)_$(4)_OBJECTS   = $$(patsubst %,.libs/$(2)/%$(5).o,   $(MONOTOUCH_SOURCE_STEMS)) $$(patsubst %,.libs/$(2)/%$(5).o,   $(MONOTOUCH_$(call uppercase,$(lastword $(subst -, ,$(2))))_SOURCE_STEMS))
 

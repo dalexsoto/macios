@@ -2177,7 +2177,11 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 
 	if (mode == MarshalManagedExceptionModeDefault) {
+#if TARGET_OS_WATCH
+		mode = MarshalManagedExceptionModeAbort;
+#else
 		mode = MarshalManagedExceptionModeThrowObjectiveCException;
+#endif
 	}
 
 	xamarin_log_managed_exception (exception, mode);
@@ -2286,6 +2290,9 @@ xamarin_process_managed_exception (MonoObject *exception)
 	case MarshalManagedExceptionModeAbort:
 	default: {
 		GCHandle handle = xamarin_gchandle_new (exception, false);
+#if TARGET_OS_WATCH
+		xamarin_bridge_raise_unhandled_exception_event (handle);
+#endif
 		const char *msg = [xamarin_print_all_exceptions (handle) UTF8String];
 		xamarin_gchandle_free (handle);
 		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", msg);
@@ -2584,7 +2591,7 @@ xamarin_is_sandboxed ()
 	CFRelease (task);
 
 	return is_sandboxed;
-#elif TARGET_OS_IOS || TARGET_OS_TV
+#elif TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
 	// TARGET_OS_IOS is set for Mac Catalyst too, so we check for TARGET_OS_MACCATALYST first.
 	return true;
 #else
@@ -3408,7 +3415,7 @@ xamarin_is_object_valid (id obj, char** error_message)
 	return true;
 }
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
 int
 xamarin_get_runtime_arch ()
 {

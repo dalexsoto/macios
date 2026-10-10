@@ -15,6 +15,8 @@
       #define PRODUCT                  "Microsoft.iOS"
   #elif TARGET_OS_TV
       #define PRODUCT                  "Microsoft.tvOS"
+  #elif TARGET_OS_WATCH
+      #define PRODUCT                  "Microsoft.watchOS"
   #else
     #error Unknown MONOTOUCH product
   #endif
@@ -48,6 +50,12 @@
     #define RUNTIMEIDENTIFIER_PLATFORM  "tvossimulator"
   #else
     #define RUNTIMEIDENTIFIER_PLATFORM  "tvos"
+  #endif
+#elif TARGET_OS_WATCH
+  #if TARGET_OS_SIMULATOR
+    #define RUNTIMEIDENTIFIER_PLATFORM  "watchossimulator"
+  #else
+    #define RUNTIMEIDENTIFIER_PLATFORM  "watchos"
   #endif
 #elif TARGET_OS_OSX
   #define RUNTIMEIDENTIFIER_PLATFORM    "osx"

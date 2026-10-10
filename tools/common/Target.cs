@@ -190,6 +190,7 @@ namespace Xamarin.Bundler {
 					switch (platform) {
 					case ApplePlatform.iOS:
 					case ApplePlatform.TVOS:
+					case ApplePlatform.WatchOS:
 					case ApplePlatform.MacCatalyst:
 					case ApplePlatform.MacOSX:
 						GenerateMainImpl (sw, abi);
@@ -238,6 +239,10 @@ namespace Xamarin.Bundler {
 			}
 
 			sw.WriteLine ("#include \"xamarin/xamarin.h\"");
+			if (app.Platform == ApplePlatform.WatchOS && !string.IsNullOrEmpty (app.WatchApplicationEntryPoint)) {
+				sw.WriteLine ("#include \"xamarin/watchos.h\"");
+				sw.WriteLine ("#include \"WatchApplication-Swift.h\"");
+			}
 
 			if (assembly_location.Length > 0) {
 				sw.WriteLine ();
@@ -317,6 +322,9 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("void xamarin_setup_impl ()");
 			sw.WriteLine ("{");
 
+			if (app.Platform == ApplePlatform.WatchOS && !string.IsNullOrEmpty (app.WatchApplicationEntryPoint))
+				sw.WriteLine ("\txamarin_watch_application_entry_point = &{0};", app.WatchApplicationEntryPoint);
+
 			if (app.GenerateTrustedPlatformAssemblies && trusted_platform_assembly_names.Length > 0) {
 				sw.WriteLine ("\txamarin_trusted_platform_assembly_names = xamarin_trusted_platform_assembly_names_array;");
 				if (app.IsMultiRidBuild) {
@@ -372,7 +380,7 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
 			if (app.EnableDebug)
 				sw.WriteLine ("\txamarin_debug_mode = TRUE;");
-			if (!string.IsNullOrEmpty (app.MonoGCParams) && app.XamarinRuntime == XamarinRuntime.MonoVM)
+			if (app.XamarinRuntime == XamarinRuntime.MonoVM && !string.IsNullOrEmpty (app.MonoGCParams))
 				sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
 			// Do this last, so that the app developer can override any other environment variable we set.
 			foreach (var kvp in app.EnvironmentVariables) {

@@ -11,7 +11,9 @@ using System.Collections.Generic;
 
 using CoreFoundation;
 using Registrar;
+#if !__WATCHOS__
 using UIKit;
+#endif
 
 namespace ObjCRuntime {
 	public static partial class Runtime {
@@ -26,7 +28,11 @@ namespace ObjCRuntime {
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
+#if __WATCHOS__
+			WatchKit.WatchApplication.InitializePlatform ();
+#else
 			UIApplication.InitializeApplication ();
+#endif
 		}
 
 #if !__MACCATALYST__
@@ -44,6 +50,7 @@ namespace ObjCRuntime {
 		}
 #endif
 
+#if !__WATCHOS__
 #if TVOS || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception?> callback)
@@ -105,6 +112,7 @@ namespace ObjCRuntime {
 			xamarin_start_wwan (uriPtr);
 		}
 #endif // !TVOS
+#endif // !__WATCHOS__
 #endif // !COREBUILD
 	}
 

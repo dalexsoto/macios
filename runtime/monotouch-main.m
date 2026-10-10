@@ -10,7 +10,7 @@
 //
 
 #include <TargetConditionals.h>
-#if !TARGET_OS_OSX
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
 #include <UIKit/UIKit.h>
 #endif
 #include <sys/time.h>
@@ -195,10 +195,15 @@ extern void mono_gc_init_finalizer_thread (void);
 #endif
 #endif
 
+#if TARGET_OS_WATCH
+static dispatch_source_t watch_memory_pressure_source;
+#endif
+
 @interface XamarinGCSupport : NSObject {
 }
 - (id) init;
 - (void) start;
+- (void) memoryWarning: (NSNotification *) sender;
 @end
 
 @implementation XamarinGCSupport
@@ -208,8 +213,17 @@ extern void mono_gc_init_finalizer_thread (void);
 #if defined(__aarch64__)
 		[self start];
 #endif
-#if !TARGET_OS_OSX
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
+#if TARGET_OS_WATCH
+		watch_memory_pressure_source = dispatch_source_create (DISPATCH_SOURCE_TYPE_MEMORYPRESSURE, 0, DISPATCH_MEMORYPRESSURE_WARN | DISPATCH_MEMORYPRESSURE_CRITICAL, dispatch_get_main_queue ());
+		if (watch_memory_pressure_source == NULL)
+			xamarin_assertion_message ("Could not create the watchOS memory-pressure observer.");
+		dispatch_source_set_event_handler (watch_memory_pressure_source, ^{
+			[self memoryWarning:nil];
+		});
+		dispatch_resume (watch_memory_pressure_source);
 #endif
 	}
 
@@ -402,7 +416,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		}
 	}
 
-#ifdef DEBUG
+#if defined (DEBUG) && !TARGET_OS_WATCH
 	xamarin_capture_debugging_settings ();
 	xamarin_initialize_cocoa_threads (monotouch_configure_debugging);
 #else

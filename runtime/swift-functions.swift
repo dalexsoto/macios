@@ -9,7 +9,7 @@ import UIKit
 
 #if os(macOS)
 public typealias PlatformScene = NSViewController
-#elseif !os(tvOS)
+#elseif !os(tvOS) && !os(watchOS)
 @available(iOS 13, macCatalyst 13.1, *)
 public typealias PlatformScene = UIWindowScene
 #endif
@@ -17,7 +17,7 @@ public typealias PlatformScene = UIWindowScene
 
 @objc(XamarinSwiftFunctions)
 public class XamarinSwiftFunctions : NSObject {
-#if !os(tvOS)
+#if !os(tvOS) && !os(watchOS)
     @MainActor
     @objc(requestReview:)
     @available(iOS 16, macCatalyst 16, macOS 13, *)

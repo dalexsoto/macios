@@ -13,7 +13,11 @@
 #include "bindings.h"
 #include <dlfcn.h>
 
-#if !TARGET_OS_OSX
+#if TARGET_OS_WATCH
+#include "xamarin/watchos.h"
+#endif
+
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
 #include <UIKit/UIKit.h>
 #endif
 
@@ -114,7 +118,7 @@ xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_str
 }
 
 /* UIKit bindings */
-#if !TARGET_OS_OSX
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
 int xamarin_UIApplicationMain (int argc, char * _Nullable argv[_Nonnull], NSString * _Nullable principalClassName, NSString * _Nullable delegateClassName, GCHandle *exception_gchandle)
 {
 	@try {
@@ -125,4 +129,28 @@ int xamarin_UIApplicationMain (int argc, char * _Nullable argv[_Nonnull], NSStri
 		return 1;
 	}
 }
-#endif // !TARGET_OS_OSX
+#endif // !TARGET_OS_OSX && !TARGET_OS_WATCH
+
+#if TARGET_OS_WATCH
+XamarinWatchApplicationEntryPoint xamarin_watch_application_entry_point = NULL;
+
+void
+xamarin_watch_application_main (NSObject *application_model)
+{
+	if (application_model == NULL || xamarin_watch_application_entry_point == NULL)
+		xamarin_assertion_message ("watchOS requires an application model and a registered WatchApplicationEntryPoint.");
+	if (![NSThread isMainThread])
+		xamarin_assertion_message ("The watchOS application must start on the main thread.");
+
+	@try {
+		xamarin_watch_application_entry_point (application_model);
+	} @catch (NSException *exception) {
+		GCHandle exception_gchandle = INVALID_GCHANDLE;
+		xamarin_on_marshal_objectivec_exception (exception, false, &exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "The watchOS unhandled-exception observer failed.");
+		xamarin_assertion_message ("An Objective-C exception escaped the watchOS application:\n%s", [[exception description] UTF8String]);
+	}
+	xamarin_assertion_message ("The watchOS application entry point must not return.");
+	abort ();
+}
+#endif

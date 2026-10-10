@@ -402,7 +402,7 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 {
 	int rv;
 
-#if defined (DEBUG) && !TARGET_OS_SIMULATOR && !TARGET_OS_MACCATALYST && !TARGET_OS_OSX
+#if defined (DEBUG) && !TARGET_OS_SIMULATOR && !TARGET_OS_MACCATALYST && !TARGET_OS_OSX && !TARGET_OS_WATCH
 	// If mlaunch is going to set up port forwarding (and change environment variables such
 	// as the hot reload websocket endpoint), wait for that to complete before we initialize
 	// CoreCLR - otherwise CoreCLR (and the startup hooks) may read/cache the old values.
