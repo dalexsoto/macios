@@ -733,6 +733,15 @@ public class Frameworks : Dictionary<string, Framework> {
 		}
 	}
 
+	static readonly Frameworks watchos_frameworks = new Frameworks {
+		{ "CoreFoundation", 26, 0 },
+		{ "CoreGraphics", 26, 0 },
+		{ "Foundation", 26, 0 },
+		{ "Security", 26, 0 },
+		{ "UIKit", 26, 0 },
+		{ "WatchKit", 26, 0 },
+	};
+
 	public static bool TryGetFrameworks (ApplePlatform platform, [NotNullWhen (true)] out Frameworks? frameworks)
 	{
 		switch (platform) {
@@ -741,6 +750,9 @@ public class Frameworks : Dictionary<string, Framework> {
 			return true;
 		case ApplePlatform.TVOS:
 			frameworks = TVOSFrameworks;
+			return true;
+		case ApplePlatform.WatchOS:
+			frameworks = watchos_frameworks;
 			return true;
 		case ApplePlatform.MacOSX:
 			frameworks = MacFrameworks;
@@ -874,6 +886,7 @@ public class Frameworks : Dictionary<string, Framework> {
 		case ApplePlatform.TVOS:
 		case ApplePlatform.MacCatalyst:
 		case ApplePlatform.MacOSX:
+		case ApplePlatform.WatchOS:
 			return true; // Include all frameworks by default
 		default:
 			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/dotnet/macios/issues/new with a test case." */, app.Platform, app.ProductName);

@@ -21,6 +21,8 @@ namespace GenerateFrameworksConstants {
 				return ApplePlatform.iOS;
 			case "tvos":
 				return ApplePlatform.TVOS;
+			case "watchos":
+				return ApplePlatform.WatchOS;
 			case "macos":
 				return ApplePlatform.MacOSX;
 			case "maccatalyst":

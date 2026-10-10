@@ -260,6 +260,8 @@ namespace Xamarin.Bundler {
 				return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
+			case ApplePlatform.WatchOS:
+				return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				return "MacOSX";
@@ -283,6 +285,8 @@ namespace Xamarin.Bundler {
 				return "Microsoft.iOS";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS";
+			case ApplePlatform.WatchOS:
+				return "Microsoft.watchOS";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS";
 			case ApplePlatform.MacCatalyst:

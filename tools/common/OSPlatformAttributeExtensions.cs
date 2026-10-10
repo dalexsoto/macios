@@ -100,6 +100,9 @@ namespace Xamarin.Utils {
 			case "tvos":
 				platform = ApplePlatform.TVOS;
 				break;
+			case "watchos":
+				platform = ApplePlatform.WatchOS;
+				break;
 			case "macos":
 				platform = ApplePlatform.MacOSX;
 				break;

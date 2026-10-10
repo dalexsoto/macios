@@ -267,6 +267,7 @@ namespace Xamarin.Utils {
 				switch (Application.Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					args.Add ("@executable_path/Frameworks");
 					break;
 				case ApplePlatform.MacCatalyst:

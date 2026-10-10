@@ -14,7 +14,6 @@ namespace Xamarin.Utils {
 		None,
 		MacOSX = 1,
 		iOS = 2,
-		[System.Obsolete ("Do not use")]
 		WatchOS = 4,
 		TVOS = 8,
 		MacCatalyst = 16,
@@ -30,6 +29,8 @@ namespace Xamarin.Utils {
 				return "macOS";
 			case ApplePlatform.TVOS:
 				return "tvOS";
+			case ApplePlatform.WatchOS:
+				return "watchOS";
 			case ApplePlatform.MacCatalyst:
 				return "MacCatalyst";
 			case ApplePlatform.None:
@@ -85,6 +86,8 @@ namespace Xamarin.Utils {
 				return netVersion + "-macos";
 			case ApplePlatform.TVOS:
 				return netVersion + "-tvos";
+			case ApplePlatform.WatchOS:
+				return netVersion + "-watchos";
 			case ApplePlatform.MacCatalyst:
 				return netVersion + "-maccatalyst";
 			default:
@@ -99,6 +102,8 @@ namespace Xamarin.Utils {
 				return ApplePlatform.iOS;
 			case "tvos":
 				return ApplePlatform.TVOS;
+			case "watchos":
+				return ApplePlatform.WatchOS;
 			case "macos":
 				return ApplePlatform.MacOSX;
 			case "maccatalyst":
@@ -113,6 +118,7 @@ namespace Xamarin.Utils {
 			switch (@this) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				return false;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:

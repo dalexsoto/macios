@@ -5,6 +5,8 @@ using ObjCRuntime;
 [assembly: TargetPlatform ("ios")]
 #elif __TVOS__
 [assembly: TargetPlatform ("tvos")]
+#elif __WATCHOS__
+[assembly: TargetPlatform ("watchos")]
 #elif __MACCATALYST__
 [assembly: TargetPlatform ("maccatalyst")]
 #elif MONOMAC
@@ -14,16 +16,21 @@ using ObjCRuntime;
 #endif
 
 // undecorated API availability falls back to those minimum versions, per platform
+#if __WATCHOS__
+[assembly: SupportedOSPlatform (Constants.MinimumVersions.watchOS)]
+#else
 [assembly: SupportedOSPlatform (Constants.MinimumVersions.iOS)]
 [assembly: SupportedOSPlatform (Constants.MinimumVersions.tvOS)]
 [assembly: SupportedOSPlatform (Constants.MinimumVersions.macOS)]
 [assembly: SupportedOSPlatform (Constants.MinimumVersions.MacCatalyst)]
+#endif
 
 namespace ObjCRuntime {
 	public static partial class Constants {
 		internal static class MinimumVersions {
 			internal const string iOS = "ios@DOTNET_MIN_IOS_SDK_VERSION@";
 			internal const string tvOS = "tvos@DOTNET_MIN_TVOS_SDK_VERSION@";
+			internal const string watchOS = "watchos@DOTNET_MIN_WATCHOS_SDK_VERSION@";
 			internal const string macOS = "macos@DOTNET_MIN_MACOS_SDK_VERSION@";
 			internal const string MacCatalyst = "maccatalyst@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
 		}

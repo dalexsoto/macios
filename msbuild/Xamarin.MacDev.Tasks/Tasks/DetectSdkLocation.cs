@@ -65,6 +65,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 			case ApplePlatform.MacCatalyst:
 				return AppleSdkVersion.UseDefault;
 			case ApplePlatform.MacOSX:

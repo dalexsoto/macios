@@ -16,6 +16,7 @@ namespace Xamarin.Tests {
 		public static string DotNetTfm;
 		public static string ios_sdk_version;
 		public static string tvos_sdk_version;
+		public static string watchos_sdk_version;
 		public static string macos_sdk_version;
 		public static string maccatalyst_sdk_version;
 		static string xcode_root;
@@ -25,6 +26,7 @@ namespace Xamarin.Tests {
 		public static bool include_ios;
 		public static bool include_mac;
 		public static bool include_tvos;
+		public static bool include_watchos;
 		public static bool include_maccatalyst;
 		public static bool XcodeIsStable;
 		public static string DOTNET_DIR;
@@ -254,12 +256,14 @@ namespace Xamarin.Tests {
 
 			ios_sdk_version = GetVariable ("IOS_SDK_VERSION", "8.0");
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
+			watchos_sdk_version = GetVariable ("WATCHOS_SDK_VERSION", "27.0");
 			macos_sdk_version = GetVariable ("MACOS_SDK_VERSION", "10.12");
 			maccatalyst_sdk_version = GetVariable ("MACCATALYST_SDK_VERSION", "14.0");
 			xcode_root = GetVariable ("XCODE_DEVELOPER_ROOT", "/Applications/Xcode.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
+			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCHOS", ""));
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", "");
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", "").Trim ('\'');
@@ -277,6 +281,7 @@ namespace Xamarin.Tests {
 			Console.WriteLine ("  INCLUDE_IOS={0}", include_ios);
 			Console.WriteLine ("  INCLUDE_MAC={0}", include_mac);
 			Console.WriteLine ("  INCLUDE_TVOS={0}", include_tvos);
+			Console.WriteLine ("  INCLUDE_WATCHOS={0}", include_watchos);
 			Console.WriteLine ("  INCLUDE_MACCATALYST={0}", include_maccatalyst);
 		}
 
@@ -455,6 +460,8 @@ namespace Xamarin.Tests {
 				return "Microsoft.iOS.dll";
 			case ApplePlatform.TVOS:
 				return "Microsoft.tvOS.dll";
+			case ApplePlatform.WatchOS:
+				return "Microsoft.watchOS.dll";
 			case ApplePlatform.MacOSX:
 				return "Microsoft.macOS.dll";
 			case ApplePlatform.MacCatalyst:
@@ -473,6 +480,8 @@ namespace Xamarin.Tests {
 				return ApplePlatform.MacCatalyst;
 			case "Microsoft.tvOS":
 				return ApplePlatform.TVOS;
+			case "Microsoft.watchOS":
+				return ApplePlatform.WatchOS;
 			case "Microsoft.macOS":
 				return ApplePlatform.MacOSX;
 			default:
@@ -561,6 +570,12 @@ namespace Xamarin.Tests {
 			case ApplePlatform.TVOS:
 				rid = "tvos-arm64";
 				packageName = isCoreCLR ? $"microsoft.netcore.app.runtime.tvOS-arm64" : $"microsoft.netcore.app.runtime.mono.tvOS-arm64";
+				break;
+			case ApplePlatform.WatchOS:
+				if (!isCoreCLR)
+					throw new InvalidOperationException ("watchOS does not support the Mono runtime.");
+				rid = "watchos-arm64";
+				packageName = "microsoft.netcore.app.runtime.watchos-arm64";
 				break;
 			case ApplePlatform.MacOSX:
 				rid = "osx-arm64";
@@ -742,6 +757,8 @@ namespace Xamarin.Tests {
 				return macos_sdk_version;
 			case ApplePlatform.TVOS:
 				return tvos_sdk_version;
+			case ApplePlatform.WatchOS:
+				return watchos_sdk_version;
 			case ApplePlatform.MacCatalyst:
 				return maccatalyst_sdk_version;
 			default:
@@ -853,6 +870,7 @@ namespace Xamarin.Tests {
 			var platform = framework.Platform switch {
 				ApplePlatform.iOS => "ios",
 				ApplePlatform.TVOS => "tvos",
+				ApplePlatform.WatchOS => "watchos",
 				ApplePlatform.MacOSX => "macos",
 				ApplePlatform.MacCatalyst => "maccatalyst",
 				_ => null,
@@ -870,6 +888,7 @@ namespace Xamarin.Tests {
 			var platform = framework.Platform switch {
 				ApplePlatform.iOS => "ios",
 				ApplePlatform.TVOS => "tvos",
+				ApplePlatform.WatchOS => "watchos",
 				ApplePlatform.MacOSX => "macos",
 				ApplePlatform.MacCatalyst => "maccatalyst",
 				_ => null,

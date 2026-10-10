@@ -56,6 +56,9 @@ namespace Xamarin {
 			case ApplePlatform.TVOS:
 				buildPlatform = (uint) (simulator ? MachO.Platform.TvOSSimulator : MachO.Platform.TvOS);
 				break;
+			case ApplePlatform.WatchOS:
+				buildPlatform = (uint) (simulator ? MachO.Platform.WatchOSSimulator : MachO.Platform.WatchOS);
+				break;
 			case ApplePlatform.MacCatalyst:
 				buildPlatform = (uint) MachO.Platform.MacCatalyst;
 				break;

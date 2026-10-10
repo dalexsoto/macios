@@ -15,8 +15,16 @@ export LANG
 # Compute commit distances
 for platform in $ALL_DOTNET_PLATFORMS; do
 	PLATFORM=$(echo "$platform" | tr '[:lower:]' '[:upper:]')
-	COMMIT=$(git blame -- ./Make.versions HEAD | grep "${PLATFORM}_NUGET_OS_VERSION=" | sed 's/ .*//' | sed 's/^\^//')
-	COMMIT_DISTANCE=$(git rev-list --count "$COMMIT..HEAD")
+	COMMIT=$(git blame -- ./Make.versions HEAD | awk -v key="${PLATFORM}_NUGET_OS_VERSION=" 'index($0, key) { sub(/^\^/, "", $1); print $1 }')
+	if test -n "$COMMIT"; then
+		COMMIT_DISTANCE=$(git rev-list --count "$COMMIT..HEAD")
+	elif grep -q "^${PLATFORM}_NUGET_OS_VERSION=" Make.versions; then
+		# A newly introduced platform has no committed version line yet.
+		COMMIT_DISTANCE=0
+	else
+		echo "Missing ${PLATFORM}_NUGET_OS_VERSION in Make.versions" >&2
+		exit 1
+	fi
 	TOTAL_DISTANCE=$((NUGET_VERSION_COMMIT_DISTANCE_START+COMMIT_DISTANCE))
 	printf "${PLATFORM}_NUGET_COMMIT_DISTANCE:=$TOTAL_DISTANCE\\n" >> "$OUTPUT_FILE"
 done

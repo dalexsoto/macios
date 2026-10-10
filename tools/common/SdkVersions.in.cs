@@ -14,11 +14,13 @@ namespace Xamarin {
 		public const string OSX = "@MACOS_SDK_VERSION@";
 		public const string iOS = "@IOS_SDK_VERSION@";
 		public const string TVOS = "@TVOS_SDK_VERSION@";
+		public const string WatchOS = "@WATCHOS_SDK_VERSION@";
 		public const string MacCatalyst = "@MACCATALYST_SDK_VERSION@";
 
 		public const string MinOSX = "@DOTNET_MIN_MACOS_SDK_VERSION@";
 		public const string MiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
 		public const string MinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
+		public const string MinWatchOS = "@DOTNET_MIN_WATCHOS_SDK_VERSION@";
 		public const string MinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
 
 		public const string DotNetMiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
@@ -47,6 +49,7 @@ namespace Xamarin {
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }
 		public static Version TVOSVersion { get { return new Version (TVOS); } }
+		public static Version WatchOSVersion { get { return new Version (WatchOS); } }
 		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); } }
 
 		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); } }
@@ -55,6 +58,7 @@ namespace Xamarin {
 		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
 		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
+		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
 		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
 		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); } }
@@ -72,6 +76,7 @@ namespace Xamarin {
 			case ApplePlatform.MacOSX: return OSXVersion;
 			case ApplePlatform.iOS: return iOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/dotnet/macios/issues/new with a test case.", app.Platform, app.ProductName);
@@ -84,6 +89,7 @@ namespace Xamarin {
 			case ApplePlatform.MacOSX: return OSXVersion;
 			case ApplePlatform.iOS: return iOSTargetVersion;
 			case ApplePlatform.TVOS: return TVOSTargetVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/dotnet/macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}
@@ -95,6 +101,7 @@ namespace Xamarin {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
+			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/dotnet/macios/issues/new with a test case.", app.Platform, app.ProductName);
@@ -108,6 +115,7 @@ namespace Xamarin {
 			case ApplePlatform.MacOSX: return OSXVersion;
 			case ApplePlatform.iOS: return iOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
+			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
@@ -120,6 +128,7 @@ namespace Xamarin {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
+			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");

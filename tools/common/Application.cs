@@ -86,6 +86,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 		public bool? PublishReadyToRun;
 		public string PublishReadyToRunContainerFormat = "";
+		public string WatchApplicationEntryPoint = "";
 
 		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
 		public List<string> AotArguments = new List<string> ();
@@ -255,6 +256,7 @@ namespace Xamarin.Bundler {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 				case ApplePlatform.MacCatalyst:
 					return !AreAnyAssembliesTrimmed;
 				case ApplePlatform.MacOSX:
@@ -273,6 +275,7 @@ namespace Xamarin.Bundler {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return BuildTarget == BuildTarget.Device;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -291,6 +294,7 @@ namespace Xamarin.Bundler {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return BuildTarget == BuildTarget.Simulator;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -426,6 +430,7 @@ namespace Xamarin.Bundler {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return Path.Combine (AppDirectory, "Info.plist");
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
@@ -473,6 +478,8 @@ namespace Xamarin.Bundler {
 					return "iOS";
 				case ApplePlatform.TVOS:
 					return "tvOS";
+				case ApplePlatform.WatchOS:
+					return "watchOS";
 				case ApplePlatform.MacOSX:
 					return "macOS";
 				case ApplePlatform.MacCatalyst:
@@ -735,6 +742,9 @@ namespace Xamarin.Bundler {
 				validAbis.Add (Abi.x86_64);
 				validAbis.Add (Abi.ARM64);
 				break;
+			case ApplePlatform.WatchOS:
+				validAbis.Add (Abi.ARM64);
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
@@ -918,7 +928,7 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				MarshalManagedExceptions = Platform == ApplePlatform.WatchOS ? MarshalManagedExceptionMode.Abort : MarshalManagedExceptionMode.ThrowObjectiveCException;
 				IsDefaultMarshalManagedExceptionMode = true;
 				break;
 			case MarshalManagedExceptionMode.UnwindNativeCode:
@@ -1151,6 +1161,8 @@ namespace Xamarin.Bundler {
 					return ProductConstants.MacCatalyst;
 				case ApplePlatform.TVOS:
 					return ProductConstants.tvOS;
+				case ApplePlatform.WatchOS:
+					return ProductConstants.watchOS;
 				case ApplePlatform.MacOSX:
 					return ProductConstants.macOS;
 				default:
@@ -1236,6 +1248,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				return false;
 			case ApplePlatform.MacCatalyst:
 				// https://github.com/dotnet/macios/issues/14437

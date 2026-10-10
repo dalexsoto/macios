@@ -3,7 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 include $(TOP)/mk/xamarin.mk
 
-DOTNET_PLATFORMS_MOBILE=$(filter-out macOS MacCatalyst,$(DOTNET_PLATFORMS))
+DOTNET_PLATFORMS_MOBILE=$(filter-out macOS MacCatalyst watchOS,$(DOTNET_PLATFORMS))
 
 DOWNLOAD_STAMP_FILE=.download-$(MLAUNCH_NUGET_VERSION).stamp
 

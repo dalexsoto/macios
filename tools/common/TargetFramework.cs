@@ -17,6 +17,7 @@ namespace Xamarin.Utils {
 		const string TFMVersion = Xamarin.DotNetVersions.Version;
 		public const string DotNet_iOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=ios"; // Short form: netX.Y-ios
 		public const string DotNet_tvOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=tvos"; // Short form: netX.Y-tvos
+		public const string DotNet_watchOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=watchos";
 		public const string DotNet_macOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=macos"; // Short form: netX.Y-macos
 		public const string DotNet_MacCatalyst_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=maccatalyst"; // Short form: netX.Y-maccatalyst
 
@@ -24,6 +25,7 @@ namespace Xamarin.Utils {
 
 		public static readonly TargetFramework DotNet_iOS = Parse (DotNet_iOS_String);
 		public static readonly TargetFramework DotNet_tvOS = Parse (DotNet_tvOS_String);
+		public static readonly TargetFramework DotNet_watchOS = Parse (DotNet_watchOS_String);
 		public static readonly TargetFramework DotNet_macOS = Parse (DotNet_macOS_String);
 		public static readonly TargetFramework DotNet_MacCatalyst = Parse (DotNet_MacCatalyst_String);
 
@@ -32,7 +34,7 @@ namespace Xamarin.Utils {
 		};
 
 		public static readonly TargetFramework [] ValidFrameworksiOS = new [] {
-			DotNet_iOS, DotNet_tvOS, DotNet_MacCatalyst,
+			DotNet_iOS, DotNet_tvOS, DotNet_watchOS, DotNet_MacCatalyst,
 		};
 
 		public static IEnumerable<TargetFramework> AllValidFrameworks {
@@ -197,6 +199,8 @@ namespace Xamarin.Utils {
 						return ApplePlatform.iOS;
 					case "tvos":
 						return ApplePlatform.TVOS;
+					case "watchos":
+						return ApplePlatform.WatchOS;
 					case "macos":
 						return ApplePlatform.MacOSX;
 					case "maccatalyst":
@@ -217,6 +221,8 @@ namespace Xamarin.Utils {
 				return DotNet_iOS;
 			case ApplePlatform.TVOS:
 				return DotNet_tvOS;
+			case ApplePlatform.WatchOS:
+				return DotNet_watchOS;
 			case ApplePlatform.MacCatalyst:
 				return DotNet_MacCatalyst;
 			case ApplePlatform.MacOSX:

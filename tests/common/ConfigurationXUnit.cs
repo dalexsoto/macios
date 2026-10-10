@@ -22,6 +22,10 @@ namespace Xamarin.Tests {
 				if (!Configuration.include_tvos)
 					Skip = "tvOS is not included in this build";
 				break;
+			case ApplePlatform.WatchOS:
+				if (!Configuration.include_watchos)
+					Skip = "watchOS is not included in this build";
+				break;
 			case ApplePlatform.MacOSX:
 				if (!Configuration.include_mac)
 					Skip = "macOS is not included in this build";
@@ -99,6 +103,7 @@ namespace Xamarin.Tests {
 			=> platform switch {
 				ApplePlatform.iOS => include_ios,
 				ApplePlatform.TVOS => include_tvos,
+				ApplePlatform.WatchOS => include_watchos,
 				ApplePlatform.MacCatalyst => include_maccatalyst,
 				ApplePlatform.MacOSX => include_mac,
 				_ => false

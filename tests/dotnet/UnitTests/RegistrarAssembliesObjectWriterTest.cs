@@ -21,6 +21,8 @@ namespace Xamarin.Tests {
 		[TestCase (Abi.x86_64, ApplePlatform.iOS, true, 7u, 0x01000007u, 3u)]
 		[TestCase (Abi.ARM64, ApplePlatform.TVOS, false, 3u, 0x0100000cu, 0u)]
 		[TestCase (Abi.ARM64, ApplePlatform.TVOS, true, 8u, 0x0100000cu, 0u)]
+		[TestCase (Abi.ARM64, ApplePlatform.WatchOS, false, 4u, 0x0100000cu, 0u)]
+		[TestCase (Abi.ARM64, ApplePlatform.WatchOS, true, 9u, 0x0100000cu, 0u)]
 		[TestCase (Abi.x86_64, ApplePlatform.MacOSX, false, 1u, 0x01000007u, 3u)]
 		[TestCase (Abi.ARM64, ApplePlatform.MacCatalyst, false, 6u, 0x0100000cu, 0u)]
 		public void ObjectLayout (Abi abi, ApplePlatform platform, bool simulator, uint buildPlatform, uint cpuType, uint cpuSubtype)

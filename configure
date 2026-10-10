@@ -14,6 +14,9 @@ Usage: configure [options]
     --enable-tvos
     --disable-tvos          Enable/disable building the tvOS SDK.
 
+    --enable-watchos
+    --disable-watchos        Enable/disable building the watchOS SDK.
+
     --enable-maccatalyst
     --disable-maccatalyst   Enable/disable building the Mac Catalyst SDK.
 
@@ -93,6 +96,7 @@ while test "x$1" != x; do
         echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
         echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
         echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_WATCHOS=" >> $CONFIGURED_FILE
         echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
         echo "Disabled all platforms"
         shift
@@ -125,6 +129,16 @@ while test "x$1" != x; do
     --enable-tvos)
         echo "INCLUDE_TVOS=1" >> $CONFIGURED_FILE
         echo "tvOS Build enabled"
+        shift
+        ;;
+    --disable-watchos)
+        echo "INCLUDE_WATCHOS=" >> $CONFIGURED_FILE
+        echo "watchOS Build disabled"
+        shift
+        ;;
+    --enable-watchos)
+        echo "INCLUDE_WATCHOS=1" >> $CONFIGURED_FILE
+        echo "watchOS Build enabled"
         shift
         ;;
     --disable-maccatalyst)
@@ -192,6 +206,7 @@ while test "x$1" != x; do
         echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
         echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
         echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_WATCHOS=" >> $CONFIGURED_FILE
         echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
         shift
         ;;

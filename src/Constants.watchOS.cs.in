@@ -1,0 +1,11 @@
+namespace ObjCRuntime {
+	public static partial class Constants {
+		/// <summary>The version of this Microsoft SDK for watchOS.</summary>
+		public const string Version = "@VERSION@";
+
+		internal const string Revision = "@REVISION@";
+
+		/// <summary>The watchOS version this library is built to support.</summary>
+		public const string SdkVersion = "@WATCHOS_SDK_VERSION@";
+	}
+}

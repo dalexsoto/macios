@@ -79,6 +79,9 @@ namespace Xamarin.MacDev.Tasks {
 					case ApplePlatform.TVOS:
 						currentSdk = new AppleTVOSSdk (xcodeLocator.DeveloperRoot, xcodeLocator.DeveloperRootVersionPlist);
 						break;
+					case ApplePlatform.WatchOS:
+						currentSdk = new AppleWatchSdk (xcodeLocator.DeveloperRoot, xcodeLocator.DeveloperRootVersionPlist);
+						break;
 					case ApplePlatform.MacCatalyst:
 					case ApplePlatform.MacOSX:
 						currentSdk = new MacOSXSdk (xcodeLocator.DeveloperRoot, xcodeLocator.DeveloperRootVersionPlist);
@@ -133,6 +136,8 @@ namespace Xamarin.MacDev.Tasks {
 					return "iOS";
 				case ApplePlatform.TVOS:
 					return "tvOS";
+				case ApplePlatform.WatchOS:
+					return "watchOS";
 				case ApplePlatform.MacOSX:
 					return "macOS";
 				case ApplePlatform.MacCatalyst:
@@ -154,6 +159,8 @@ namespace Xamarin.MacDev.Tasks {
 					return VersionConstants.Microsoft_macOS_Version;
 				case ApplePlatform.TVOS:
 					return VersionConstants.Microsoft_tvOS_Version;
+				case ApplePlatform.WatchOS:
+					return VersionConstants.Microsoft_watchOS_Version;
 				default:
 					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}

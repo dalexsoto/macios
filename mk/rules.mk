@@ -9,11 +9,14 @@ iossimulator_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/iPhoneSimulator.platform/Deve
 ios_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IOS_SDK_VERSION).sdk
 tvossimulator_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator$(TVOS_SDK_VERSION).sdk
 tvos_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS$(TVOS_SDK_VERSION).sdk
+watchos_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/WatchOS.platform/Developer/SDKs/WatchOS$(WATCHOS_SDK_VERSION).sdk
+watchossimulator_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator$(WATCHOS_SDK_VERSION).sdk
 maccatalyst_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOS_SDK_VERSION).sdk
 macos_SDK=$(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOS_SDK_VERSION).sdk
 
 ios_DEFINES=-DMONOTOUCH
 tvos_DEFINES=-DMONOTOUCH
+watchos_DEFINES=-DMONOTOUCH
 maccatalyst_DEFINES=-DMONOTOUCH
 macos_DEFINES=-DMONOMAC
 
@@ -64,6 +67,8 @@ SWIFT_TOOLCHAIN_ios=iphoneos
 SWIFT_TOOLCHAIN_maccatalyst=macosx
 SWIFT_TOOLCHAIN_tvossimulator=appletvsimulator
 SWIFT_TOOLCHAIN_tvos=appletvos
+SWIFT_TOOLCHAIN_watchos=watchos
+SWIFT_TOOLCHAIN_watchossimulator=watchsimulator
 SWIFT_TOOLCHAIN_macos=macosx
 
 # iOS

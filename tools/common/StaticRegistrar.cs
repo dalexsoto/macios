@@ -1773,6 +1773,9 @@ namespace Registrar {
 			case ApplePlatform.TVOS:
 				currentPlatform = ApplePlatform.TVOS;
 				break;
+			case ApplePlatform.WatchOS:
+				currentPlatform = ApplePlatform.WatchOS;
+				break;
 			case ApplePlatform.MacOSX:
 				currentPlatform = ApplePlatform.MacOSX;
 				break;

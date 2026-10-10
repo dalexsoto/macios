@@ -42,6 +42,8 @@ namespace Xamarin.MacDev.Tasks {
 			switch (framework) {
 			case ApplePlatform.TVOS:
 				return "tvos";
+			case ApplePlatform.WatchOS:
+				return "watchos";
 			case ApplePlatform.MacOSX:
 				return "osx";
 			case ApplePlatform.iOS:
@@ -56,6 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				return ManifestKeys.MinimumOSVersion;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
@@ -74,6 +77,8 @@ namespace Xamarin.MacDev.Tasks {
 				return is_simulator ? "iphonesimulator" : "ios";
 			case ApplePlatform.TVOS:
 				return is_simulator ? "tvos-simulator" : "tvos";
+			case ApplePlatform.WatchOS:
+				return is_simulator ? "watchos-simulator" : "watchos";
 			case ApplePlatform.MacOSX:
 				return "macosx";
 			default:
@@ -92,6 +97,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				return Path.Combine (appBundlePath, "Info.plist");
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
@@ -108,6 +114,8 @@ namespace Xamarin.MacDev.Tasks {
 				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
 			case ApplePlatform.TVOS:
 				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
+			case ApplePlatform.WatchOS:
+				return isSimulator ? "WatchSimulator" : "WatchOS";
 			case ApplePlatform.MacOSX:
 				return "MacOSX";
 			case ApplePlatform.MacCatalyst:

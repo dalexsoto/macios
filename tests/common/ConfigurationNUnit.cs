@@ -59,6 +59,10 @@ namespace Xamarin.Tests {
 				if (!include_tvos)
 					Assert.Ignore ("tvOS is not included in this build");
 				break;
+			case ApplePlatform.WatchOS:
+				if (!include_watchos)
+					Assert.Ignore ("watchOS is not included in this build");
+				break;
 			case ApplePlatform.MacOSX:
 				if (!include_mac)
 					Assert.Ignore ("macOS is not included in this build");
@@ -78,6 +82,7 @@ namespace Xamarin.Tests {
 			switch (platform.ToLower ()) {
 			case "ios":
 			case "tvos":
+			case "watchos":
 			case "macosx":
 			case "maccatalyst":
 				IgnoreIfIgnoredPlatform ((ApplePlatform) Enum.Parse (typeof (ApplePlatform), platform, true));

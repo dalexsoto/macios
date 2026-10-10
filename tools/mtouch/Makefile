@@ -15,8 +15,8 @@ MTOUCH_DIR=bin/$(MTOUCH_CONF)
 LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.dll
 LOCAL_MTOUCH_COMMAND=$(DOTNET) exec $(LOCAL_MTOUCH)
 
-DOTNET_PLATFORMS_MTOUCH=$(DOTNET_PLATFORMS)
-DOTNET_PLATFORMS_CORECLR_MTOUCH=$(DOTNET_CORECLR_PLATFORMS)
+DOTNET_PLATFORMS_MTOUCH=$(filter-out watchOS,$(DOTNET_PLATFORMS))
+DOTNET_PLATFORMS_CORECLR_MTOUCH=$(filter-out watchOS,$(DOTNET_CORECLR_PLATFORMS))
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)

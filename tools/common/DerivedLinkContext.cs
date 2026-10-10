@@ -274,6 +274,9 @@ namespace Xamarin.Tuner {
 			case ApplePlatform.TVOS:
 				platformName = "tvos";
 				break;
+			case ApplePlatform.WatchOS:
+				platformName = "watchos";
+				break;
 			default:
 				LinkerConfiguration.Report (LinkerConfiguration.Context, ErrorHelper.CreateWarning (App, 99, methodForErrorReporting, "Unexpected platform '{0}'. Please file an issue at https://github.com/dotnet/macios/issues.", App.Platform));
 				return false;
