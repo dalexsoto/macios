@@ -79,6 +79,7 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				minimumOSVersionString = appManifest.GetMinimumOSVersion ();
 				break;
 			case ApplePlatform.MacCatalyst:
@@ -236,6 +237,10 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 				deviceType = IPhoneDeviceType.TV;
 				break;
 			case "applewatch":
+				runtimeIdentifier += "watchos-";
+				platform = ApplePlatform.WatchOS;
+				deviceType = IPhoneDeviceType.Watch;
+				break;
 			case "visionos":
 			default:
 				platform = ApplePlatform.None;
@@ -326,6 +331,9 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 				case "tvos":
 					runtimeIdentifier += "tvossimulator-";
 					break;
+				case "watchos":
+					runtimeIdentifier += "watchossimulator-";
+					break;
 				default:
 					discardedReason = $"'{runtimePlatform}' simulators are not supported";
 					break;
@@ -337,7 +345,8 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 						switch (arch.ToLowerInvariant ()) {
 						case "x64":
 						case "x86_64":
-							runtimeIdentifiers.Add (runtimeIdentifier + "x64");
+							if (!string.Equals (runtimePlatform, "watchos", StringComparison.OrdinalIgnoreCase))
+								runtimeIdentifiers.Add (runtimeIdentifier + "x64");
 							break;
 						case "arm64":
 							runtimeIdentifiers.Add (runtimeIdentifier + "arm64");
@@ -349,6 +358,8 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 							break;
 						}
 					}
+					if (runtimeIdentifiers.Count == 0 && string.Equals (runtimePlatform, "watchos", StringComparison.OrdinalIgnoreCase))
+						discardedReason = "watchOS requires an ARM64 simulator.";
 				}
 			} else {
 				discardedReason = $"Device is not available: {device.AvailabilityError}";
@@ -364,6 +375,8 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 					platform = ApplePlatform.TVOS;
 					break;
 				case "watchos":
+					platform = ApplePlatform.WatchOS;
+					break;
 				case "visionos":
 				default:
 					discardedReason = $"'{device.Platform}' simulators are not supported";
@@ -385,6 +398,9 @@ public class GetAvailableDevices : XamarinTask, ICancelableTask {
 					case "appletv":
 					case "apple tv":
 						deviceType = IPhoneDeviceType.TV;
+						break;
+					case "apple watch":
+						deviceType = IPhoneDeviceType.Watch;
 						break;
 					default:
 						discardedReason = $"Unknown product family '{deviceTypeInfo.ProductFamily}'";

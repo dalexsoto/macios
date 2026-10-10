@@ -252,6 +252,9 @@ namespace Xamarin.MacDev.Tasks {
 				return null;
 			}
 
+			if (platform == ApplePlatform.WatchOS)
+				return "armv8-a";
+
 			// For macOS, Mac Catalyst, and simulators (which run on Mac hardware), we need different logic
 			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst || RuntimeIdentifier.Contains ("simulator")) {
 				return ComputeMacInstructionSet (platform, targetVersion);

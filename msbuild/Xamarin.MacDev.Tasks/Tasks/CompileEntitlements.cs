@@ -101,6 +101,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return "application-identifier";
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -126,6 +127,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return iOSAllowedProvisioningKeys;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -141,6 +143,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return AppBundleDir;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -156,6 +159,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return !SdkIsSimulator;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -448,6 +452,8 @@ namespace Xamarin.MacDev.Tasks {
 				break;
 			case "iPhoneSimulator":
 			case "iPhoneOS":
+			case "WatchSimulator":
+			case "WatchOS":
 				platform = MobileProvisionPlatform.iOS;
 				break;
 			case "MacOSX":
@@ -632,6 +638,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (all_entitlements is null) {
 				var iOS = ApplePlatform.iOS;
 				var tvOS = ApplePlatform.TVOS;
+				var watchOS = ApplePlatform.WatchOS;
 				var mobile = ApplePlatform.iOS | ApplePlatform.TVOS;
 				var desktop = ApplePlatform.MacOSX | ApplePlatform.MacCatalyst;
 				var iOSDesktop = iOS | desktop;
@@ -640,9 +647,9 @@ namespace Xamarin.MacDev.Tasks {
 				var visionOS = (ApplePlatform) 0;
 
 				var content = new EntitlementData [] {
-					new EntitlementData ("application-identifier", mobile, EntitlementType.String, requiresProvisioningProfile: true ),
-					new EntitlementData ("aps-environment", mobile, EntitlementType.String ),
-					new EntitlementData ("beta-reports-active", allPlatforms, EntitlementType.Boolean, requiresProvisioningProfile: true ), // https://developer.apple.com/library/archive/qa/qa1830/_index.html
+					new EntitlementData ("application-identifier", mobile | watchOS, EntitlementType.String, requiresProvisioningProfile: true ),
+					new EntitlementData ("aps-environment", mobile | watchOS, EntitlementType.String ),
+					new EntitlementData ("beta-reports-active", allPlatforms | watchOS, EntitlementType.Boolean, requiresProvisioningProfile: true ), // https://developer.apple.com/library/archive/qa/qa1830/_index.html
 					new EntitlementData ("com.apple.application-identifier", desktop, EntitlementType.String, requiresProvisioningProfile: true ),
 					new EntitlementData ("com.apple.developer.accessibility.merchant-api-control", iOS, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.developer.app-compute-category", visionOS, EntitlementType.ArrayOfStrings ),
@@ -763,7 +770,7 @@ namespace Xamarin.MacDev.Tasks {
 					new EntitlementData ("com.apple.developer.sustained-execution", iOSDesktop, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.developer.system-extension.install", desktop, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.developer.system-extension.redistributable", desktop, EntitlementType.Boolean ),
-					new EntitlementData ("com.apple.developer.team-identifier", allPlatforms, EntitlementType.String, requiresProvisioningProfile: true ),
+					new EntitlementData ("com.apple.developer.team-identifier", allPlatforms | watchOS, EntitlementType.String, requiresProvisioningProfile: true ),
 					new EntitlementData ("com.apple.developer.translation-app", iOS, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.developer.ubiquity-kvstore-identifier", allPlatforms, EntitlementType.String ),
 					new EntitlementData ("com.apple.developer.upi-device-validation", iOS, EntitlementType.Boolean ),
@@ -779,7 +786,7 @@ namespace Xamarin.MacDev.Tasks {
 					new EntitlementData ("com.apple.developer.web-browser.public-key-credential", desktop, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.external-accessory.wireless-configuration", iOS, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.security.app-sandbox", desktop, EntitlementType.Boolean, requiresProvisioningProfile: false ),
-					new EntitlementData ("com.apple.security.application-groups", allPlatforms, EntitlementType.ArrayOfStrings ),
+					new EntitlementData ("com.apple.security.application-groups", allPlatforms | watchOS, EntitlementType.ArrayOfStrings ),
 					new EntitlementData ("com.apple.security.assets.movies.read-only", desktop, EntitlementType.Boolean, requiresProvisioningProfile: false ),
 					new EntitlementData ("com.apple.security.assets.movies.read-write", desktop, EntitlementType.Boolean, requiresProvisioningProfile: false ),
 					new EntitlementData ("com.apple.security.assets.music.read-only", desktop, EntitlementType.Boolean, requiresProvisioningProfile: false ),
@@ -818,9 +825,9 @@ namespace Xamarin.MacDev.Tasks {
 					new EntitlementData ("com.apple.vm.device-access", desktop, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.vm.hypervisor", desktop, EntitlementType.Boolean ),
 					new EntitlementData ("com.apple.vm.networking", desktop, EntitlementType.Boolean ),
-					new EntitlementData ("get-task-allow", allPlatforms, EntitlementType.Boolean ),
+					new EntitlementData ("get-task-allow", allPlatforms | watchOS, EntitlementType.Boolean ),
 					new EntitlementData ("inter-app-audio", iOS, EntitlementType.Boolean ),
-					new EntitlementData ("keychain-access-groups", allPlatforms, EntitlementType.ArrayOfStrings ),
+					new EntitlementData ("keychain-access-groups", allPlatforms | watchOS, EntitlementType.ArrayOfStrings ),
 				};
 				all_entitlements = new Dictionary<string, EntitlementData> (content.Length);
 				foreach (var item in content) {

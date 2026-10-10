@@ -221,6 +221,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return Path.Combine (path, "_CodeSignature", "CodeResources");
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:

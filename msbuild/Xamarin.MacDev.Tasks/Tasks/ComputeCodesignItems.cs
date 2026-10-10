@@ -190,6 +190,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return string.Empty;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -278,6 +279,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				dylibDirectory = appPath;
 				metallibDirectory = appPath;
 				frameworksDirectory = Path.Combine (appPath, "Frameworks");

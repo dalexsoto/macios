@@ -215,6 +215,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 			case ApplePlatform.MacCatalyst:
 				// Fonts are listed in the Info.plist in a UIAppFonts entry for iOS, tvOS and Mac Catalyst.
 				var uiAppFonts = plist.GetArray ("UIAppFonts");
@@ -359,6 +360,7 @@ namespace Xamarin.MacDev.Tasks {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 			case ApplePlatform.MacCatalyst:
 				return CompileMobile (plist);
 			case ApplePlatform.MacOSX:
@@ -657,6 +659,11 @@ namespace Xamarin.MacDev.Tasks {
 				break;
 			case ApplePlatform.TVOS:
 				uiDeviceFamily = IPhoneDeviceType.TV;
+				break;
+			case ApplePlatform.WatchOS:
+				if (!IsFramework)
+					plist.SetIfNotPresent ("WKApplication", true);
+				uiDeviceFamily = IPhoneDeviceType.Watch;
 				break;
 			}
 

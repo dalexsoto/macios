@@ -53,6 +53,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					var plist = PDictionary.OpenFile (AppManifestPath);
 					return plist.GetUIDeviceFamily ();
 				default:
@@ -90,6 +91,9 @@ namespace Xamarin.MacDev.Tasks {
 				break;
 			case IPhoneDeviceType.TV:
 				productFamilies = ["Apple TV"];
+				break;
+			case IPhoneDeviceType.Watch:
+				productFamilies = ["Apple Watch"];
 				break;
 			default:
 				throw new InvalidOperationException ($"Invalid device type: {DeviceType}");
@@ -489,7 +493,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var sb = new StringBuilder ();
 			var f = $"net{TargetFramework.Version}-{Platform.AsString ().ToLower ()}";
-			var rid = Platform == ApplePlatform.TVOS ? "tvos-arm64" : "ios-arm64";
+			var rid = Platform == ApplePlatform.WatchOS ? "watchos-arm64" : Platform == ApplePlatform.TVOS ? "tvos-arm64" : "ios-arm64";
 
 			sb.AppendLine ($"");
 			sb.AppendLine ($"To run on physical device:");

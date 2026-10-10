@@ -109,6 +109,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		IEnumerable<string> GetTargetDevices (IPhoneDeviceType devices, bool watch, bool watchExtension)
 		{
+			if (Platform == ApplePlatform.WatchOS) {
+				yield return "watch";
+				yield break;
+			}
 			if (Platform == ApplePlatform.MacOSX)
 				yield break;
 
@@ -192,6 +196,8 @@ namespace Xamarin.MacDev.Tasks {
 				return "iOS";
 			case ApplePlatform.TVOS:
 				return "tvOS";
+			case ApplePlatform.WatchOS:
+				return "watchOS";
 			case ApplePlatform.MacOSX:
 			default:
 				return null;

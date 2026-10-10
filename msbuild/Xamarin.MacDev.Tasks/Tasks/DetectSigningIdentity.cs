@@ -34,6 +34,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return IPhoneCertificate.DevelopmentPrefixes;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -49,6 +50,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return Array.Empty<string> ();
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -64,6 +66,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return IPhoneCertificate.DistributionPrefixes;
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -79,6 +82,7 @@ namespace Xamarin.MacDev.Tasks {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					return "application-identifier";
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
@@ -151,6 +155,7 @@ namespace Xamarin.MacDev.Tasks {
 						switch (Platform) {
 						case ApplePlatform.iOS:
 						case ApplePlatform.TVOS:
+						case ApplePlatform.WatchOS:
 							requireProvisioningProfile = !SdkIsSimulator || HasEntitlements;
 							break;
 						case ApplePlatform.MacCatalyst:
@@ -557,6 +562,8 @@ namespace Xamarin.MacDev.Tasks {
 				break;
 			case "iPhoneSimulator":
 			case "iPhoneOS":
+			case "WatchSimulator":
+			case "WatchOS":
 				platform = MobileProvisionPlatform.iOS;
 				break;
 			case "MacOSX":

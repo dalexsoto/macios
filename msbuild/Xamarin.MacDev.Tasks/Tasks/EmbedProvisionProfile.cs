@@ -28,6 +28,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			switch (Platform) {
 			case ApplePlatform.iOS:
+			case ApplePlatform.WatchOS:
 				return MobileProvisionPlatform.iOS;
 			case ApplePlatform.TVOS:
 				return MobileProvisionPlatform.tvOS;

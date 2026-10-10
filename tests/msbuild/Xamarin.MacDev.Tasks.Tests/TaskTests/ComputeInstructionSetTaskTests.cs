@@ -88,6 +88,17 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.That (task.InstructionSet, Is.EqualTo (""), "Instruction set should be empty for empty OS version");
 		}
 
+		[TestCase ("watchos-arm64", "26.0")]
+		[TestCase ("watchossimulator-arm64", "27.0")]
+		public void WatchOSUsesBaselineArm64 (string runtimeIdentifier, string osVersion)
+		{
+			var task = CreateTask (ApplePlatform.WatchOS);
+			task.RuntimeIdentifier = runtimeIdentifier;
+			task.SupportedOSPlatformVersion = osVersion;
+			ExecuteTask (task);
+			Assert.That (task.InstructionSet, Is.EqualTo ("armv8-a"));
+		}
+
 		[Test]
 		public void TestInvalidOSVersion ()
 		{

@@ -145,7 +145,7 @@ public class ProcessRuntimeLibraries : XamarinTask, ICancelableTask {
 
 					// if we have a single .dylib, but we're linking statically, we need to convert it to a framework (if we're targeting a mobile platform)
 					// if we have both a .dylib and a .a, and we're linking statically, we still need to convert the .dylib to a .framework, because the .a is ignored/irrelevant
-					if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.TVOS) {
+					if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.TVOS || Platform == ApplePlatform.WatchOS) {
 						dylibsToFrameworks.AddRange (dylibs);
 					} else {
 						// on desktop just link with the dylib
