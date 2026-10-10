@@ -34,6 +34,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios26.0")]
 		[SupportedOSPlatform ("maccatalyst26.0")]
 		[SupportedOSPlatform ("macos26.0")]
@@ -48,6 +49,7 @@ namespace Security {
 		/// <param name="certificate">The certificate to use for the new <see cref="SecIdentity" /> instance.</param>
 		/// <param name="privateKey">The private to use for the new <see cref="SecIdentity" /> instance.</param>
 		/// <returns>A new <see cref="SecIdentity" /> instance if successful, otherwise <see langword="null" />.</returns>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios26.0")]
 		[SupportedOSPlatform ("maccatalyst26.0")]
 		[SupportedOSPlatform ("macos26.0")]

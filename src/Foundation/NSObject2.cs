@@ -34,7 +34,9 @@ using System.Runtime.InteropServices.ObjectiveC;
 using Xamarin.Bundler;
 #if HAS_UIKIT
 using UIKit;
+#if HAS_COREANIMATION
 using CoreAnimation;
+#endif
 #endif
 using CoreGraphics;
 #endif
@@ -936,7 +938,7 @@ namespace Foundation {
 
 		private void InvokeOnMainThread (Selector sel, NSObject? obj, bool wait)
 		{
-			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait ? (byte) 1 : (byte) 0);
+			Messaging.PerformSelectorOnMainThread (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait ? (byte) 1 : (byte) 0);
 			GC.KeepAlive (sel);
 			GC.KeepAlive (obj);
 		}
@@ -1003,7 +1005,7 @@ namespace Foundation {
 		public void BeginInvokeOnMainThread (Action action)
 		{
 			var d = new NSAsyncActionDispatcher (action);
-			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+			Messaging.PerformSelectorOnMainThread (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
 																NSDispatcher.Selector.Handle, d.Handle, 0);
 			GC.KeepAlive (d);
 		}
@@ -1011,7 +1013,7 @@ namespace Foundation {
 		internal void BeginInvokeOnMainThread (System.Threading.SendOrPostCallback cb, object? state)
 		{
 			var d = new NSAsyncSynchronizationContextDispatcher (cb, state);
-			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+			Messaging.PerformSelectorOnMainThread (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
 															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
 			GC.KeepAlive (d);
 		}
@@ -1026,7 +1028,7 @@ namespace Foundation {
 		public void InvokeOnMainThread (Action action)
 		{
 			using (var d = new NSActionDispatcher (action)) {
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+				Messaging.PerformSelectorOnMainThread (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
 																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 			}
 		}
@@ -1034,7 +1036,7 @@ namespace Foundation {
 		internal void InvokeOnMainThread (System.Threading.SendOrPostCallback cb, object? state)
 		{
 			using (var d = new NSSynchronizationContextDispatcher (cb, state)) {
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+				Messaging.PerformSelectorOnMainThread (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
 																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 			}
 		}
@@ -1102,8 +1104,10 @@ namespace Foundation {
 					return NSValue.FromCGAffineTransform ((CGAffineTransform) obj);
 				else if (t == typeof (UIEdgeInsets))
 					return NSValue.FromUIEdgeInsets ((UIEdgeInsets) obj);
+#if HAS_COREANIMATION
 				else if (t == typeof (CATransform3D))
 					return NSValue.FromCATransform3D ((CATransform3D) obj);
+#endif
 #endif
 				// last chance for types like CGPath, CGColor... that are not NSObject but are CFObject
 				// see https://bugzilla.xamarin.com/show_bug.cgi?id=8458
@@ -1283,7 +1287,7 @@ namespace Foundation {
 			[DynamicDependency ("Drain")]
 			static void ScheduleDrain ()
 			{
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, 0);
+				Messaging.PerformSelectorOnMainThread (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, 0);
 			}
 
 			static bool draining;

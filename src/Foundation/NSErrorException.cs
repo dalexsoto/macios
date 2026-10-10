@@ -31,6 +31,7 @@ namespace Foundation {
 	///       when using Async programming to set the Task's exception to the
 	///       resulting error, they are not thrown by any APIs in MonoTouch.
 	///     </remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

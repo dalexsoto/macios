@@ -43,7 +43,7 @@ using System.Diagnostics.CodeAnalysis;
 using CoreFoundation;
 using Security;
 
-#if !MONOMAC
+#if !MONOMAC && !__WATCHOS__
 using UIKit;
 #endif
 
@@ -382,13 +382,21 @@ namespace Foundation {
 			// errors that exists in both share the same error code, so we can use a single switch/case
 			// this also ease watchOS integration as if does not expose CFNetwork but (I would not be 
 			// surprised if it)could return some of it's error codes
+#if WATCHOS
+			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == "kCFErrorDomainCFNetwork")) {
+#else
 			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == NSError.CFNetworkErrorDomain)) {
+#endif
 				// Apple docs: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/URL_Loading_System_Error_Codes
 				// .NET docs: http://msdn.microsoft.com/en-us/library/system.net.webexceptionstatus(v=vs.110).aspx
 				switch ((NSUrlError) (long) error.Code) {
 				case NSUrlError.Cancelled:
 				case NSUrlError.UserCancelledAuthentication:
+#if WATCHOS
+				case (NSUrlError) (-72005): // CFNetwork cancellation; Bonjour is not exposed on watchOS.
+#else
 				case (NSUrlError) NSNetServicesStatus.CancelledError:
+#endif
 					// No more processing is required so just return.
 					return new OperationCanceledException (error.LocalizedDescription, innerException);
 				}
@@ -538,6 +546,17 @@ namespace Foundation {
 			if (!string.Equals (proxyUri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase))
 				throw new NotSupportedException ($"The proxy scheme '{proxyUri.Scheme}' is not supported. Only 'http' proxies are supported.");
 
+#if WATCHOS
+			// URLSession accepts these dictionary keys, but CFNetwork does not expose their symbols on watchOS.
+			proxyDictionary = new NSMutableDictionary {
+				["HTTPEnable"] = NSNumber.FromBoolean (true),
+				["HTTPProxy"] = new NSString (proxyUri.DnsSafeHost),
+				["HTTPPort"] = NSNumber.FromInt32 (proxyUri.Port),
+				["HTTPSEnable"] = NSNumber.FromBoolean (true),
+				["HTTPSProxy"] = new NSString (proxyUri.DnsSafeHost),
+				["HTTPSPort"] = NSNumber.FromInt32 (proxyUri.Port),
+			};
+#else
 			var strongProxy = new ProxyConfigurationDictionary {
 				HttpEnable = true,
 				HttpProxyHost = proxyUri.DnsSafeHost,
@@ -558,6 +577,7 @@ namespace Foundation {
 				mutableProxyDictionary ["HTTPSEnable"] = NSNumber.FromBoolean (true);
 				proxyDictionary = mutableProxyDictionary;
 			}
+#endif
 #endif
 			return true;
 		}

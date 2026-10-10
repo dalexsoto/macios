@@ -7,11 +7,16 @@
 using CoreFoundation;
 
 namespace CoreFoundation {
+#if WATCHOS
+	/// <summary>Base type for Core Foundation objects with native type identifiers.</summary>
+#else
 	/// <summary>Base type for some Core Foundation classes, such as <see cref="CoreFoundation.CFSocket" /> and <see cref="CoreFoundation.CFStream" />.</summary>
+#endif
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("watchos")]
 	public class CFType : NativeObject, ICFType {
 		/// <summary>Returns the CoreFoundation type identifier for the specified object.</summary>
 		/// <param name="typeRef">Handle to a CoreFoundation object.</param>

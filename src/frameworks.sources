@@ -4,6 +4,7 @@
 # Microsoft.iOS.dll
 # Microsoft.macOS.dll
 # Microsoft.tvOS.dll
+# Microsoft.watchOS.dll
 # Microsoft.MacCatalyst.dll
 #
 # First we build an assembly that contains the bare-bones code required
@@ -2461,6 +2462,131 @@ MACCATALYST_FRAMEWORKS = \
 
 WATCHOS_FRAMEWORKS = CoreFoundation CoreGraphics Foundation Security UIKit WatchKit
 
+WATCHOS_FOUNDATION_CORE_SOURCES = \
+	Foundation/AdviceAttribute.cs \
+	Foundation/ConnectAttribute.cs \
+	Foundation/DictionaryContainer.cs \
+	Foundation/ExportAttribute.cs \
+	Foundation/FieldAttribute.cs \
+	Foundation/LinkerSafeAttribute.cs \
+	Foundation/ModelAttribute.cs \
+	Foundation/ModelNotImplementedException.cs \
+	Foundation/NotImplementedAttribute.cs \
+	Foundation/NSAction.cs \
+	Foundation/NSDecimal.cs \
+	Foundation/NSDateComponents.cs \
+	Foundation/NSError.cs \
+	Foundation/NSNumber2.cs \
+	Foundation/NSObject2.cs \
+	Foundation/NSOperatingSystemVersion.cs \
+	Foundation/NSProgress.cs \
+	Foundation/NSRange.cs \
+	Foundation/NSString.cs \
+	Foundation/NSValue.cs \
+	Foundation/NSZone.cs \
+	Foundation/PreserveAttribute.cs \
+	Foundation/ProtocolAttribute.cs \
+	Foundation/RegisterAttribute.cs \
+
+WATCHOS_FOUNDATION_SOURCES = \
+	Foundation/NSArray.cs \
+	Foundation/NSArray_1.cs \
+	Foundation/NSCoder.cs \
+	Foundation/NSData.cs \
+	Foundation/NSDate.cs \
+	Foundation/NSDictionary.cs \
+	Foundation/NSDictionary_2.cs \
+	Foundation/NSEnumerator_1.cs \
+	Foundation/NSErrorException.cs \
+	Foundation/NSExceptionError.cs \
+	Foundation/NSFastEnumerationState.cs \
+	Foundation/NSFastEnumerator.cs \
+	Foundation/NSHttpCookie.cs \
+	Foundation/NSIndexSet.cs \
+	Foundation/NSInputStream.cs \
+	Foundation/NSLocale.cs \
+	Foundation/NSMutableArray_1.cs \
+	Foundation/NSMutableData.cs \
+	Foundation/NSMutableDictionary.cs \
+	Foundation/NSMutableDictionary_2.cs \
+	Foundation/NSMutableOrderedSet_1.cs \
+	Foundation/NSMutableSet.cs \
+	Foundation/NSMutableSet_1.cs \
+	Foundation/NSMutableString.cs \
+	Foundation/NSMutableUrlRequest.cs \
+	Foundation/NSNotificationCenter.cs \
+	Foundation/NSNull.cs \
+	Foundation/NSNullBehavior.cs \
+	Foundation/NSOrderedSet.cs \
+	Foundation/NSOrderedSet_1.cs \
+	Foundation/NSOutputStream.cs \
+	Foundation/NSPredicate.cs \
+	Foundation/NSRunLoop.cs \
+	Foundation/NSSecureCoding.cs \
+	Foundation/NSSet.cs \
+	Foundation/NSSet_1.cs \
+	Foundation/NSString2.cs \
+	Foundation/NSThread.cs \
+	Foundation/NSTimer.cs \
+	Foundation/NSTimeZone.cs \
+	Foundation/NSUrl.cs \
+	Foundation/NSUrlCredential.cs \
+	Foundation/NSUrlProtectionSpace.cs \
+	Foundation/NSUrlRequest.cs \
+	Foundation/NSUrlSession.cs \
+	Foundation/NSUrlSessionConfiguration.cs \
+	Foundation/ObjCException.cs \
+
+WATCHOS_GEOMETRY_CORE_SOURCES = \
+	CoreGraphics/CGAffineTransform.cs \
+	CoreGraphics/CGGeometry.cs \
+	CoreGraphics/CGPoint.cs \
+	CoreGraphics/CGPointDictionary.cs \
+	CoreGraphics/CGRect.cs \
+	CoreGraphics/CGRectDictionary.cs \
+	CoreGraphics/CGSize.cs \
+	CoreGraphics/CGSizeDictionary.cs \
+	CoreGraphics/CGVector.cs \
+	UIKit/UITypes.cs \
+	UIKit/UIOffset.cs \
+	XKit/Types.cs \
+
+WATCHOS_SECURITY_CORE_SOURCES = \
+	Security/Certificate.cs \
+	Security/SecAccessControl.cs \
+	Security/Trust.cs \
+
+WATCHOS_COREFOUNDATION_SOURCES = \
+	CoreFoundation/CFAllocator.cs \
+	CoreFoundation/CFArray.cs \
+	CoreFoundation/CFBoolean.cs \
+	CoreFoundation/CFComparisonResult.cs \
+	CoreFoundation/CFData.cs \
+	CoreFoundation/CFDataBuffer.cs \
+	CoreFoundation/CFDictionary.cs \
+	CoreFoundation/CFException.cs \
+	CoreFoundation/CFPreferences.cs \
+	CoreFoundation/CFPropertyList.cs \
+	CoreFoundation/CFStream.cs \
+	CoreFoundation/CFType.cs \
+	CoreFoundation/CFUrl.cs \
+	CoreFoundation/DispatchBlock.cs \
+	CoreFoundation/DispatchQueueSynchronizationContext.cs \
+
+WATCHOS_SECURITY_SOURCES = \
+	Security/ImportExport.cs \
+	Security/Items.cs \
+	Security/Policy.cs \
+	Security/SecIdentity.cs \
+	Security/SecPolicy.cs \
+	Security/SecTrust.cs \
+	Security/SecStatusCodeExtensions.cs \
+
+WATCHOS_DOTNET_CORE_SOURCES := $(sort $(SHARED_CORE_SOURCES) $(COREFOUNDATION_CORE_SOURCES) $(WATCHOS_FOUNDATION_CORE_SOURCES) $(WATCHOS_GEOMETRY_CORE_SOURCES) $(WATCHOS_SECURITY_CORE_SOURCES))
+WATCHOS_DOTNET_API_SOURCES := $(sort $(SHARED_API_SOURCES) foundation-base.cs Foundation/BaseEnums.cs Foundation/BaseAdditionalEnums.cs CoreGraphics/CGRectFields.cs CoreGraphics/MatrixOrder.cs $(SECURITY_API_SOURCES))
+WATCHOS_DOTNET_APIS := $(sort $(WATCHOS_DOTNET_API_SOURCES) corefoundation.cs security.cs watchkit.cs)
+WATCHOS_DOTNET_SOURCES := $(sort $(WATCHOS_DOTNET_CORE_SOURCES) $(filter-out System.Net.Http/CFContentStream.cs System.Net.Http/CFNetworkHandler.cs,$(SHARED_SOURCES)) $(WATCHOS_FOUNDATION_SOURCES) $(WATCHOS_COREFOUNDATION_SOURCES) $(WATCHOS_SECURITY_SOURCES) CoreGraphics/NativeDrawingMethods.cs CoreGraphics/NSValue.cs WatchKit/WatchApplication.cs)
+
 IOS_DOTNET_CORE_SOURCES      := $(sort $(foreach framework,$(call uppercase,$(IOS_FRAMEWORKS)),$($(framework)_CORE_SOURCES))     $(SHARED_CORE_SOURCES))
 IOS_DOTNET_API_SOURCES       := $(sort $(foreach framework,$(call uppercase,$(IOS_FRAMEWORKS)),$($(framework)_API_SOURCES))      $(SHARED_API_SOURCES))
 IOS_DOTNET_APIS              := $(sort $(foreach framework,$(call lowercase,$(IOS_FRAMEWORKS)),$(framework).cs)                  $(IOS_DOTNET_API_SOURCES))
@@ -2500,3 +2626,8 @@ MACCATALYST_CORE_SOURCES := $(MACCATALYST_DOTNET_CORE_SOURCES)
 MACCATALYST_API_SOURCES  := $(MACCATALYST_DOTNET_API_SOURCES)
 MACCATALYST_APIS         := $(MACCATALYST_DOTNET_APIS)
 MACCATALYST_SOURCES      := $(MACCATALYST_DOTNET_SOURCES)
+
+WATCHOS_CORE_SOURCES     := $(WATCHOS_DOTNET_CORE_SOURCES)
+WATCHOS_API_SOURCES      := $(WATCHOS_DOTNET_API_SOURCES)
+WATCHOS_APIS             := $(WATCHOS_DOTNET_APIS)
+WATCHOS_SOURCES          := $(WATCHOS_DOTNET_SOURCES)

@@ -26,12 +26,17 @@
 #nullable enable
 
 namespace Foundation {
+#if WATCHOS
+	/// <summary>Represents the major, minor, and patch numbers of an operating system version.</summary>
+#else
 	/// <summary>Defines the operating system version. Particularly for use with the <see cref="Foundation.NSProcessInfo.IsOperatingSystemAtLeastVersion(Foundation.NSOperatingSystemVersion)" /> method.</summary>
 	///     <remarks>To be added.</remarks>
+#endif
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("watchos")]
 	public struct NSOperatingSystemVersion : IEquatable<NSOperatingSystemVersion>, IComparable {
 		/// <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>

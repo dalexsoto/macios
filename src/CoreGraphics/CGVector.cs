@@ -37,6 +37,7 @@ namespace CoreGraphics {
 	///       <para>
 	///       </para>
 	///     </remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -81,6 +82,7 @@ namespace CoreGraphics {
 
 #if HAS_UIKIT
 #if !COREBUILD
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -89,6 +91,7 @@ namespace CoreGraphics {
 		extern static IntPtr NSStringFromCGVector (CGVector vector);
 
 		/// <summary>String representation of the vector, suitable to be passed later to <see cref="CoreGraphics.CGVector.FromString(System.String)" /> method.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -98,6 +101,7 @@ namespace CoreGraphics {
 			return CFString.FromHandle (NSStringFromCGVector (this));
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -108,6 +112,7 @@ namespace CoreGraphics {
 		/// <summary>Creates a CGVector from a stringified representation of the vector.</summary>
 		/// <param name="s">String representation, created previously with either the <see cref="CoreGraphics.CGVector.ToString" /> method or serialized in the CGVector format.</param>
 		/// <returns>The CGVector represented by the string representation.</returns>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]

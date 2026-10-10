@@ -70,6 +70,7 @@ namespace CoreFoundation {
 
 	/// <summary>An input source that generates asynchronous events and is intended to be used with a <see cref="CoreFoundation.CFRunLoop" />.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -129,6 +130,7 @@ namespace CoreFoundation {
 #if !COREBUILD
 	/// <summary>An abstract <see cref="CoreFoundation.CFRunLoop" /> that, when extended, gives the application developer fine-grained control over lifecycle events. </summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

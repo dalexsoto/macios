@@ -17,6 +17,11 @@ namespace ObjCRuntime {
 			var osx_minor = osx_version.Value.Minor;
 			return osx_major > major || (osx_major == major && osx_minor >= minor);
 		}
+#elif __WATCHOS__
+		internal static bool CheckwatchOS (int major, int minor)
+		{
+			return OperatingSystem.IsWatchOSVersionAtLeast (major, minor);
+		}
 #elif __IOS__ || __MACCATALYST__ || __TVOS__
 		// These three can be used interchangeably, the OS versions are the same.
 		internal static bool CheckiOS (int major, int minor)
@@ -57,6 +62,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_11 = OperatingSystem.IsIOSVersionAtLeast (13, 0);
 #elif __TVOS__
 					is_at_least_xcode_11 = OperatingSystem.IsTvOSVersionAtLeast (13, 0);
+#elif __WATCHOS__
+					is_at_least_xcode_11 = true;
 #else
 #error Unknown platform
 #endif
@@ -81,6 +88,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_12 = OperatingSystem.IsIOSVersionAtLeast (14, 0);
 #elif __TVOS__
 					is_at_least_xcode_12 = OperatingSystem.IsTvOSVersionAtLeast (14, 0);
+#elif __WATCHOS__
+					is_at_least_xcode_12 = true;
 #else
 #error Unknown platform
 #endif
@@ -106,6 +115,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_12_2 = OperatingSystem.IsIOSVersionAtLeast (14, 2);
 #elif __TVOS__
 					is_at_least_xcode_12_2 = OperatingSystem.IsTvOSVersionAtLeast (14, 2);
+#elif __WATCHOS__
+					is_at_least_xcode_12_2 = true;
 #else
 #error Unknown platform
 #endif
@@ -130,6 +141,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_13 = OperatingSystem.IsIOSVersionAtLeast (15, 0);
 #elif __TVOS__
 					is_at_least_xcode_13 = OperatingSystem.IsTvOSVersionAtLeast (15, 0);
+#elif __WATCHOS__
+					is_at_least_xcode_13 = true;
 #else
 #error Unknown platform
 #endif
@@ -154,6 +167,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_16 = OperatingSystem.IsIOSVersionAtLeast (18, 0);
 #elif __TVOS__
 					is_at_least_xcode_16 = OperatingSystem.IsTvOSVersionAtLeast (18, 0);
+#elif __WATCHOS__
+					is_at_least_xcode_16 = true;
 #else
 #error Unknown platform
 #endif
@@ -178,6 +193,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_16_4 = OperatingSystem.IsIOSVersionAtLeast (18, 5);
 #elif __TVOS__
 					is_at_least_xcode_16_4 = OperatingSystem.IsTvOSVersionAtLeast (18, 5);
+#elif __WATCHOS__
+					is_at_least_xcode_16_4 = true;
 #else
 #error Unknown platform
 #endif
@@ -202,6 +219,8 @@ namespace ObjCRuntime {
 					is_at_least_xcode_26 = OperatingSystem.IsIOSVersionAtLeast (26, 0);
 #elif __TVOS__
 					is_at_least_xcode_26 = OperatingSystem.IsTvOSVersionAtLeast (26, 0);
+#elif __WATCHOS__
+					is_at_least_xcode_26 = OperatingSystem.IsWatchOSVersionAtLeast (26, 0);
 #else
 #error Unknown platform
 #endif

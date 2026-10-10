@@ -111,6 +111,7 @@ namespace ObjCRuntime {
 		[SupportedOSPlatform ("tvos")]
 		static CoreGraphics.CGVector xamarin_nsvalue_to_cgvector (IntPtr value) { if (value == IntPtr.Zero) return default (CoreGraphics.CGVector); return Runtime.GetNSObject<NSValue> (value)?.CGVectorValue ?? default (CoreGraphics.CGVector); }
 #endif
+#if !WATCHOS
 		static CoreAnimation.CATransform3D xamarin_nsvalue_to_catransform3d (IntPtr value) { if (value == IntPtr.Zero) return default (CoreAnimation.CATransform3D); return Runtime.GetNSObject<NSValue> (value)?.CATransform3DValue ?? default (CoreAnimation.CATransform3D); }
 		static CoreLocation.CLLocationCoordinate2D xamarin_nsvalue_to_cllocationcoordinate2d (IntPtr value) { if (value == IntPtr.Zero) return default (CoreLocation.CLLocationCoordinate2D); return Runtime.GetNSObject<NSValue> (value)?.CoordinateValue ?? default (CoreLocation.CLLocationCoordinate2D); }
 		static CoreMedia.CMTime xamarin_nsvalue_to_cmtime (IntPtr value) { if (value == IntPtr.Zero) return default (CoreMedia.CMTime); return Runtime.GetNSObject<NSValue> (value)?.CMTimeValue ?? default (CoreMedia.CMTime); }
@@ -125,6 +126,7 @@ namespace ObjCRuntime {
 		static SceneKit.SCNMatrix4 xamarin_nsvalue_to_scnmatrix4 (IntPtr value) { if (value == IntPtr.Zero) return default (SceneKit.SCNMatrix4); return Runtime.GetNSObject<NSValue> (value)?.SCNMatrix4Value ?? default (SceneKit.SCNMatrix4); }
 		static SceneKit.SCNVector3 xamarin_nsvalue_to_scnvector3 (IntPtr value) { if (value == IntPtr.Zero) return default (SceneKit.SCNVector3); return Runtime.GetNSObject<NSValue> (value)?.Vector3Value ?? default (SceneKit.SCNVector3); }
 		static SceneKit.SCNVector4 xamarin_nsvalue_to_scnvector4 (IntPtr value) { if (value == IntPtr.Zero) return default (SceneKit.SCNVector4); return Runtime.GetNSObject<NSValue> (value)?.Vector4Value ?? default (SceneKit.SCNVector4); }
+#endif
 #if HAS_UIKIT
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos")]
@@ -156,6 +158,7 @@ namespace ObjCRuntime {
 		[SupportedOSPlatform ("tvos")]
 		static IntPtr xamarin_cgvector_to_nsvalue (CoreGraphics.CGVector value) { using var rv = NSValue.FromCGVector (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
 #endif
+#if !WATCHOS
 		static IntPtr xamarin_catransform3d_to_nsvalue (CoreAnimation.CATransform3D value) { using var rv = NSValue.FromCATransform3D (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
 		static IntPtr xamarin_cllocationcoordinate2d_to_nsvalue (CoreLocation.CLLocationCoordinate2D value) { using var rv = NSValue.FromMKCoordinate (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
 		static IntPtr xamarin_cmtime_to_nsvalue (CoreMedia.CMTime value) { using var rv = NSValue.FromCMTime (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
@@ -170,6 +173,7 @@ namespace ObjCRuntime {
 		static IntPtr xamarin_scnmatrix4_to_nsvalue (SceneKit.SCNMatrix4 value) { using var rv = NSValue.FromSCNMatrix4 (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
 		static IntPtr xamarin_scnvector3_to_nsvalue (SceneKit.SCNVector3 value) { using var rv = NSValue.FromVector (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
 		static IntPtr xamarin_scnvector4_to_nsvalue (SceneKit.SCNVector4 value) { using var rv = NSValue.FromVector (value); rv.DangerousRetain ().DangerousAutorelease (); return rv.Handle; }
+#endif
 #if HAS_UIKIT
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos")]

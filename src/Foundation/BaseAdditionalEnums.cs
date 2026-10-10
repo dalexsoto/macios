@@ -26,7 +26,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		[Field ("NSEventTrackingRunLoopMode", "AppKit")]
 		EventTracking,
-#else
+#elif !WATCHOS
 		// iOS-specific Enums start in 100 to avoid conflicting with future extensions to MonoMac
 		/// <summary>The NSRunLoop mode used when tracking controls. Use this to receive timers and events during UI tracking.</summary>
 		[Field ("UITrackingRunLoopMode", "UIKit")]

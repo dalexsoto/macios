@@ -11,11 +11,13 @@
 
 namespace Security {
 	/// <summary>Provides convenience methods for security status codes.</summary>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 	public static class SecStatusCodeExtensions {
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -28,6 +30,7 @@ namespace Security {
 		/// <summary>Gets a human-readable description of a security status code.</summary>
 		/// <param name="status">The security status code to describe.</param>
 		/// <returns>A description of <paramref name="status" />, or <see langword="null" /> if no description is available.</returns>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]

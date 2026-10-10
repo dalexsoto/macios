@@ -4,6 +4,9 @@ namespace ObjCRuntime {
 		internal const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
 #if !COREBUILD
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		internal static extern void PerformSelectorOnMainThread (IntPtr receiver, IntPtr selector, NativeHandle action, NativeHandle argument, byte waitUntilDone);
+
 		internal delegate IntPtr VariadicFunction19 (IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9, IntPtr arg10, IntPtr arg11, IntPtr arg12, IntPtr arg13, IntPtr arg14, IntPtr arg15, IntPtr arg16, IntPtr arg17, IntPtr arg18, IntPtr arg19);
 
 		/* Generic variadic function */

@@ -38,6 +38,7 @@ namespace Security {
 			GC.KeepAlive (certificate);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -48,6 +49,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -111,6 +113,7 @@ namespace Security {
 			GC.KeepAlive (policies);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -118,6 +121,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, byte* /* Boolean* */ allowFetch);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -128,6 +132,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -150,6 +155,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -160,6 +166,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -176,6 +183,7 @@ namespace Security {
 			return NSArray.ArrayFromHandleDropNullElements<SecCertificate> (p, releaseHandle: true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -197,6 +205,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -223,6 +232,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -241,6 +251,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -262,6 +273,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -272,6 +284,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -288,6 +301,7 @@ namespace Security {
 			return trust_result;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -299,6 +313,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -314,6 +329,7 @@ namespace Security {
 			return result;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -324,6 +340,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -333,6 +350,7 @@ namespace Security {
 			return new NSDictionary (SecTrustCopyResult (Handle), true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -341,6 +359,7 @@ namespace Security {
 		extern static SecStatusCode /* OSStatus */ SecTrustSetOCSPResponse (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ responseData);
 
 		// the API accept the handle for a single policy or an array of them
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -355,6 +374,7 @@ namespace Security {
 		/// <param name="ocspResponse">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -371,6 +391,7 @@ namespace Security {
 		/// <param name="ocspResponses">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -387,6 +408,7 @@ namespace Security {
 		/// <param name="ocspResponses">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -400,6 +422,7 @@ namespace Security {
 			GC.KeepAlive (ocspResponses);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -411,6 +434,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -428,6 +452,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]

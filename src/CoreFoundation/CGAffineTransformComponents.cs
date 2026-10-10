@@ -5,6 +5,7 @@
 using CoreGraphics;
 
 namespace CoreFoundation {
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

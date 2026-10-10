@@ -29,6 +29,7 @@ namespace Security {
 		UserPresence = 1 << 0,
 
 		/// <summary>Developers should use <see cref="Security.SecAccessControlCreateFlags.BiometryAny" /> instead.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -37,6 +38,7 @@ namespace Security {
 		TouchIDAny = BiometryAny,
 
 		/// <summary>Developers should use <see cref="Security.SecAccessControlCreateFlags.BiometryCurrentSet" /> instead.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -47,6 +49,7 @@ namespace Security {
 		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
 		// of 'TouchIDAny' which iOS 9 / macOS 10.12.1 will accept.
 		/// <summary>Require any biometric for access.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -56,6 +59,7 @@ namespace Security {
 		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
 		// of 'TouchIDCurrentSet' which iOS 9 / macOS 10.12.1 will accept.
 		/// <summary>Require the currently set biometric for access.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -63,6 +67,7 @@ namespace Security {
 		BiometryCurrentSet = 1 << 3,
 
 		/// <summary>Validation via the device passcode.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -84,6 +89,7 @@ namespace Security {
 		Companion = 1 << 5,
 
 		/// <summary>An "OR" operation applied to other flags.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -91,6 +97,7 @@ namespace Security {
 		Or = 1 << 14,
 
 		/// <summary>An "And" operation applied to other flags.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -98,6 +105,7 @@ namespace Security {
 		And = 1 << 15,
 
 		/// <summary>Require a private key for access.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -105,6 +113,7 @@ namespace Security {
 		PrivateKeyUsage = 1 << 30,
 
 		/// <summary>Require an application password for access.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -114,6 +123,7 @@ namespace Security {
 
 	/// <summary>Class that contains accessibility flags and access control object creation flags.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]

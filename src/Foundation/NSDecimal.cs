@@ -34,6 +34,7 @@ using System.Runtime.CompilerServices;
 namespace Foundation {
 	/// <summary>Represents an immutable value that can range from mantissa*10^exponent where mantissa is a decimal integer of up to 38 digits length, and the exponent is an integer that can range from -128 through 127.</summary>
 	/// <remarks>This structure provides a high-precision decimal type that is compatible with Foundation's NSDecimal type.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

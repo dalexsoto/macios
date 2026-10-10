@@ -31,7 +31,9 @@ using System.Diagnostics.CodeAnalysis;
 #if !COREBUILD
 using CoreFoundation;
 using CoreGraphics;
+#if HAS_COREMEDIA
 using CoreMedia;
+#endif
 #endif
 
 #if HAS_UIKIT
@@ -80,6 +82,7 @@ namespace Foundation {
 	/// }]]></code>
 	///   </example>
 	/// </remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -566,6 +569,7 @@ namespace Foundation {
 			return value;
 		}
 
+#if HAS_COREMEDIA
 		/// <summary>Returns the nullable <see cref="CMTime" /> associated with <paramref name="key" />.</summary>
 		/// <param name="key">The identifier of the value to get.</param>
 		/// <returns>The stored <see cref="CMTime" /> if present in the dictionary, <see langword="null" /> otherwise.</returns>
@@ -580,6 +584,7 @@ namespace Foundation {
 
 			return value;
 		}
+#endif
 
 #if HAS_UIKIT
 		/// <summary>Returns the nullable <see cref="UIEdgeInsets" /> associated with <paramref name="key" />.</summary>
@@ -891,6 +896,7 @@ namespace Foundation {
 				Dictionary [key] = value.Value.ToDictionary ();
 		}
 
+#if HAS_COREMEDIA
 		/// <summary>Associates a nullable <see cref="CMTime" /> value with <paramref name="key" />.</summary>
 		/// <param name="key">The identifier of the value to get.</param>
 		/// <param name="value">The nullable <see cref="CMTime" /> value to be associated with <paramref name="key" />. Pass <see langword="null" /> to remove any existing association.</param>
@@ -899,6 +905,7 @@ namespace Foundation {
 			if (NullCheckValueTypeAndRemoveKey (key, value))
 				Dictionary [key] = value.Value.ToDictionary ();
 		}
+#endif
 
 #if HAS_UIKIT
 		/// <summary>Associates a nullable <see cref="UIEdgeInsets" /> value with <paramref name="key" />.</summary>

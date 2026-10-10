@@ -59,6 +59,7 @@ namespace Foundation {
 		/// Initializes a new instance of the <see cref="NSDictionary{TKey, TValue}"/> class from a property list file.
 		/// </summary>
 		/// <param name="filename">The path to a property list file.</param>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -76,6 +77,7 @@ namespace Foundation {
 		/// Initializes a new instance of the <see cref="NSDictionary{TKey, TValue}"/> class from a property list at the specified URL.
 		/// </summary>
 		/// <param name="url">The URL to a property list file.</param>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]

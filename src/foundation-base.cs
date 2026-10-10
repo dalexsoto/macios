@@ -35,6 +35,7 @@
 
 global using nfloat = global::System.Runtime.InteropServices.NFloat;
 
+#if !WATCHOS
 using CloudKit;
 using CoreData;
 using CoreFoundation;
@@ -127,6 +128,14 @@ using NSTextTable = Foundation.NSString; // Different frmo NSTextBlock, because 
 #endif
 
 
+#else
+using CoreFoundation;
+using CoreGraphics;
+using Security;
+using UIKit;
+using System.ComponentModel;
+#endif
+
 namespace Foundation {
 	/// <param name="obj1">To be added.</param>
 	/// <param name="obj2">To be added.</param>
@@ -159,7 +168,11 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration, CKRecordValue {
+	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration
+#if !WATCHOS
+		, CKRecordValue
+#endif
+	{
 		[Export ("count")]
 		nuint Count { get; }
 
@@ -1133,7 +1146,11 @@ namespace Foundation {
 
 
 	[BaseType (typeof (NSObject))]
-	interface NSData : NSSecureCoding, NSMutableCopying, CKRecordValue {
+	interface NSData : NSSecureCoding, NSMutableCopying
+#if !WATCHOS
+		, CKRecordValue
+#endif
+	{
 		[Export ("dataWithContentsOfURL:")]
 		[Static]
 		NSData FromUrl (NSUrl url);
@@ -1353,6 +1370,11 @@ namespace Foundation {
 		[Export ("initWithCoder:")]
 		NativeHandle Constructor (NSCoder decoder);
 
+#if WATCHOS
+		/// <summary>Encodes the state of the object using the provided encoder.</summary>
+		/// <param name="encoder">The encoder that receives the object's state.</param>
+		/// <remarks>Implement this method and an <c>initWithCoder:</c> constructor to support native object coding.</remarks>
+#else
 		/// <summary>Encodes the state of the object using the provided encoder.</summary>
 		/// <param name="encoder">The encoder object where the state of the object will be stored</param>
 		/// <remarks>
@@ -1366,6 +1388,7 @@ namespace Foundation {
 		/// coder.Encode (hostName, key: "hostName");]]></code>
 		/// </example>
 		/// </remarks>
+#endif
 		[Abstract]
 		[Export ("encodeWithCoder:")]
 		void EncodeTo (NSCoder encoder);
@@ -1591,7 +1614,11 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	interface NSDate : NSSecureCoding, NSCopying, CKRecordValue {
+	interface NSDate : NSSecureCoding, NSCopying
+#if !WATCHOS
+		, CKRecordValue
+#endif
+	{
 		[Export ("timeIntervalSinceReferenceDate")]
 		double SecondsSinceReferenceDate { get; }
 
@@ -1674,7 +1701,11 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	interface NSDictionary : NSSecureCoding, NSMutableCopying, NSFetchRequestResult, INSFastEnumeration {
+	interface NSDictionary : NSSecureCoding, NSMutableCopying,
+#if !WATCHOS
+		NSFetchRequestResult,
+#endif
+		INSFastEnumeration {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NSMutableDictionary.FromFile' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NSMutableDictionary.FromFile' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NSMutableDictionary.FromFile' instead.")]
@@ -1973,10 +2004,12 @@ namespace Foundation {
 		///         <value>
 		///         </value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("NSNetServicesErrorDomain")]
 		NSString NSNetServicesErrorDomain { get; }
 
+		[NoWatch]
 		[Field ("NSNetServicesErrorCode")]
 		NSString NSNetServicesErrorCode { get; }
 
@@ -1994,6 +2027,7 @@ namespace Foundation {
 		[Field ("NSStreamSOCKSErrorDomain")]
 		NSString NSStreamSOCKSErrorDomain { get; }
 
+#if !WATCHOS
 		/// <summary>The CoreLocation error domain.</summary>
 		///         <value>
 		///         </value>
@@ -2020,6 +2054,7 @@ namespace Foundation {
 		[NoMacCatalyst] // We don't expose CarPlay on Mac Catalyst for the moment // [MacCatalyst (14, 0)]
 		[Field ("CarPlayErrorDomain", "CarPlay")]
 		NSString CarPlayErrorDomain { get; }
+#endif
 
 		/// <summary>Represents the value associated with the constant NSUnderlyingErrorKey</summary>
 		///         <value>
@@ -2117,6 +2152,7 @@ namespace Foundation {
 		[Export ("userInfoValueProviderForDomain:")]
 		[return: NullAllowed]
 		NSErrorUserInfoValueProvider GetUserInfoValueProvider (string errorDomain);
+#if !WATCHOS
 
 		// From NSError (NSFileProviderError) Category to avoid static category uglyness
 
@@ -2130,6 +2166,8 @@ namespace Foundation {
 		[Export ("fileProviderErrorForCollisionWithItem:")]
 		NSError GetFileProviderError (INSFileProviderItem existingItem);
 
+#endif
+
 		/// <param name="nonExistentItemIdentifier">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
@@ -2139,6 +2177,7 @@ namespace Foundation {
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
+#if !WATCHOS
 
 		[iOS (16, 0)]
 		[NoMacCatalyst]
@@ -2146,6 +2185,8 @@ namespace Foundation {
 		[Static]
 		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]
 		NSError GetFileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
+
+#endif
 
 #if false
 		// FIXME that value is present in the header (7.0 DP 6) files but returns NULL (i.e. unusable)
@@ -2201,7 +2242,10 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject))]
 	interface NSNull : NSSecureCoding, NSCopying
-	, CAAction {
+#if !WATCHOS
+		, CAAction
+#endif
+	{
 		[Export ("null"), Static]
 		[Internal]
 		NSNull _Null { get; }
@@ -2934,6 +2978,7 @@ namespace Foundation {
 		[Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		[MacCatalyst (13, 1)]
 		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
+#if !WATCHOS
 
 		/* These methods come from NURL_AppKitAdditions */
 		/// <param name="pasteboard">To be added.</param>
@@ -2948,6 +2993,9 @@ namespace Foundation {
 		[return: NullAllowed]
 		NSUrl FromPasteboard (NSPasteboard pasteboard);
 
+#endif
+#if !WATCHOS
+
 		/// <param name="pasteboard">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
@@ -2956,6 +3004,8 @@ namespace Foundation {
 		[NoTV]
 		[Export ("writeToPasteboard:")]
 		void WriteToPasteboard (NSPasteboard pasteboard);
+
+#endif
 
 		[Export ("bookmarkDataWithContentsOfURL:error:")]
 		[Static]
@@ -3617,6 +3667,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLVolumeAvailableCapacityForImportantUsageKey")]
@@ -3625,6 +3676,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLVolumeAvailableCapacityForOpportunisticUsageKey")]
@@ -3714,6 +3766,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousItemIsSharedKey")]
@@ -3722,6 +3775,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemCurrentUserRoleKey")]
@@ -3730,6 +3784,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemCurrentUserPermissionsKey")]
@@ -3738,6 +3793,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemOwnerNameComponentsKey")]
@@ -3746,6 +3802,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemMostRecentEditorNameComponentsKey")]
@@ -3754,6 +3811,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemRoleOwner")]
@@ -3762,6 +3820,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemRoleParticipant")]
@@ -3770,6 +3829,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemPermissionsReadOnly")]
@@ -3778,6 +3838,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("NSURLUbiquitousSharedItemPermissionsReadWrite")]
@@ -4197,6 +4258,7 @@ namespace Foundation {
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface NSUrlAuthenticationChallenge : NSSecureCoding {
+#if !WATCHOS
 		/// <param name="space">To be added.</param>
 		/// <param name="credential">To be added.</param>
 		/// <param name="previousFailureCount">To be added.</param>
@@ -4211,8 +4273,13 @@ namespace Foundation {
 		[Export ("initWithProtectionSpace:proposedCredential:previousFailureCount:failureResponse:error:sender:")]
 		NativeHandle Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, [NullAllowed] NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
 
+#endif
+#if !WATCHOS
+
 		[Export ("initWithAuthenticationChallenge:sender:")]
 		NativeHandle Constructor (NSUrlAuthenticationChallenge challenge, NSUrlConnection sender);
+
+#endif
 
 		[Export ("protectionSpace")]
 		NSUrlProtectionSpace ProtectionSpace { get; }
@@ -4240,9 +4307,12 @@ namespace Foundation {
 		INSUrlAuthenticationChallengeSender SenderObject { get; }
 #endif
 #else
+#if !WATCHOS
 		[Obsolete ("Use 'SenderObject' instead, this property has the wrong type.")]
 		[Export ("sender")]
 		NSUrlConnection Sender { get; }
+
+#endif
 
 		[Export ("sender")]
 		[Sealed]
@@ -4749,6 +4819,7 @@ namespace Foundation {
 			        </remarks>
 			""")]
 		void GetAllTasks (NSUrlSessionAllPendingTasks completionHandler);
+#if !WATCHOS
 
 		/// <param name="hostname">To be added.</param>
 		/// <param name="port">To be added.</param>
@@ -4759,6 +4830,9 @@ namespace Foundation {
 		[Export ("streamTaskWithHostName:port:")]
 		NSUrlSessionStreamTask CreateBidirectionalStream (string hostname, nint port);
 
+#endif
+#if !WATCHOS
+
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
@@ -4767,17 +4841,28 @@ namespace Foundation {
 		[Export ("streamTaskWithNetService:")]
 		NSUrlSessionStreamTask CreateBidirectionalStream (NSNetService service);
 
+#endif
+#if !WATCHOS
+
 		[MacCatalyst (13, 1)]
 		[Export ("webSocketTaskWithURL:")]
 		NSUrlSessionWebSocketTask CreateWebSocketTask (NSUrl url);
+
+#endif
+#if !WATCHOS
 
 		[MacCatalyst (13, 1)]
 		[Export ("webSocketTaskWithURL:protocols:")]
 		NSUrlSessionWebSocketTask CreateWebSocketTask (NSUrl url, string [] protocols);
 
+#endif
+#if !WATCHOS
+
 		[MacCatalyst (13, 1)]
 		[Export ("webSocketTaskWithRequest:")]
 		NSUrlSessionWebSocketTask CreateWebSocketTask (NSUrlRequest request);
+
+#endif
 
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("uploadTaskWithResumeData:")]
@@ -4942,6 +5027,7 @@ namespace Foundation {
 	[Internal]
 	[Static]
 	[MacCatalyst (13, 1)]
+	[NoWatch]
 	interface ProxyConfigurationDictionaryKeys {
 		[Field ("kCFNetworkProxiesHTTPEnable")]
 		NSString HttpEnableKey { get; }
@@ -4967,6 +5053,7 @@ namespace Foundation {
 
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("ProxyConfigurationDictionaryKeys")]
+	[NoWatch]
 	interface ProxyConfigurationDictionary {
 		bool HttpEnable { get; set; }
 		string HttpProxyHost { get; set; }
@@ -5029,6 +5116,7 @@ namespace Foundation {
 		NSDictionary ConnectionProxyDictionary { get; set; }
 
 		[MacCatalyst (13, 1)]
+		[NoWatch]
 		ProxyConfigurationDictionary StrongConnectionProxyDictionary {
 			[Wrap ("new ProxyConfigurationDictionary (ConnectionProxyDictionary!)")]
 			get;
@@ -5111,11 +5199,14 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Export ("shouldUseExtendedBackgroundIdleMode")]
 		bool ShouldUseExtendedBackgroundIdleMode { get; set; }
+#if !WATCHOS
 
 		[NoTV, NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("multipathServiceType", ArgumentSemantic.Assign)]
 		NSUrlSessionMultipathServiceType MultipathServiceType { get; set; }
+
+#endif
 
 		[MacCatalyst (13, 1)]
 		[Export ("waitsForConnectivity")]
@@ -5129,6 +5220,7 @@ namespace Foundation {
 		[Export ("allowsConstrainedNetworkAccess")]
 		bool AllowsConstrainedNetworkAccess { get; set; }
 
+		[Watch (26, 1)]
 		[TV (26, 1), Mac (26, 1), iOS (26, 1), MacCatalyst (26, 1)]
 		[Export ("allowsUltraConstrainedNetworkAccess")]
 		bool AllowsUltraConstrainedNetworkAccess { get; set; }
@@ -5137,10 +5229,13 @@ namespace Foundation {
 		[MacCatalyst (16, 0)]
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; set; }
+#if !WATCHOS
 
 		[Internal]
 		[Export ("proxyConfigurations", ArgumentSemantic.Copy)]
 		IntPtr _ProxyConfigurations { get; set; }
+
+#endif
 
 		[iOS (18, 4), TV (18, 4), MacCatalyst (18, 4), Mac (15, 4)]
 		[Export ("usesClassicLoadingMode")]
@@ -5316,6 +5411,7 @@ namespace Foundation {
 		/// <remarks>To be added.</remarks>
 		[Export ("URLSession:dataTask:willCacheResponse:completionHandler:")]
 		void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler);
+#if !WATCHOS
 
 		/// <param name="session">To be added.</param>
 		/// <param name="dataTask">To be added.</param>
@@ -5325,6 +5421,8 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Export ("URLSession:dataTask:didBecomeStreamTask:")]
 		void DidBecomeStreamTask (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlSessionStreamTask streamTask);
+
+#endif
 	}
 
 
@@ -6114,6 +6212,7 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Static, Export ("getBoundStreamsWithBufferSize:inputStream:outputStream:")]
 		void GetBoundStreams (nuint bufferSize, out NSInputStream inputStream, out NSOutputStream outputStream);
+#if !WATCHOS
 
 		/// <param name="hostname">To be added.</param>
 		/// <param name="port">To be added.</param>
@@ -6124,6 +6223,8 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Static, Export ("getStreamsToHostWithName:port:inputStream:outputStream:")]
 		void GetStreamsToHost (string hostname, nint port, out NSInputStream inputStream, out NSOutputStream outputStream);
+
+#endif
 	}
 
 
@@ -6148,13 +6249,17 @@ namespace Foundation {
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
 	[DesignatedDefaultCtor]
-	interface NSString2 : NSSecureCoding, NSMutableCopying, CKRecordValue
+	interface NSString2 : NSSecureCoding, NSMutableCopying
+#if !WATCHOS
+		, CKRecordValue
+#endif
 #if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 #endif
 		, NSItemProviderReading, NSItemProviderWriting {
 		[Export ("initWithData:encoding:")]
 		NativeHandle Constructor (NSData data, NSStringEncoding encoding);
+#if !WATCHOS
 
 		/// <param name="attributedStringAttributes">To be added.</param>
 		/// <summary>To be added.</summary>
@@ -6165,6 +6270,9 @@ namespace Foundation {
 		[NoTV]
 		[Bind ("sizeWithAttributes:")]
 		CGSize StringSize ([NullAllowed] NSDictionary attributedStringAttributes);
+
+#endif
+#if !WATCHOS
 
 		/// <param name="size">To be added.</param>
 		/// <param name="options">To be added.</param>
@@ -6178,6 +6286,9 @@ namespace Foundation {
 		[Bind ("boundingRectWithSize:options:attributes:")]
 		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options, NSDictionary attributes);
 
+#endif
+#if !WATCHOS
+
 		/// <param name="point">To be added.</param>
 		/// <param name="attributes">To be added.</param>
 		/// <summary>To be added.</summary>
@@ -6187,6 +6298,9 @@ namespace Foundation {
 		[NoTV]
 		[Bind ("drawAtPoint:withAttributes:")]
 		void DrawString (CGPoint point, NSDictionary attributes);
+
+#endif
+#if !WATCHOS
 
 		/// <param name="rect">To be added.</param>
 		/// <param name="attributes">To be added.</param>
@@ -6198,6 +6312,9 @@ namespace Foundation {
 		[Bind ("drawInRect:withAttributes:")]
 		void DrawString (CGRect rect, NSDictionary attributes);
 
+#endif
+#if !WATCHOS
+
 		/// <param name="rect">To be added.</param>
 		/// <param name="options">To be added.</param>
 		/// <param name="attributes">To be added.</param>
@@ -6208,6 +6325,8 @@ namespace Foundation {
 		[NoTV]
 		[Bind ("drawWithRect:options:attributes:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, NSDictionary attributes);
+
+#endif
 
 		[Internal]
 		[Export ("characterAtIndex:")]
@@ -6754,6 +6873,7 @@ namespace Foundation {
 
 		[Field ("NSKeyValueChangeNotificationIsPriorKey")]
 		NSString ChangeNotificationIsPriorKey { get; }
+#if !WATCHOS
 
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
 		[NoiOS]
@@ -6762,11 +6882,17 @@ namespace Foundation {
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Export ("exposedBindings")]
 		NSString [] ExposedBindings { get; }
+
+#endif
+#if !WATCHOS
 
 		[NoiOS]
 		[NoMacCatalyst]
@@ -6774,11 +6900,17 @@ namespace Foundation {
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Wrap ("Bind (binding, observable, keyPath, options.GetDictionary ())")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSBindingOptions options);
+
+#endif
+#if !WATCHOS
 
 		[NoiOS]
 		[NoMacCatalyst]
@@ -6786,17 +6918,26 @@ namespace Foundation {
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject [] GetBindingOptionDescriptions (NSString aBinding);
+
+#endif
+#if !WATCHOS
 
 		// NSPlaceholders (informal) protocol
 		[NoiOS]
@@ -6807,6 +6948,9 @@ namespace Foundation {
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -6815,12 +6959,18 @@ namespace Foundation {
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
+
+#endif
+#if !WATCHOS
 
 		[NoiOS]
 		[NoMacCatalyst]
@@ -6829,12 +6979,17 @@ namespace Foundation {
 		[Export ("commitEditing")]
 		bool CommitEditing ();
 
+#endif
+#if !WATCHOS
+
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
+
+#endif
 
 		[Export ("methodForSelector:")]
 		IntPtr GetMethodForSelector (Selector sel);
@@ -6869,10 +7024,14 @@ namespace Foundation {
 
 		[Static, Export ("cancelPreviousPerformRequestsWithTarget:selector:object:")]
 		void CancelPreviousPerformRequest (NSObject aTarget, Selector selector, [NullAllowed] NSObject argument);
+#if !WATCHOS
 
 		[MacCatalyst (13, 1)]
 		[Export ("prepareForInterfaceBuilder")]
 		void PrepareForInterfaceBuilder ();
+
+#endif
+#if !WATCHOS
 
 		[MacCatalyst (13, 1)]
 #if MONOMAC
@@ -6883,25 +7042,39 @@ namespace Foundation {
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 
+#endif
+#if !WATCHOS
+
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("accessibilityRespondsToUserInteraction")]
 		bool AccessibilityRespondsToUserInteraction { get; set; }
+
+#endif
+#if !WATCHOS
 
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("accessibilityUserInputLabels", ArgumentSemantic.Strong)]
 		string [] AccessibilityUserInputLabels { get; set; }
 
+#endif
+#if !WATCHOS
+
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("accessibilityAttributedUserInputLabels", ArgumentSemantic.Copy)]
 		NSAttributedString [] AccessibilityAttributedUserInputLabels { get; set; }
 
+#endif
+#if !WATCHOS
+
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("accessibilityTextualContext", ArgumentSemantic.Strong)]
 		string AccessibilityTextualContext { get; set; }
+
+#endif
 	}
 
 
@@ -7986,8 +8159,12 @@ namespace Foundation {
 	interface INSItemProviderWriting { }
 
 
+#if WATCHOS
+	/// <summary>Provides data representations of a Foundation object.</summary>
+#else
 	/// <summary>Interface used by <see cref="Foundation.NSItemProvider" /> for retrieving data from an object.</summary>
 	/// <remarks>To be added.</remarks>
+#endif
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface NSItemProviderWriting {
@@ -8031,6 +8208,12 @@ namespace Foundation {
 		// 'GetItemProviderVisibility' is a nicer name, but there's a static method with that name.
 		NSItemProviderRepresentationVisibility GetItemProviderVisibilityForTypeIdentifier (string typeIdentifier);
 
+#if WATCHOS
+		/// <summary>Loads a data representation of this object.</summary>
+		/// <param name="typeIdentifier">The Uniform Type Identifier of the requested representation.</param>
+		/// <param name="completionHandler">The callback that receives the data or an error.</param>
+		/// <returns>The progress of the data-loading operation.</returns>
+#else
 		/// <param name="typeIdentifier">A Universal Type Identifier (UTI) indicating the type of data to load.</param>
 		/// <param name="completionHandler">The method called after the data is loaded.</param>
 		/// <summary>Implement this method to customize the loading of data by an <see cref="Foundation.NSItemProvider" />.</summary>
@@ -8038,6 +8221,7 @@ namespace Foundation {
 		/// <remarks>
 		///           <para>The <paramref name="typeIdentifier" /> must be in the set of values returned by <see cref="Foundation.NSItemProviderWriting_Extensions.GetWritableTypeIdentifiersForItemProvider(Foundation.INSItemProviderWriting)" />.</para>
 		///         </remarks>
+#endif
 		[Abstract]
 		[Async (XmlDocs = """
 			<param name="typeIdentifier">A Universal Type Identifier (UTI) indicating the type of data to load.</param>
@@ -8206,6 +8390,7 @@ namespace Foundation {
 
 		[Export ("rangeValue")]
 		NSRange RangeValue { get; }
+#if !WATCHOS
 
 		/// <param name="time">To be added.</param>
 		///         <summary>Creates an NSValue that wraps a CMTime object..</summary>
@@ -8215,12 +8400,18 @@ namespace Foundation {
 		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>Returns the CMTime value wrapped by this NSValue object.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
+
+#endif
+#if !WATCHOS
 
 		/// <param name="timeMapping">To be added.</param>
 		///         <summary>Creates an NSValue that wraps a CMTimeMapping object.</summary>
@@ -8230,12 +8421,18 @@ namespace Foundation {
 		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>Returns the CMTimeMapping value wrapped by this NSValue object.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
+
+#endif
+#if !WATCHOS
 
 		/// <param name="timeRange">To be added.</param>
 		///         <summary>Creates an NSValue that wraps a CMTimeRange object.</summary>
@@ -8245,12 +8442,17 @@ namespace Foundation {
 		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>Returns the CMTimeRange value wrapped by this NSValue object.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
+
+#endif
 
 #if MONOMAC
 		[Export ("valueWithRect:")]
@@ -8398,6 +8600,7 @@ namespace Foundation {
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		NSValue FromCGVector (CGVector vector);
+#if !WATCHOS
 
 		// Maybe we should include this inside mapkit.cs instead (it's a partial interface, so that's trivial)?
 		/// <param name="coordinate">To be added.</param>
@@ -8408,6 +8611,9 @@ namespace Foundation {
 		[Static, Export ("valueWithMKCoordinate:")]
 		NSValue FromMKCoordinate (CoreLocation.CLLocationCoordinate2D coordinate);
 
+#endif
+#if !WATCHOS
+
 		/// <param name="coordinateSpan">To be added.</param>
 		///         <summary>Creates an NSValue that stores an MKCoordinateSpan.</summary>
 		///         <returns>To be added.</returns>
@@ -8416,6 +8622,9 @@ namespace Foundation {
 		[Static, Export ("valueWithMKCoordinateSpan:")]
 		NSValue FromMKCoordinateSpan (MapKit.MKCoordinateSpan coordinateSpan);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>The CLLocationCoordinate2D stored in this NSValue.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
@@ -8423,12 +8632,18 @@ namespace Foundation {
 		[Export ("MKCoordinateValue")]
 		CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
+#endif
+#if !WATCHOS
+
 		/// <summary>The MKCoordinateSpan stored in this NSValue.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("MKCoordinateSpanValue")]
 		MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
+
+#endif
+#if !WATCHOS
 
 		/// <param name="transform">To be added.</param>
 		///         <summary>Creates an NSValue that wraps a CATransform3D object.</summary>
@@ -8438,17 +8653,26 @@ namespace Foundation {
 		[Static]
 		NSValue FromCATransform3D (CoreAnimation.CATransform3D transform);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>Returns the CATransform3D value wrapped by this NSValue object.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[Export ("CATransform3DValue")]
 		CoreAnimation.CATransform3D CATransform3DValue { get; }
 
+#endif
+#if !WATCHOS
+
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
 		[TV (16, 0)]
 		[Export ("CMVideoDimensionsValue")]
 		CMVideoDimensions CMVideoDimensionsValue { get; }
+
+#endif
+#if !WATCHOS
 
 		[iOS (16, 0)]
 		[MacCatalyst (16, 0)]
@@ -8457,7 +8681,10 @@ namespace Foundation {
 		[Static]
 		NSValue FromCMVideoDimensions (CMVideoDimensions value);
 
+#endif
+
 		#region SceneKit Additions
+#if !WATCHOS
 
 		/// <param name="vector">To be added.</param>
 		///         <summary>To be added.</summary>
@@ -8467,12 +8694,18 @@ namespace Foundation {
 		[Static, Export ("valueWithSCNVector3:")]
 		NSValue FromVector (SCNVector3 vector);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("SCNVector3Value")]
 		SCNVector3 Vector3Value { get; }
+
+#endif
+#if !WATCHOS
 
 		/// <param name="vector">To be added.</param>
 		///         <summary>To be added.</summary>
@@ -8482,12 +8715,18 @@ namespace Foundation {
 		[Static, Export ("valueWithSCNVector4:")]
 		NSValue FromVector (SCNVector4 vector);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("SCNVector4Value")]
 		SCNVector4 Vector4Value { get; }
+
+#endif
+#if !WATCHOS
 
 		/// <param name="matrix">To be added.</param>
 		///         <summary>To be added.</summary>
@@ -8497,12 +8736,17 @@ namespace Foundation {
 		[Static, Export ("valueWithSCNMatrix4:")]
 		NSValue FromSCNMatrix4 (SCNMatrix4 matrix);
 
+#endif
+#if !WATCHOS
+
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
 		[MacCatalyst (13, 1)]
 		[Export ("SCNMatrix4Value")]
 		SCNMatrix4 SCNMatrix4Value { get; }
+
+#endif
 
 		#endregion
 	}
@@ -8511,7 +8755,11 @@ namespace Foundation {
 	[BaseType (typeof (NSValue))]
 	// init returns NIL
 	[DisableDefaultCtor]
-	interface NSNumber : CKRecordValue, NSFetchRequestResult {
+	interface NSNumber
+#if !WATCHOS
+		: CKRecordValue, NSFetchRequestResult
+#endif
+	{
 		[Export ("charValue")]
 		sbyte SByteValue { get; }
 
@@ -9039,12 +9287,14 @@ namespace Foundation {
 		[Export ("kind", ArgumentSemantic.Copy)]
 		NSString Kind { get; set; }
 
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Export ("publish")]
 		void Publish ();
 
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9055,18 +9305,21 @@ namespace Foundation {
 		///         <param name="appBundleIdentifier">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Export ("setAcknowledgementHandler:forAppBundleIdentifier:")]
 		void SetAcknowledgementHandler (Action<bool> acknowledgementHandler, string appBundleIdentifier);
 
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
 		[Static, Export ("addSubscriberForFileURL:withPublishingHandler:")]
 		NSObject AddSubscriberForFile (NSUrl url, Action<NSProgress> publishingHandler);
 
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9076,6 +9329,7 @@ namespace Foundation {
 		/// <param name="success">To be added.</param>
 		///         <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9085,6 +9339,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9180,6 +9435,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9189,6 +9445,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9198,6 +9455,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoMacCatalyst]
 		[NoTV]
@@ -9302,6 +9560,7 @@ namespace Foundation {
 
 		[Export ("evaluateWithObject:substitutionVariables:")]
 		bool EvaluateWithObject (NSObject obj, NSDictionary substitutionVariables);
+#if !WATCHOS
 
 		[return: NullAllowed]
 		[Static]
@@ -9311,9 +9570,12 @@ namespace Foundation {
 		[Export ("predicateFromMetadataQueryString:")]
 		NSPredicate FromMetadataQueryString (string query);
 
+#endif
+
 		[MacCatalyst (13, 1)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
+#if !WATCHOS
 
 		/// <summary>Validates this predicate using the specified validator and, if valid, allows it to be evaluated.</summary>
 		/// <param name="validator">The <see cref="INSPredicateValidating" /> object used to validate the predicate before allowing evaluation.</param>
@@ -9322,6 +9584,8 @@ namespace Foundation {
 		[iOS (26, 4), TV (26, 4), Mac (26, 4), MacCatalyst (26, 4)]
 		[Export ("allowEvaluationWithValidator:error:")]
 		bool AllowEvaluation (INSPredicateValidating validator, [NullAllowed] out NSError error);
+
+#endif
 	}
 
 

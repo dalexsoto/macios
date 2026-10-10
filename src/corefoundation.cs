@@ -205,6 +205,7 @@ namespace CoreFoundation {
 		IntPtr free { get; }
 	}
 
+#if !WATCHOS
 	/// <summary>Provides the necessary methods needed for accessing the system's global proxy configuration settings and resolving a list of proxies to use for connecting to a URL.</summary>
 	[Partial]
 	interface CFNetwork {
@@ -215,6 +216,7 @@ namespace CoreFoundation {
 		[Field ("kCFErrorDomainCFNetwork", "CFNetwork")]
 		NSString ErrorDomain { get; }
 	}
+#endif
 
 	enum CFStringTransform {
 		/// <summary>To be added.</summary>
@@ -299,6 +301,7 @@ namespace CoreFoundation {
 		BigEndian,
 	}
 
+#if !WATCHOS
 	// The CFProxy + friends types should really be in CFNetwork
 	[Partial]
 	interface CFProxy {
@@ -353,4 +356,5 @@ namespace CoreFoundation {
 		[Field ("kCFProxyTypeSOCKS", "CFNetwork")]
 		SOCKS,
 	}
+#endif
 }

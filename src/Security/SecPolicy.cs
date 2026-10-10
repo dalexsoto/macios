@@ -16,6 +16,7 @@ namespace Security {
 	/// <summary>Encapsulates a security policy. A policy comprises a set of rules that specify how to evaluate a certificate for a certain level of trust.</summary>
 	///     <remarks>To be added.</remarks>
 	public partial class SecPolicy {
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -26,6 +27,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -36,6 +38,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSDictionary> (dict, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -47,6 +50,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -57,6 +61,7 @@ namespace Security {
 			return policy == IntPtr.Zero ? null : new SecPolicy (policy, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -69,6 +74,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

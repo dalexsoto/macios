@@ -9,6 +9,7 @@ using CoreFoundation;
 namespace CoreGraphics {
 	/// <summary>Structure defining a 2D point.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

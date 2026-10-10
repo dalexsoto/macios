@@ -3,7 +3,9 @@
 //
 // Authors:
 //     Manuel de la Pena <mandel@microsoft.com>
+#if HAS_NETWORK
 using Network;
+#endif
 
 namespace Foundation {
 
@@ -52,6 +54,8 @@ namespace Foundation {
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos10.10", "Use 'CreateBackgroundSessionConfiguration' instead.")]
 		[ObsoletedOSPlatform ("ios8.0", "Use 'CreateBackgroundSessionConfiguration' instead.")]
+		[SupportedOSPlatform ("watchos26.0")]
+		[ObsoletedOSPlatform ("watchos2.0", "Use 'CreateBackgroundSessionConfiguration' instead.")]
 		public static NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier)
 		{
 			var config = NSUrlSessionConfiguration._BackgroundSessionConfiguration (identifier);
@@ -70,6 +74,7 @@ namespace Foundation {
 			return config;
 		}
 
+#if HAS_NETWORK
 		/// <summary>Gets or sets the proxy configurations for this session.</summary>
 		/// <value>An array of <see cref="Network.NWProxyConfig" /> objects representing the proxy configurations.</value>
 		[SupportedOSPlatform ("ios17.0")]
@@ -83,6 +88,7 @@ namespace Foundation {
 				_ProxyConfigurations = arr.GetHandle ();
 			}
 		}
+#endif
 
 	}
 }

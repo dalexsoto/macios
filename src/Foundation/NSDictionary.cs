@@ -593,6 +593,7 @@ namespace Foundation {
 #endif
 		}
 
+#if !WATCHOS
 		/// <summary>
 		/// Converts the dictionary to an <see cref="NSFileAttributes"/> object.
 		/// </summary>
@@ -601,5 +602,6 @@ namespace Foundation {
 		{
 			return NSFileAttributes.FromDictionary (this);
 		}
+#endif
 	}
 }

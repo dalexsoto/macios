@@ -242,6 +242,7 @@ namespace Security {
 			}
 		}
 #else
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -251,6 +252,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
@@ -265,6 +267,7 @@ namespace Security {
 #endif
 #endif // !__MACCATALYST__
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -275,6 +278,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -285,6 +289,7 @@ namespace Security {
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -295,6 +300,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -309,6 +315,7 @@ namespace Security {
 			return null;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -319,6 +326,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -333,6 +341,7 @@ namespace Security {
 			return null;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -343,6 +352,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -353,6 +363,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -363,6 +374,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -373,6 +385,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -390,6 +403,7 @@ namespace Security {
 		/// <summary>Developers should not use this deprecated method. Developers should use 'GetSerialNumber(out NSError)' instead.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -408,6 +422,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -419,6 +434,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -434,6 +450,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 		[SupportedOSPlatform ("macos15.0")]
@@ -443,6 +460,7 @@ namespace Security {
 
 		/// <summary>Get the date when this certificate becomes valid.</summary>
 		/// <returns>The date when this certificate becomes valid, or null if the date could not be obtained.</returns>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 		[SupportedOSPlatform ("macos15.0")]
@@ -454,6 +472,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 		[SupportedOSPlatform ("macos15.0")]
@@ -463,6 +482,7 @@ namespace Security {
 
 		/// <summary>Get the date when this certificate is no longer valid.</summary>
 		/// <returns>The date when this certificate is no longer valid, or null if the date could not be obtained.</returns>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios18.0")]
 		[SupportedOSPlatform ("maccatalyst18.0")]
 		[SupportedOSPlatform ("macos15.0")]
@@ -661,6 +681,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecKeyGetTypeID")]
 		public extern static nint GetTypeID ();
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -680,6 +701,7 @@ namespace Security {
 		///         <summary>Generates a key pair from the provided values.</summary>
 		///         <returns>A status code for the operation.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -716,6 +738,7 @@ namespace Security {
 		/// <summary>Generates a key pair from the provided values.</summary>
 		/// <returns>A status code for the operation.</returns>
 		/// <remarks>On every platform except macOS this method applies the attributes to both the public and the private key.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -755,6 +778,7 @@ namespace Security {
 		///         <summary>Generates a key pair from the provided values.</summary>
 		///         <returns>A status code for the operation.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -794,6 +818,7 @@ namespace Security {
 		}
 
 #if !(__MACOS__ && XAMCORE_5_0)
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -816,6 +841,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -842,6 +868,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -863,6 +890,7 @@ namespace Security {
 				return _RawSign (padding, (IntPtr) bp, dataToSign.Length, out result);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -887,6 +915,7 @@ namespace Security {
 			return status;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
@@ -905,6 +934,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -928,6 +958,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -959,6 +990,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
@@ -969,6 +1001,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, nint* cipherTextLengh);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -993,6 +1026,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -1026,6 +1060,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -1044,6 +1079,7 @@ namespace Security {
 			return Encrypt (padding, plainText, cipherText);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
@@ -1054,6 +1090,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		unsafe extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, nint* plainTextLen);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -1072,6 +1109,7 @@ namespace Security {
 				return SecKeyDecrypt (GetCheckedHandle (), padding, cipherText, cipherTextLen, plainText, plainTextLenPtr);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -1110,6 +1148,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #if XAMCORE_5_0
@@ -1129,6 +1168,7 @@ namespace Security {
 		}
 #endif // !(__MACOS__ && XAMCORE_5_0)
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1141,6 +1181,7 @@ namespace Security {
 		///         <summary>Creates and returns a new key pair.</summary>
 		///         <returns>A new key pair.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1167,6 +1208,7 @@ namespace Security {
 		///         <summary>Creates and returns a new key pair.</summary>
 		///         <returns>A new key pair.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1186,6 +1228,7 @@ namespace Security {
 		///         <summary>Creates and returns a new key pair.</summary>
 		///         <returns>A new key pair.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1202,6 +1245,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1215,6 +1259,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1246,6 +1291,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1261,6 +1307,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1272,6 +1319,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1290,6 +1338,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1304,6 +1353,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1314,6 +1364,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1324,6 +1375,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSDictionary> (dict, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1334,6 +1386,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1344,6 +1397,7 @@ namespace Security {
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1356,6 +1410,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1368,6 +1423,7 @@ namespace Security {
 			return rv;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1381,6 +1437,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1402,6 +1459,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1416,6 +1474,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1440,6 +1499,7 @@ namespace Security {
 			return result;
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1453,6 +1513,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1474,6 +1535,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1487,6 +1549,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1508,6 +1571,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1522,6 +1586,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -1553,6 +1618,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]

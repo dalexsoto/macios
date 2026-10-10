@@ -47,6 +47,7 @@ namespace CoreFoundation {
 
 	/// <summary>URL class used by C-only Cocoa APIs.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -145,6 +146,7 @@ namespace CoreFoundation {
 			return CFString.FromHandle (CFURLCopyFileSystemPath (hcfurl, 0), true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -155,6 +157,7 @@ namespace CoreFoundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]

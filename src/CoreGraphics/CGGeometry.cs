@@ -47,6 +47,7 @@ namespace CoreGraphics {
 
 	/// <summary>Extensions to the <see cref="CGRect" /> class that are useful when using CoreGraphics.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

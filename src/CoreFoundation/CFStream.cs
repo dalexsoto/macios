@@ -33,9 +33,11 @@
 #nullable enable
 
 using System.ComponentModel;
+#if !WATCHOS
 using System.Net;
 using System.Net.Sockets;
 using CFNetwork;
+#endif
 
 using CFIndex = System.IntPtr;
 
@@ -70,6 +72,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("watchos")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFStreamClientContext {
 		/// <summary>The version of this structure. Currently the only valid value is 0.</summary>
@@ -162,6 +165,7 @@ namespace CoreFoundation {
 		}
 	}
 
+#if !WATCHOS
 	// CFIndex
 	/// <summary>An enumeration whose values specify valid statuses for a <see cref="CoreFoundation.CFStream" />.</summary>
 	///     <remarks>To be added.</remarks>
@@ -867,4 +871,5 @@ namespace CoreFoundation {
 			}
 		}
 	}
+#endif
 }

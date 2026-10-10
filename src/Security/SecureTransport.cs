@@ -104,6 +104,7 @@ namespace Security {
 		Ats,
 		AtsCompatibility,
 		/// <summary>The ciphersuite group that conforms to the App Transport Security Forward Compatibility Profile version 2.1.</summary>
+		[Watch (26, 5)]
 		[iOS (26, 5), TV (26, 5), Mac (26, 5), MacCatalyst (26, 5)]
 		AtsFcpV21,
 	}
@@ -319,6 +320,7 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+#if !WATCHOS
 	/// <summary>Enumerates values that indicate whether a server side or client side <see cref="Security.SslContext" /> should be created.</summary>
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13, 0, message: Constants.UseNetworkInstead)]
@@ -330,6 +332,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		Client,
 	}
+#endif
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
@@ -417,6 +420,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		AtsCompatibility,
 		/// <summary>The ciphersuite group that conforms to the App Transport Security Forward Compatibility Profile version 2.1.</summary>
+		[Watch (26, 5)]
 		[iOS (26, 5), TV (26, 5), Mac (26, 5), MacCatalyst (26, 5)]
 		AtsFcpV21,
 	}

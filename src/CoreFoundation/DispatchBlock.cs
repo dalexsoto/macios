@@ -16,6 +16,7 @@ namespace CoreFoundation {
 #if !COREBUILD
 	/// <summary>To be added.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]

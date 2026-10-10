@@ -36,7 +36,9 @@ using System.Drawing;
 #if !COREBUILD
 using CoreFoundation;
 using CoreGraphics;
+#if HAS_COREMEDIA
 using CoreMedia;
+#endif
 #endif
 
 namespace ObjCRuntime {

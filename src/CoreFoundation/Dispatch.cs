@@ -73,6 +73,7 @@ namespace CoreFoundation {
 	}
 
 	/// <include file="../../docs/api/CoreFoundation/DispatchObject.xml" path="/Documentation/Docs[@DocId='T:CoreFoundation.DispatchObject']/*" />
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -134,6 +135,7 @@ namespace CoreFoundation {
 
 		/// <summary>To be added.</summary>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
@@ -143,6 +145,7 @@ namespace CoreFoundation {
 			dispatch_activate (GetCheckedHandle ());
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
@@ -153,6 +156,7 @@ namespace CoreFoundation {
 	}
 
 	/// <include file="../../docs/api/CoreFoundation/DispatchQueue.xml" path="/Documentation/Docs[@DocId='T:CoreFoundation.DispatchQueue']/*" />
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -211,6 +215,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("watchos26.0")]
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
@@ -236,6 +241,7 @@ namespace CoreFoundation {
 		///         </value>
 		///         <remarks>
 		///         </remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -287,6 +293,7 @@ namespace CoreFoundation {
 		///         was queued into a DispatchQueue, otherwise it returns the same
 		///         queue as <see cref="CoreFoundation.DispatchQueue.MainQueue" />.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -607,6 +614,7 @@ namespace CoreFoundation {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -622,6 +630,7 @@ namespace CoreFoundation {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -645,6 +654,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_create (IntPtr label, IntPtr attr);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
@@ -688,6 +698,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -711,6 +722,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_queue_get_specific (IntPtr queue, /* const void* */ IntPtr key);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -745,6 +757,7 @@ namespace CoreFoundation {
 			/// <summary>To be added.</summary>
 			///         <value>To be added.</value>
 			///         <remarks>To be added.</remarks>
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
@@ -754,6 +767,7 @@ namespace CoreFoundation {
 			/// <summary>To be added.</summary>
 			///         <value>To be added.</value>
 			///         <remarks>To be added.</remarks>
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
@@ -763,6 +777,7 @@ namespace CoreFoundation {
 			/// <summary>To be added.</summary>
 			///         <value>To be added.</value>
 			///         <remarks>To be added.</remarks>
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
@@ -772,6 +787,7 @@ namespace CoreFoundation {
 			/// <summary>To be added.</summary>
 			///         <value>To be added.</value>
 			///         <remarks>To be added.</remarks>
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
@@ -797,18 +813,21 @@ namespace CoreFoundation {
 				return rv;
 			}
 
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
 
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
 
+			[SupportedOSPlatform ("watchos26.0")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[DllImport (Constants.libcLibrary)]
@@ -817,6 +836,7 @@ namespace CoreFoundation {
 
 		/// <summary>To be added.</summary>
 		///     <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
@@ -844,6 +864,7 @@ namespace CoreFoundation {
 	///       </para>
 	///       <para>To create an absolute wall time, invoke the DispatchTime constructor with the number of nanoseconds for a particular point in time with a negative time.</para>
 	///     </remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -920,6 +941,7 @@ namespace CoreFoundation {
 
 	/// <summary>Manages group of code blocks allows for aggregate synchronization.</summary>
 	///     <remarks>Code block can be executed on different dispatch queues but managed as a group.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

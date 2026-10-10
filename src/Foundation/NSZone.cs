@@ -8,6 +8,7 @@ namespace Foundation {
 
 	// Helper to (mostly) support NS[Mutable]Copying protocols
 	/// <summary>An OS-controlled area within memory from which objects are allocated.</summary>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]

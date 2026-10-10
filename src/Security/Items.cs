@@ -73,6 +73,7 @@ namespace Security {
 		/// <summary>The data is only available after the first time the device has been unlocked after booting.</summary>
 		AfterFirstUnlock,
 		/// <summary>Always available.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -87,6 +88,7 @@ namespace Security {
 		/// <summary>The data is only available after the first time the device has been unlocked after booting.</summary>
 		AfterFirstUnlockThisDeviceOnly,
 		/// <summary>Always available.</summary>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -196,6 +198,7 @@ namespace Security {
 	}
 
 	/// <include file="../../docs/api/Security/SecKeyChain.xml" path="/Documentation/Docs[@DocId='T:Security.SecKeyChain']/*" />
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -916,6 +919,7 @@ namespace Security {
 	///       </example>
 	///     </remarks>
 	///     <related type="sample" href="https://github.com/xamarin/ios-samples/tree/master/LineLayout/">Keychain</related>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -952,7 +956,7 @@ namespace Security {
 		public SecRecord (SecKind secKind)
 		{
 			var kind = SecClass.FromSecKind (secKind);
-#if MONOMAC
+#if MONOMAC || WATCHOS
 			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
@@ -1163,6 +1167,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -1179,6 +1184,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
@@ -1347,6 +1353,7 @@ namespace Security {
 		///           <para />
 		///         </value>
 		///         <remarks>Set this value to a string that will be displayed to the user when the authentication takes place for the item to give the user some context for the request.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
@@ -1368,6 +1375,7 @@ namespace Security {
 		///           <para />
 		///         </value>
 		///         <remarks>Setting this value will return an error condition if the item requires a user interface to authenticate.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
@@ -1387,6 +1395,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -1401,7 +1410,7 @@ namespace Security {
 			}
 		}
 
-#if !TVOS
+#if !TVOS && !WATCHOS
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
@@ -1847,6 +1856,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -1860,6 +1870,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -2305,6 +2316,7 @@ namespace Security {
 
 	/// <summary>An exception based on a <see cref="Security.SecStatusCode" />.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -2345,6 +2357,7 @@ namespace Security {
 		/// <summary>Gets or sets the access control for the new key.</summary>
 		///         <value>The access control for the new key.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -2390,6 +2403,7 @@ namespace Security {
 		/// <summary>Gets or sets the access control for the new key.</summary>
 		///         <value>The access control for the new key.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -2410,6 +2424,7 @@ namespace Security {
 		/// <summary>Gets or sets the token ID.</summary>
 		///         <value>The token ID.</value>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]

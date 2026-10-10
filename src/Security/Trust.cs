@@ -151,6 +151,7 @@ namespace Security {
 			InitializeHandle (handle);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -165,6 +166,7 @@ namespace Security {
 		/// <summary>Evaluate the trust of the certificate using the policy.</summary>
 		///         <returns>A code that describe if the certificate can be trusted and, if so, under which circumstances.</returns>
 		///         <remarks>In general both Proceed and Unspecified means you can trust the certificate, other values means it should not be trusted.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -199,6 +201,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -208,6 +211,7 @@ namespace Security {
 		[ObsoletedOSPlatform ("tvos15.0")]
 		[ObsoletedOSPlatform ("ios15.0")]
 		[DllImport (Constants.SecurityLibrary)]
+		[ObsoletedOSPlatform ("watchos8.0", "Use 'SecTrustCopyCertificateChain' instead.")]
 		extern static IntPtr /* SecCertificateRef */ SecTrustGetCertificateAtIndex (IntPtr /* SecTrustRef */ trust, nint /* CFIndex */ ix);
 
 		[SupportedOSPlatform ("ios")]
@@ -218,6 +222,8 @@ namespace Security {
 		[ObsoletedOSPlatform ("maccatalyst", "Use the 'GetCertificateChain' method instead.")]
 		[ObsoletedOSPlatform ("tvos15.0", "Use the 'GetCertificateChain' method instead.")]
 		[ObsoletedOSPlatform ("ios15.0", "Use the 'GetCertificateChain' method instead.")]
+		[SupportedOSPlatform ("watchos26.0")]
+		[ObsoletedOSPlatform ("watchos8.0", "Use the 'GetCertificateChain' method instead.")]
 		public SecCertificate this [nint index] {
 			get {
 				if ((index < 0) || (index >= Count))
@@ -227,6 +233,7 @@ namespace Security {
 			}
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -234,6 +241,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFArrayRef */ IntPtr SecTrustCopyCertificateChain (/* SecTrustRef */ IntPtr trust);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
@@ -241,6 +249,7 @@ namespace Security {
 		public SecCertificate []? GetCertificateChain ()
 			=> NSArray.ArrayFromHandleDropNullElements<SecCertificate> (SecTrustCopyCertificateChain (Handle), releaseHandle: true);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -256,6 +265,7 @@ namespace Security {
 		///         <returns>A SecKey instance of the certificate's public key.</returns>
 		///         <remarks>
 		///         </remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -269,6 +279,7 @@ namespace Security {
 			return new SecKey (SecTrustCopyPublicKey (GetCheckedHandle ()), true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -276,6 +287,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyKey (IntPtr /* SecTrustRef */ trust);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
@@ -285,6 +297,7 @@ namespace Security {
 			return new SecKey (SecTrustCopyKey (GetCheckedHandle ()), true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -295,6 +308,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -304,6 +318,7 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (SecTrustCopyExceptions (GetCheckedHandle ()), true);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -315,6 +330,7 @@ namespace Security {
 		///         <summary>To be added.</summary>
 		///         <returns>To be added.</returns>
 		///         <remarks>To be added.</remarks>
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]

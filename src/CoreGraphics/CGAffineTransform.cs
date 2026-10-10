@@ -43,6 +43,7 @@ namespace CoreGraphics {
 	/// These transformation can be used to rotate, scale, shear and translate points and rectangles from one coordinate system into another.
 	/// </para>
 	///     </remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
@@ -397,6 +398,7 @@ namespace CoreGraphics {
 			return CGAffineTransformInvert (this);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -404,6 +406,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGAffineTransformComponents CGAffineTransformDecompose (CGAffineTransform transform);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -413,6 +416,7 @@ namespace CoreGraphics {
 			return CGAffineTransformDecompose (this);
 		}
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
@@ -420,6 +424,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGAffineTransform CGAffineTransformMakeWithComponents (CGAffineTransformComponents components);
 
+		[SupportedOSPlatform ("watchos26.0")]
 		[SupportedOSPlatform ("ios16.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]

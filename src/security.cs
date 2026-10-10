@@ -57,6 +57,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -66,6 +67,7 @@ namespace Security {
 		/// <summary>To be added.</summary>
 		///         <value>To be added.</value>
 		///         <remarks>To be added.</remarks>
+		[NoWatch]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -189,6 +191,7 @@ namespace Security {
 	}
 
 	/// <summary>Represents shared user name and password for a Website.</summary>
+	[NoWatch]
 	[Static]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoTV] // removed in tvOS 10
@@ -925,10 +928,12 @@ namespace Security {
 		[Field ("kSecImportExportPassphrase")]
 		NSString Passphrase { get; }
 
+		[NoWatch]
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecImportExportKeychain")]
 		NSString Keychain { get; }
 
+		[NoWatch]
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecImportExportAccess")]
 		NSString Access { get; }
@@ -998,14 +1003,17 @@ namespace Security {
 		[Field ("kSecMatchHostOrSubdomainOfHost")]
 		IntPtr MatchHostOrSubdomainOfHost { get; }
 
+		[NoWatch]
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectStartsWith")]
 		IntPtr MatchSubjectStartsWith { get; }
 
+		[NoWatch]
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectEndsWith")]
 		IntPtr MatchSubjectEndsWith { get; }
 
+		[NoWatch]
 		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("kSecMatchSubjectWholeString")]
 		IntPtr MatchSubjectWholeString { get; }
@@ -1074,11 +1082,13 @@ namespace Security {
 		[Field ("kSecUseAuthenticationContext")]
 		IntPtr UseAuthenticationContext { get; }
 
+		[NoWatch]
 		[TV (17, 0), NoMacCatalyst, NoMac, NoiOS]
 		[Field ("kSecUseUserIndependentKeychain")]
 		IntPtr UseUserIndependentKeychain { get; }
 	}
 
+	[NoWatch]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1089,6 +1099,7 @@ namespace Security {
 		IntPtr SubjectPublicKey { get; }
 	}
 
+	[NoWatch]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1576,6 +1587,7 @@ namespace Security {
 		NSData SharedInfo { get; set; }
 	}
 
+	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Internal]
@@ -1595,6 +1607,7 @@ namespace Security {
 		NSString PortKey { get; }
 	}
 
+	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
@@ -1622,36 +1635,63 @@ namespace Security {
 	}
 
 	delegate void SecProtocolVerifyComplete (bool complete);
+#if !WATCHOS
 
 	// Respond with the identity to use for this challenge.
 	delegate void SecProtocolChallengeComplete (SecIdentity2 identity);
 
+#endif
+
 	delegate void SecProtocolPreSharedKeySelectionComplete ([NullAllowed] DispatchData psk_identity);
+#if !WATCHOS
 	//
 	// These are fake NSObject types, used purely for the generator to do all the heavy lifting with block generation
 	//
 	delegate void SecProtocolKeyUpdate (SecProtocolMetadata metadata, [BlockCallback] Action complete);
+
+#endif
+#if !WATCHOS
 	delegate void SecProtocolChallenge (SecProtocolMetadata metadata, [BlockCallback] SecProtocolChallengeComplete challengeComplete);
+
+#endif
+#if !WATCHOS
 	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
+
+#endif
+#if !WATCHOS
 	delegate void SecProtocolPreSharedKeySelection (SecProtocolMetadata metadata, [NullAllowed] DispatchData psk_identity_hint, [BlockCallback] SecProtocolPreSharedKeySelectionComplete complete);
+
+#endif
 
 	[Internal]
 	[Partial]
 	interface Callbacks {
+#if !WATCHOS
 		[Export ("options:keyUpdateBlock:keyUpdateQueue:")]
 		[NoMethod]
 		void SetKeyUpdateBlock (SecProtocolOptions options, [BlockCallback] SecProtocolKeyUpdate keyUpdateBlock, DispatchQueue keyUpdateQueue);
+
+#endif
+#if !WATCHOS
 
 		[Export ("options:challengeBlock:challengeQueue:")]
 		[NoMethod]
 		void SetChallengeBlock (SecProtocolOptions options, [BlockCallback] SecProtocolChallenge challengeBlock, DispatchQueue challengeQueue);
 
+#endif
+#if !WATCHOS
+
 		[Export ("options:protocolVerify:verifyQueue:")]
 		[NoMethod]
 		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
 
+#endif
+#if !WATCHOS
+
 		[Export ("options:pskSelectionBlock:pskSelectionQueue:")]
 		[NoMethod]
 		void SetProtocolPreSharedKeySelectionBlock (SecProtocolOptions options, [BlockCallback] SecProtocolPreSharedKeySelection pskSelectionBlock, DispatchQueue pskSelectionQueue);
+
+#endif
 	}
 }

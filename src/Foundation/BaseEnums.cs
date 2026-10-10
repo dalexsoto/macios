@@ -211,6 +211,7 @@ namespace Foundation {
 
 	/// <summary>Status codes for the NSNetService.</summary>
 	/// <remarks>To be added.</remarks>
+	[NoWatch]
 	[Native]
 	public enum NSNetServicesStatus : long {
 		/// <summary>To be added.</summary>
@@ -661,10 +662,12 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		SuitableForBookmarkFile = 1 << 10,
 		/// <summary>To be added.</summary>
+		[NoWatch]
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		WithSecurityScope = 1 << 11,
 		/// <summary>To be added.</summary>
+		[NoWatch]
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		SecurityScopeAllowOnlyReadAccess = 1 << 12,
@@ -683,6 +686,7 @@ namespace Foundation {
 		/// <summary>To be added.</summary>
 		WithoutMounting = 1 << 9,
 		/// <summary>To be added.</summary>
+		[NoWatch]
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		WithSecurityScope = 1 << 10,
@@ -927,6 +931,7 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		Team = 1,
 		/// <summary>To be added.</summary>
+		[NoWatch]
 		[NoiOS, NoTV]
 		[NoMacCatalyst]
 		Group = 2,

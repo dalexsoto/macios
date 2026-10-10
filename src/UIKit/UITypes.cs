@@ -138,6 +138,7 @@ namespace UIKit {
 #endif
 	}
 
+#if !WATCHOS
 	/// <summary>A range of floating-point numbers.</summary>
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
@@ -204,6 +205,7 @@ namespace UIKit {
 		[Field ("UIFloatRangeInfinite")] // fake (but helps testing and could also help documentation)
 		public static UIFloatRange Infinite = new UIFloatRange (nfloat.NegativeInfinity, nfloat.PositiveInfinity);
 	}
+#endif
 
 #if IOS || __MACCATALYST__
 	/// <summary>Represents the position of a pointer accessory relative to the pointer.</summary>

@@ -32,6 +32,7 @@ namespace UIKit {
 #endif
 	/// <summary>Edge insets that account for text direction.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]

@@ -913,6 +913,8 @@ namespace Registrar {
 					}
 #elif __TVOS__
 					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType, null);
+#elif __WATCHOS__
+					is_stret = false;
 #else
 #error unknown architecture
 #endif
@@ -1388,6 +1390,8 @@ namespace Registrar {
 					return "Microsoft.iOS";
 				case ApplePlatform.TVOS:
 					return "Microsoft.tvOS";
+				case ApplePlatform.WatchOS:
+					return "Microsoft.watchOS";
 				case ApplePlatform.MacOSX:
 					return "Microsoft.macOS";
 				case ApplePlatform.MacCatalyst:
@@ -1401,6 +1405,8 @@ namespace Registrar {
 		internal const string AssemblyName = "Microsoft.macOS";
 #elif TVOS
 		internal const string AssemblyName = "Microsoft.tvOS";
+#elif WATCHOS
+		internal const string AssemblyName = "Microsoft.watchOS";
 #elif __MACCATALYST__
 		internal const string AssemblyName = "Microsoft.MacCatalyst";
 #elif IOS
@@ -2723,6 +2729,7 @@ namespace Registrar {
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
 				return "B";
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:

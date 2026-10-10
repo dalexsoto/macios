@@ -70,6 +70,7 @@ namespace CoreFoundation {
 
 	/// <summary>Represents an exception arising from a Core Foundation <c>CFError</c>, having an error domain, a domain-specific error code, and perhaps additional information.</summary>
 	///     <remarks>To be added.</remarks>
+	[SupportedOSPlatform ("watchos26.0")]
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
